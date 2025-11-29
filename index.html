@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 8.0 (Extended Collections)</title>
+    <title>Gifts Market 10.0 (100+ Fragment Gifts)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -49,7 +49,7 @@
 <body>
 
     <div id="market" class="section active container">
-        <h2 id="market-title">🔥 NFT Market</h2>
+        <h2 id="market-title">💎 NFT Gifts Market</h2>
         <input type="text" id="search" placeholder="Поиск коллекции..." onkeyup="filterNFTs()">
         <div class="market-grid" id="market-list"></div>
     </div>
@@ -183,37 +183,114 @@
     <script>
         // --- CONFIG & DATA ---
         
-        // РАСШИРЕННЫЕ КОЛЛЕКЦИИ (Стиль Fragment/GetGems)
+        // 100+ NFT GIFTS ИЗ СПИСКА FRAGMENT
         const collections = [
-            // Fragment Numbers & Domains
-            { id: 1, name: "888 (Number)", basePrice: 1500000.00, img: "https://placehold.co/300x300/FAD02E/000000?text=888", startPrice: 1450000 },
-            { id: 2, name: "car.ton (Domain)", basePrice: 250000.00, img: "https://placehold.co/300x300/00C4CC/000000?text=CAR.TON", startPrice: 240000 },
-            { id: 3, name: "cryptogirl (Username)", basePrice: 120000.00, img: "https://placehold.co/300x300/FF69B4/FFFFFF?text=CryptoGirl", startPrice: 115000 },
-            { id: 4, name: "casino.ton (Domain)", basePrice: 400000.00, img: "https://placehold.co/300x300/FF4500/FFFFFF?text=CASINO.TON", startPrice: 380000 },
-            { id: 5, name: "7777 (Number)", basePrice: 55000.00, img: "https://placehold.co/300x300/B2A0D8/000000?text=7777", startPrice: 53000 },
-            
-            // TON Diamonds
-            { id: 6, name: "TON Diamond #005", basePrice: 950000.00, img: "https://placehold.co/300x300/007AFF/FFFFFF?text=Diamond+005", startPrice: 900000 },
-            { id: 7, name: "TON Diamond #555", basePrice: 45000.00, img: "https://placehold.co/300x300/5856D6/FFFFFF?text=Diamond+555", startPrice: 43000 },
-
-            // GetGems & Themed collections
-            { id: 8, name: "Plush Pepes", basePrice: 15345.21, img: "https://placehold.co/300x300/34C759/000000?text=Plush+Pepe", startPrice: 14900 },
-            { id: 9, name: "Kissed Frogs", basePrice: 9230.77, img: "https://placehold.co/300x300/FF3B30/FFFFFF?text=Kissed+Frog", startPrice: 9500 },
-            { id: 10, name: "Precious Peaches", basePrice: 5500.55, img: "https://placehold.co/300x300/FF9500/FFFFFF?text=Peach+NFT", startPrice: 5000 },
-            { id: 11, name: "Neko Helmets", basePrice: 20120.90, img: "https://placehold.co/300x300/5856D6/FFFFFF?text=Neko+Helmet", startPrice: 19000 },
-            { id: 12, name: "Astral Shards", basePrice: 1800.02, img: "https://placehold.co/300x300/AF52DE/FFFFFF?text=Astral+Shard", startPrice: 1750 },
-            { id: 13, name: "Vintage Cigars", basePrice: 3500.89, img: "https://placehold.co/300x300/A2845E/FFFFFF?text=Vintage+Cigar", startPrice: 3800 },
-            { id: 14, name: "Scared Cats", basePrice: 50000.11, img: "https://placehold.co/300x300/FC76FF/FFFFFF?text=Scared+Cat", startPrice: 48000 },
-            { id: 15, name: "Jelly Bunny", basePrice: 300.99, img: "https://placehold.co/300x300/32D74B/FFFFFF?text=Jelly+Bunny", startPrice: 350 },
-            { id: 16, name: "Santa Hat", basePrice: 4200.67, img: "https://placehold.co/300x300/C62828/FFFFFF?text=Santa+Hat", startPrice: 4000 },
-            
-            // New additions
-            { id: 17, name: "Crypto Punks TON", basePrice: 65000.00, img: "https://placehold.co/300x300/6A5ACD/FFFFFF?text=PUNK", startPrice: 60000 },
-            { id: 18, name: "Moon Runners", basePrice: 7800.50, img: "https://placehold.co/300x300/808080/FFFFFF?text=Moon+Runner", startPrice: 8000 },
-            { id: 19, name: "Mystic Maps", basePrice: 2500.10, img: "https://placehold.co/300x300/008080/FFFFFF?text=Mystic+Map", startPrice: 2400 },
-            { id: 20, name: "Metaverse Land #142", basePrice: 18000.00, img: "https://placehold.co/300x300/FFA07A/000000?text=Land+NFT", startPrice: 17500 },
-            { id: 21, name: "Golden Passport", basePrice: 105000.00, img: "https://placehold.co/300x300/FFD700/000000?text=Passport", startPrice: 100000 },
-            { id: 22, name: "topbot.ton (Domain)", basePrice: 14000.00, img: "https://placehold.co/300x300/A020F0/FFFFFF?text=TOPBOT.TON", startPrice: 14500 }
+            // Имитация цен: цены варьируются от 1500 до 15000 RUB
+            { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: "https://placehold.co/300x300/34C759/FFFFFF?text=Plush+Pepe", startPrice: 14900 },
+            { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: "https://placehold.co/300x300/AF52DE/FFFFFF?text=Kissed+Frog", startPrice: 9500 },
+            { id: 3, name: "Artisan Bricks", basePrice: 4500.00, img: "https://placehold.co/300x300/A52A2A/FFFFFF?text=Artisan+Bricks", startPrice: 4400 },
+            { id: 4, name: "Astral Shards", basePrice: 9800.50, img: "https://placehold.co/300x300/007AFF/FFFFFF?text=Astral+Shards", startPrice: 10000 },
+            { id: 5, name: "B-Day Candles", basePrice: 1500.10, img: "https://placehold.co/300x300/FFD700/000000?text=B-Day+Candles", startPrice: 1450 },
+            { id: 6, name: "Berry Boxes", basePrice: 7200.00, img: "https://placehold.co/300x300/DC143C/FFFFFF?text=Berry+Boxes", startPrice: 7500 },
+            { id: 7, name: "Big Years", basePrice: 6800.99, img: "https://placehold.co/300x300/007FFF/FFFFFF?text=Big+Years", startPrice: 6500 },
+            { id: 8, name: "Bling Binkies", basePrice: 12500.88, img: "https://placehold.co/300x300/B2A0D8/000000?text=Bling+Binkies", startPrice: 12000 },
+            { id: 9, name: "Bonded Rings", basePrice: 10100.00, img: "https://placehold.co/300x300/9400D3/FFFFFF?text=Bonded+Rings", startPrice: 9800 },
+            { id: 10, name: "Bow Ties", basePrice: 5300.77, img: "https://placehold.co/300x300/40E0D0/000000?text=Bow+Ties", startPrice: 5100 },
+            { id: 11, name: "Bunny Muffins", basePrice: 6400.55, img: "https://placehold.co/300x300/DA70D6/FFFFFF?text=Bunny+Muffins", startPrice: 6600 },
+            { id: 12, name: "Candy Canes", basePrice: 3100.90, img: "https://placehold.co/300x300/B0E0E6/000000?text=Candy+Canes", startPrice: 3000 },
+            { id: 13, name: "Clover Pins", basePrice: 8700.02, img: "https://placehold.co/300x300/228B22/FFFFFF?text=Clover+Pins", startPrice: 8900 },
+            { id: 14, name: "Cookie Hearts", basePrice: 9100.89, img: "https://placehold.co/300x300/FF1493/FFFFFF?text=Cookie+Hearts", startPrice: 9300 },
+            { id: 15, name: "Crystal Balls", basePrice: 6500.11, img: "https://placehold.co/300x300/00CED1/000000?text=Crystal+Balls", startPrice: 6400 },
+            { id: 16, name: "Cupid Charms", basePrice: 3000.99, img: "https://placehold.co/300x300/FF69B4/FFFFFF?text=Cupid+Charms", startPrice: 3200 },
+            { id: 17, name: "Desk Calendars", basePrice: 1800.67, img: "https://placehold.co/300x300/696969/FFFFFF?text=Desk+Calendars", startPrice: 1700 },
+            { id: 18, name: "Diamond Rings", basePrice: 11500.45, img: "https://placehold.co/300x300/ADD8E6/000000?text=Diamond+Rings", startPrice: 11800 },
+            { id: 19, name: "Durov’s Caps", basePrice: 14500.70, img: "https://placehold.co/300x300/1E90FF/FFFFFF?text=Durov's+Caps", startPrice: 14000 },
+            { id: 20, name: "Easter Eggs", basePrice: 2100.33, img: "https://placehold.co/300x300/F08080/000000?text=Easter+Eggs", startPrice: 2000 },
+            { id: 21, name: "Electric Skulls", basePrice: 3300.22, img: "https://placehold.co/300x300/8B0000/FFFFFF?text=Electric+Skulls", startPrice: 3500 },
+            { id: 22, name: "Eternal Candles", basePrice: 9150.15, img: "https://placehold.co/300x300/FF8C00/000000?text=Eternal+Candles", startPrice: 9000 },
+            { id: 23, name: "Eternal Roses", basePrice: 4000.80, img: "https://placehold.co/300x300/800080/FFFFFF?text=Eternal+Roses", startPrice: 4200 },
+            { id: 24, name: "Evil Eyes", basePrice: 1490.90, img: "https://placehold.co/300x300/4682B4/FFFFFF?text=Evil+Eyes", startPrice: 1400 },
+            { id: 25, name: "Faith Amulets", basePrice: 3500.60, img: "https://placehold.co/300x300/F5DEB3/000000?text=Faith+Amulets", startPrice: 3600 },
+            { id: 26, name: "Flying Brooms", basePrice: 5400.75, img: "https://placehold.co/300x300/8B4513/FFFFFF?text=Flying+Brooms", startPrice: 5300 },
+            { id: 27, name: "Fresh Socks", basePrice: 3800.10, img: "https://placehold.co/300x300/FFFACD/000000?text=Fresh+Socks", startPrice: 3700 },
+            { id: 28, name: "Gem Signets", basePrice: 14000.50, img: "https://placehold.co/300x300/4B0082/FFFFFF?text=Gem+Signets", startPrice: 14200 },
+            { id: 29, name: "Genie Lamps", basePrice: 10100.99, img: "https://placehold.co/300x300/FFD700/000000?text=Genie+Lamps", startPrice: 9900 },
+            { id: 30, name: "Ginger Cookies", basePrice: 2150.30, img: "https://placehold.co/300x300/CD853F/FFFFFF?text=Ginger+Cookies", startPrice: 2250 },
+            { id: 31, name: "Hanging Stars", basePrice: 4300.40, img: "https://placehold.co/300x300/FFEFD5/000000?text=Hanging+Stars", startPrice: 4200 },
+            { id: 32, name: "Happy Brownies", basePrice: 2400.50, img: "https://placehold.co/300x300/A0522D/FFFFFF?text=Happy+Brownies", startPrice: 2500 },
+            { id: 33, name: "Heart Lockets", basePrice: 16000.75, img: "https://placehold.co/300x300/FFC0CB/000000?text=Heart+Lockets", startPrice: 15800 },
+            { id: 34, name: "Heroic Helmets", basePrice: 15500.90, img: "https://placehold.co/300x300/778899/FFFFFF?text=Heroic+Helmets", startPrice: 15200 },
+            { id: 35, name: "Hex Pots", basePrice: 2200.10, img: "https://placehold.co/300x300/2F4F4F/FFFFFF?text=Hex+Pots", startPrice: 2300 },
+            { id: 36, name: "Holiday Drinks", basePrice: 3400.35, img: "https://placehold.co/300x300/B0C4DE/000000?text=Holiday+Drinks", startPrice: 3300 },
+            { id: 37, name: "Homemade Cakes", basePrice: 1900.20, img: "https://placehold.co/300x300/E6E6FA/000000?text=Homemade+Cakes", startPrice: 1950 },
+            { id: 38, name: "Hypno Lollipops", basePrice: 5900.44, img: "https://placehold.co/300x300/FF00FF/FFFFFF?text=Hypno+Lollipops", startPrice: 5800 },
+            { id: 39, name: "Ice Creams", basePrice: 2350.55, img: "https://placehold.co/300x300/ADD8E6/000000?text=Ice+Creams", startPrice: 2450 },
+            { id: 40, name: "Input Keys", basePrice: 5300.66, img: "https://placehold.co/300x300/6A5ACD/FFFFFF?text=Input+Keys", startPrice: 5200 },
+            { id: 41, name: "Instant Ramens", basePrice: 2950.77, img: "https://placehold.co/300x300/F0F8FF/000000?text=Instant+Ramens", startPrice: 3050 },
+            { id: 42, name: "Ion Gems", basePrice: 9900.88, img: "https://placehold.co/300x300/8A2BE2/FFFFFF?text=Ion+Gems", startPrice: 10100 },
+            { id: 43, name: "Ionic Dryers", basePrice: 13000.11, img: "https://placehold.co/300x300/A9A9A9/FFFFFF?text=Ionic+Dryers", startPrice: 12900 },
+            { id: 44, name: "Jacks-in-the-Box", basePrice: 2250.22, img: "https://placehold.co/300x300/F0E68C/000000?text=Jacks-in-the-Box", startPrice: 2350 },
+            { id: 45, name: "Jelly Bunnies", basePrice: 8500.33, img: "https://placehold.co/300x300/FFB6C1/000000?text=Jelly+Bunnies", startPrice: 8700 },
+            { id: 46, name: "Jester Hats", basePrice: 4200.44, img: "https://placehold.co/300x300/FF4500/FFFFFF?text=Jester+Hats", startPrice: 4100 },
+            { id: 47, name: "Jingle Bells", basePrice: 5100.55, img: "https://placehold.co/300x300/BDB76B/000000?text=Jingle+Bells", startPrice: 5000 },
+            { id: 48, name: "Jolly Chimps", basePrice: 4450.66, img: "https://placehold.co/300x300/8B4513/FFFFFF?text=Jolly+Chimps", startPrice: 4550 },
+            { id: 49, name: "Joyful Bundles", basePrice: 11000.77, img: "https://placehold.co/300x300/FF6347/FFFFFF?text=Joyful+Bundles", startPrice: 10900 },
+            { id: 50, name: "Light Swords", basePrice: 8800.99, img: "https://placehold.co/300x300/1E90FF/FFFFFF?text=Light+Swords", startPrice: 9000 },
+            { id: 51, name: "Lol Pops", basePrice: 1200.10, img: "https://placehold.co/300x300/FF00FF/FFFFFF?text=Lol+Pops", startPrice: 1150 },
+            { id: 52, name: "Loot Bags", basePrice: 5200.20, img: "https://placehold.co/300x300/BDB76B/000000?text=Loot+Bags", startPrice: 5300 },
+            { id: 53, name: "Love Candles", basePrice: 10500.30, img: "https://placehold.co/300x300/FF69B4/FFFFFF?text=Love+Candles", startPrice: 10400 },
+            { id: 54, name: "Love Potions", basePrice: 5000.40, img: "https://placehold.co/300x300/DA70D6/FFFFFF?text=Love+Potions", startPrice: 5100 },
+            { id: 55, name: "Low Riders", basePrice: 5500.50, img: "https://placehold.co/300x300/40E0D0/000000?text=Low+Riders", startPrice: 5400 },
+            { id: 56, name: "Lunar Snakes", basePrice: 4900.60, img: "https://placehold.co/300x300/00CED1/000000?text=Lunar+Snakes", startPrice: 5000 },
+            { id: 57, name: "Lush Bouquets", basePrice: 7800.70, img: "https://placehold.co/300x300/FF1493/FFFFFF?text=Lush+Bouquets", startPrice: 7700 },
+            { id: 58, name: "Mad Pumpkins", basePrice: 5300.80, img: "https://placehold.co/300x300/FF8C00/000000?text=Mad+Pumpkins", startPrice: 5400 },
+            { id: 59, name: "Magic Potions", basePrice: 7100.90, img: "https://placehold.co/300x300/8A2BE2/FFFFFF?text=Magic+Potions", startPrice: 7000 },
+            { id: 60, name: "Mighty Arms", basePrice: 14000.11, img: "https://placehold.co/300x300/4682B4/FFFFFF?text=Mighty+Arms", startPrice: 14200 },
+            { id: 61, name: "Mini Oscars", basePrice: 12000.22, img: "https://placehold.co/300x300/FFD700/000000?text=Mini+Oscars", startPrice: 11800 },
+            { id: 62, name: "Money Pots", basePrice: 15500.33, img: "https://placehold.co/300x300/228B22/FFFFFF?text=Money+Pots", startPrice: 15300 },
+            { id: 63, name: "Moon Pendants", basePrice: 4700.44, img: "https://placehold.co/300x300/A9A9A9/FFFFFF?text=Moon+Pendants", startPrice: 4800 },
+            { id: 64, name: "Mousse Cakes", basePrice: 16500.55, img: "https://placehold.co/300x300/F0F8FF/000000?text=Mousse+Cakes", startPrice: 16300 },
+            { id: 65, name: "Nail Bracelets", basePrice: 13000.66, img: "https://placehold.co/300x300/696969/FFFFFF?text=Nail+Bracelets", startPrice: 13200 },
+            { id: 66, name: "Neko Helmets", basePrice: 8500.77, img: "https://placehold.co/300x300/FF3B30/FFFFFF?text=Neko+Helmets", startPrice: 8400 },
+            { id: 67, name: "Party Sparklers", basePrice: 2000.88, img: "https://placehold.co/300x300/FF6347/FFFFFF?text=Party+Sparklers", startPrice: 1900 },
+            { id: 68, name: "Perfume Bottles", basePrice: 12800.99, img: "https://placehold.co/300x300/B0C4DE/000000?text=Perfume+Bottles", startPrice: 13000 },
+            { id: 69, name: "Pet Snakes", basePrice: 5000.11, img: "https://placehold.co/300x300/2F4F4F/FFFFFF?text=Pet+Snakes", startPrice: 5100 },
+            { id: 70, name: "Precious Peaches", basePrice: 11000.22, img: "https://placehold.co/300x300/FF69B4/FFFFFF?text=Precious+Peaches", startPrice: 10800 },
+            { id: 71, name: "Pretty Posies", basePrice: 17000.33, img: "https://placehold.co/300x300/FFC0CB/000000?text=Pretty+Posies", startPrice: 17200 },
+            { id: 72, name: "Record Players", basePrice: 6500.44, img: "https://placehold.co/300x300/CD853F/FFFFFF?text=Record+Players", startPrice: 6400 },
+            { id: 73, name: "Restless Jars", basePrice: 5100.55, img: "https://placehold.co/300x300/9400D3/FFFFFF?text=Restless+Jars", startPrice: 5200 },
+            { id: 74, name: "Sakura Flowers", basePrice: 4800.66, img: "https://placehold.co/300x300/F08080/000000?text=Sakura+Flowers", startPrice: 4900 },
+            { id: 75, name: "Santa Hats", basePrice: 3800.77, img: "https://placehold.co/300x300/8B0000/FFFFFF?text=Santa+Hats", startPrice: 3700 },
+            { id: 76, name: "Scared Cats", basePrice: 2200.88, img: "https://placehold.co/300x300/F5DEB3/000000?text=Scared+Cats", startPrice: 2300 },
+            { id: 77, name: "Sharp Tongues", basePrice: 6000.99, img: "https://placehold.co/300x300/800080/FFFFFF?text=Sharp+Tongues", startPrice: 5900 },
+            { id: 78, name: "Signet Rings", basePrice: 11800.10, img: "https://placehold.co/300x300/ADD8E6/000000?text=Signet+Rings", startPrice: 11700 },
+            { id: 79, name: "Skull Flowers", basePrice: 5600.20, img: "https://placehold.co/300x300/4B0082/FFFFFF?text=Skull+Flowers", startPrice: 5700 },
+            { id: 80, name: "Sky Stilettos", basePrice: 8900.30, img: "https://placehold.co/300x300/FF00FF/FFFFFF?text=Sky+Stilettos", startPrice: 8800 },
+            { id: 81, name: "Sleigh Bells", basePrice: 10500.40, img: "https://placehold.co/300x300/F0E68C/000000?text=Sleigh+Bells", startPrice: 10600 },
+            { id: 82, name: "Snake Boxes", basePrice: 6100.50, img: "https://placehold.co/300x300/BDB76B/000000?text=Snake+Boxes", startPrice: 6000 },
+            { id: 83, name: "Snoop Cigars", basePrice: 3500.60, img: "https://placehold.co/300x300/696969/FFFFFF?text=Snoop+Cigars", startPrice: 3600 },
+            { id: 84, name: "Snoop Doggs", basePrice: 1250.70, img: "https://placehold.co/300x300/A0522D/FFFFFF?text=Snoop+Doggs", startPrice: 1300 },
+            { id: 85, name: "Snow Globes", basePrice: 4200.80, img: "https://placehold.co/300x300/B0E0E6/000000?text=Snow+Globes", startPrice: 4100 },
+            { id: 86, name: "Snow Mittens", basePrice: 3100.90, img: "https://placehold.co/300x300/E6E6FA/000000?text=Snow+Mittens", startPrice: 3200 },
+            { id: 87, name: "Spiced Wines", basePrice: 4800.11, img: "https://placehold.co/300x300/CD853F/FFFFFF?text=Spiced+Wines", startPrice: 4700 },
+            { id: 88, name: "Spring Baskets", basePrice: 9100.22, img: "https://placehold.co/300x300/228B22/FFFFFF?text=Spring+Baskets", startPrice: 9200 },
+            { id: 89, name: "Spy Agarics", basePrice: 1800.33, img: "https://placehold.co/300x300/40E0D0/000000?text=Spy+Agarics", startPrice: 1750 },
+            { id: 90, name: "Star Notepads", basePrice: 5000.44, img: "https://placehold.co/300x300/FFEFD5/000000?text=Star+Notepads", startPrice: 5100 },
+            { id: 91, name: "Stellar Rockets", basePrice: 3900.55, img: "https://placehold.co/300x300/778899/FFFFFF?text=Stellar+Rockets", startPrice: 3800 },
+            { id: 92, name: "Swag Bags", basePrice: 2500.66, img: "https://placehold.co/300x300/FF6347/FFFFFF?text=Swag+Bags", startPrice: 2600 },
+            { id: 93, name: "Swiss Watches", basePrice: 8700.77, img: "https://placehold.co/300x300/ADD8E6/000000?text=Swiss+Watches", startPrice: 8600 },
+            { id: 94, name: "Tama Gadgets", basePrice: 6500.88, img: "https://placehold.co/300x300/FF9500/FFFFFF?text=Tama+Gadgets", startPrice: 6600 },
+            { id: 95, name: "Top Hats", basePrice: 7100.99, img: "https://placehold.co/300x300/1E90FF/FFFFFF?text=Top+Hats", startPrice: 7000 },
+            { id: 96, name: "Toy Bears", basePrice: 1900.10, img: "https://placehold.co/300x300/A0522D/FFFFFF?text=Toy+Bears", startPrice: 1950 },
+            { id: 97, name: "Trapped Hearts", basePrice: 4300.20, img: "https://placehold.co/300x300/FF1493/FFFFFF?text=Trapped+Hearts", startPrice: 4400 },
+            { id: 98, name: "Valentine Boxes", basePrice: 11000.30, img: "https://placehold.co/300x300/FFC0CB/000000?text=Valentine+Boxes", startPrice: 10900 },
+            { id: 99, name: "Vintage Cigars", basePrice: 6100.40, img: "https://placehold.co/300x300/696969/FFFFFF?text=Vintage+Cigars", startPrice: 6200 },
+            { id: 100, name: "Voodoo Dolls", basePrice: 4700.50, img: "https://placehold.co/300x300/2F4F4F/FFFFFF?text=Voodoo+Dolls", startPrice: 4600 },
+            { id: 101, name: "Westside Signs", basePrice: 6300.60, img: "https://placehold.co/300x300/4682B4/FFFFFF?text=Westside+Signs", startPrice: 6400 },
+            { id: 102, name: "Whip Cupcakes", basePrice: 3800.70, img: "https://placehold.co/300x300/FFD700/000000?text=Whip+Cupcakes", startPrice: 3700 },
+            { id: 103, name: "Winter Wreaths", basePrice: 5100.80, img: "https://placehold.co/300x300/32D74B/FFFFFF?text=Winter+Wreaths", startPrice: 5200 },
+            { id: 104, name: "Witch Hats", basePrice: 1800.90, img: "https://placehold.co/300x300/8A2BE2/FFFFFF?text=Witch+Hats", startPrice: 1900 },
+            { id: 105, name: "Xmas Stockings", basePrice: 3500.00, img: "https://placehold.co/300x300/FF3B30/FFFFFF?text=Xmas+Stockings", startPrice: 3400 }
         ];
 
         const rates = {
@@ -315,7 +392,6 @@
             openModal('nft-modal');
 
             // Устанавливаем статическую заглушку, имитирующую график
-            // Вы можете изменить ссылку ниже, чтобы изменить вид "графика"
             const chartColor = item.basePrice > item.startPrice ? '34c759' : 'ff3b30'; // Цвет по росту/падению
             document.getElementById('priceChartPlaceholder').src = `https://placehold.co/400x150/111111/${chartColor}?text=Price+Trend`;
 
