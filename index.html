@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 21.1 (Stable Placeholders)</title>
+    <title>Gifts Market 21.0 (Full Lottie Market)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -303,18 +303,11 @@
             };
         }
         
-        // --- ИСПРАВЛЕННАЯ ФУНКЦИЯ ДЛЯ НАДЕЖНОЙ ЛОКАЛЬНОЙ ЗАГЛУШКИ ---
+        // Функция для генерации более специфичной заглушки
         function getPlaceholderImage(name) {
-            const slug = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 10).toUpperCase();
-            
-            // Встраиваем SVG-изображение напрямую в Data URL, чтобы избежать зависимости от внешних хостингов
-            return `data:image/svg+xml;charset=UTF-8,
-                <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-                    <rect width="300" height="300" fill="#1c1c1e"/>
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#8e8e93">${slug}</text>
-                </svg>`.trim().replace(/\s+/g, ' ');
+            const slug = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 10);
+            return `https://placehold.co/300x300/1c1c1e/8e8e93?text=${slug.toUpperCase()}`;
         }
-        // -----------------------------------------------------------------
 
         // --- NFT DATA (ОБНОВЛЕНО ДЛЯ ВСЕХ КОЛЛЕКЦИЙ) ---
         const collections = [
