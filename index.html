@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 18.0 (Lottie & Full Fix)</title>
+    <title>Gifts Market 19.0 (Multiple Lottie Skulls)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -208,9 +208,15 @@
         const IMAGE_PEPE_1_URL = "https://i.imgur.com/W2d0fJ3.png"; 
         const IMAGE_PEPE_2_URL = "https://i.imgur.com/W2d0fJ3.png"; 
         
-        // ССЫЛКИ НА WEBP (СТАТИКА) И LOTTIE (АНИМАЦИЯ)
-        const IMAGE_SKULL_STATIC_URL = "https://nft.fragment.com/gift/electricskull-5813.webp"; 
-        const LOTTIE_SKULL_URL = "https://nft.fragment.com/gift/electricskull-5813.lottie.json";
+        // --- НОВЫЕ ССЫЛКИ НА Electric Skulls (Fragment/TonViewer) ---
+        const SKULL_1_STATIC = "https://nft.fragment.com/gift/electricskull-5813.webp"; 
+        const SKULL_1_LOTTIE = "https://nft.fragment.com/gift/electricskull-5813.lottie.json";
+
+        const SKULL_2_STATIC = "https://nft.fragment.com/gift/electricskull-6469.webp"; 
+        const SKULL_2_LOTTIE = "https://nft.fragment.com/gift/electricskull-6469.lottie.json"; 
+
+        const SKULL_3_STATIC = "https://nft.fragment.com/gift/electricskull-4008.webp"; 
+        const SKULL_3_LOTTIE = "https://nft.fragment.com/gift/electricskull-4008.lottie.json";
         
         // Заглушки для других категорий
         const imageThemes = [
@@ -262,16 +268,15 @@
             { id: 18, name: "Diamond Rings", basePrice: 11500.45, img: imageThemes[5], startPrice: 11800, ...getRandomRarity() },
             { id: 19, name: "Durov’s Caps", basePrice: 14500.70, img: imageThemes[0], startPrice: 14000, ...getRandomRarity() },
             { id: 20, name: "Easter Eggs", basePrice: 2100.33, img: imageThemes[6], startPrice: 2000, ...getRandomRarity() },
+            // 21. Electric Skulls #5813 (Original)
             { 
                 id: 21, 
-                name: "Electric Skulls", 
+                name: "Electric Skull #5813", 
                 basePrice: 3300.22, 
-                img: IMAGE_SKULL_STATIC_URL, 
-                lottie: LOTTIE_SKULL_URL,
+                img: SKULL_1_STATIC, 
+                lottie: SKULL_1_LOTTIE, 
                 startPrice: 3500, 
-                model: "Vivid 1%", 
-                symbol: "Lightning 0.8%", 
-                backdrop: "Crimson 6%" 
+                model: "Vivid 1%", symbol: "Lightning 0.8%", backdrop: "Crimson 6%" 
             },
             { id: 22, name: "Eternal Candles", basePrice: 9150.15, img: imageThemes[1], startPrice: 9000, ...getRandomRarity() },
             { id: 23, name: "Eternal Roses", basePrice: 4000.80, img: imageThemes[2], startPrice: 4200, ...getRandomRarity() },
@@ -357,7 +362,26 @@
             { id: 103, name: "Winter Wreaths", basePrice: 5100.80, img: imageThemes[3], startPrice: 5200, ...getRandomRarity() },
             { id: 104, name: "Witch Hats", basePrice: 1800.90, img: imageThemes[2], startPrice: 1900, ...getRandomRarity() },
             { id: 105, name: "Xmas Stockings", basePrice: 3500.00, img: imageThemes[4], startPrice: 3400, ...getRandomRarity() },
-            { id: 106, name: "Electric Skulls V2", basePrice: 3350.22, img: IMAGE_SKULL_STATIC_URL, startPrice: 3600, model: "Vivid 1%", symbol: "Lightning 0.8%", backdrop: "Crimson 6%" },
+            // 106. Electric Skulls #6469 (New)
+            { 
+                id: 106, 
+                name: "Electric Skull #6469", 
+                basePrice: 3800.22, 
+                img: SKULL_2_STATIC, 
+                lottie: SKULL_2_LOTTIE, 
+                startPrice: 3900, 
+                model: "Metallic 0.5%", symbol: "Star Crown 0.2%", backdrop: "Gold 0.1%" 
+            },
+            // 107. Electric Skulls #4008 (New)
+            { 
+                id: 107, 
+                name: "Electric Skull #4008", 
+                basePrice: 3150.22, 
+                img: SKULL_3_STATIC, 
+                lottie: SKULL_3_LOTTIE, 
+                startPrice: 3100, 
+                model: "Pixel 2%", symbol: "TON Cube 0.4%", backdrop: "Sapphire 3%" 
+            },
         ];
 
         const rates = {
