@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 5.0 (Final Stable)</title>
+    <title>Gifts Market 6.0 (Final Freeze Fix)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -182,9 +182,8 @@
     <script>
         // --- CONFIG & DATA ---
         
-        // ОБНОВЛЕННЫЕ КОЛЛЕКЦИИ С ТЕМАТИЧЕСКИМИ ЗАГЛУШКАМИ (как на Fragment/GetGems)
+        // ОБНОВЛЕННЫЕ КОЛЛЕКЦИИ С ТЕМАТИЧЕСКИМИ ЗАГЛУШКАМИ
         const collections = [
-            // Использованы ссылки на Placeholder-изображения, стилизованные под NFT
             { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: "https://via.placeholder.com/300/34c759/FFFFFF?text=Plush+Pepe", startPrice: 14900 },
             { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: "https://via.placeholder.com/300/FF3B30/FFFFFF?text=Kissed+Frog", startPrice: 9500 },
             { id: 3, name: "Precious Peaches", basePrice: 5500.55, img: "https://via.placeholder.com/300/FF9500/FFFFFF?text=Peach+NFT", startPrice: 5000 },
@@ -277,12 +276,13 @@
         // --- SETTINGS: CURRENCY ---
         function changeCurrency() {
             currentCurrency = document.getElementById('currency-select').value;
+            // Обновляем баланс, но не вызываем renderMarket/renderFavorites, так как они будут вызваны в INIT
             document.getElementById('user-balance').innerText = getPrice(0); 
             document.getElementById('frozen-balance').innerText = getPrice(0);
             filterNFTs(); renderFavorites();
         }
 
-        // --- openNFT (ВОССТАНОВЛЕН ГРАФИК С ЗАДЕРЖКОЙ 300ms) ---
+        // --- openNFT (УЛЬТРА-НАДЕЖНЫЙ АСИНХРОННЫЙ FIX) ---
         function openNFT(id) {
             const item = collections.find(c => c.id === id);
             currentOpenId = id;
@@ -294,15 +294,18 @@
             updateModalFavBtn(id);
             openModal('nft-modal');
 
-            // !!! КРИТИЧЕСКИЙ FIX: Задержка 300 мс !!!
-            // Даем Webview достаточно времени, чтобы открыть модальное окно и определить размеры Canvas.
+            // !!! ДВУХУРОВНЕВАЯ АСИНХРОННАЯ ЗАДЕРЖКА !!!
+            // Сначала 50мс, затем ждем готовности браузера к отрисовке (requestAnimationFrame)
             setTimeout(() => {
                 if (document.getElementById('nft-modal').style.display !== 'flex') return;
-
-                const history = generateHistory(item.basePrice, 5);
-                renderHistory(history);
-                drawChart(history.map(h => h.rawPrice));
-            }, 300); 
+                
+                window.requestAnimationFrame(() => {
+                    const history = generateHistory(item.basePrice, 5);
+                    renderHistory(history);
+                    drawChart(history.map(h => h.rawPrice));
+                });
+                
+            }, 50); 
         }
 
         // --- HISTORY GENERATION ---
@@ -354,7 +357,7 @@
             });
         }
 
-        // --- ADVANCED CHART DRAWING (ВОССТАНОВЛЕНО) ---
+        // --- ADVANCED CHART DRAWING ---
         function drawChart(prices) {
             const canvas = document.getElementById('priceChart');
             if (canvas.clientWidth === 0 || canvas.clientHeight === 0) return; 
@@ -461,10 +464,20 @@
             openModal('payment-modal');
         }
 
-        // --- INIT ---
-        renderMarket(collections, 'market-list');
-        renderFavorites();
+        // --- INIT (NEW ASYNCHRONOUS INITIALIZATION FIX) ---
+        function initializeApp() {
+            // 1. Устанавливаем отображение баланса сразу
+            document.getElementById('user-balance').innerText = getPrice(0); 
+            document.getElementById('frozen-balance').innerText = getPrice(0);
 
+            // 2. Откладываем тяжелую отрисовку списка NFT на 50мс, чтобы Webview не завис
+            setTimeout(() => {
+                renderMarket(collections, 'market-list');
+                renderFavorites();
+            }, 50); 
+        }
+
+        initializeApp();
     </script>
 </body>
 </html>
