@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 2.0</title>
+    <title>Gifts Market 3.0 (Stable)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -39,8 +39,6 @@
         .close-btn { position: absolute; top: 16px; right: 16px; font-size: 24px; color: #888; cursor: pointer; }
         #priceChart { width: 100%; height: 150px; background: rgba(255,255,255,0.03); border-radius: 8px; margin: 15px 0; }
         .info-box { background: rgba(255, 165, 0, 0.15); color: #ffb340; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 10px; line-height: 1.4; }
-
-        /* Price History Table */
         .history-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
         .history-table th, .history-table td { padding: 8px 0; border-bottom: 1px solid #2c2c2e; text-align: left; }
         .history-table th { color: var(--secondary-text); }
@@ -185,7 +183,7 @@
         // --- CONFIG & DATA ---
         
         // ОБНОВЛЕННЫЕ КОЛЛЕКЦИИ С FRAGMENT.COM/GIFTS
-        // ВСТАВЬ СВОЮ ССЫЛКУ: Замени URL в img: "..." на реальные картинки
+        // Примечание: ВСТАВЬТЕ СВОИ РЕАЛЬНЫЕ ССЫЛКИ на картинки
         const collections = [
             { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: "https://cdn-icons-png.flaticon.com/512/3256/3256958.png", startPrice: 14900 },
             { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: "https://cdn-icons-png.flaticon.com/512/3067/3067823.png", startPrice: 9500 },
@@ -223,11 +221,6 @@
             return (rubPrice * rate.val).toFixed(2) + ' ' + rate.sign;
         }
 
-        // Helper for non-round numbers
-        function getRawPrice(rubPrice) {
-            return rubPrice * rates[currentCurrency].val;
-        }
-        
         function renderMarket(items, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -255,7 +248,7 @@
             });
         }
 
-        // --- FAVORITES LOGIC (unchanged) ---
+        // --- FAVORITES LOGIC ---
         function toggleFav(id, event) {
             if(event) event.stopPropagation();
             favorites = favorites.includes(id) ? favorites.filter(favId => favId !== id) : [...favorites, id];
@@ -274,14 +267,14 @@
             renderMarket(favItems, 'fav-list');
         }
 
-        // --- MARKET LOGIC (unchanged) ---
+        // --- SEARCH & FILTER ---
         function filterNFTs() {
             const q = document.getElementById('search').value.toLowerCase();
             const filtered = collections.filter(c => c.name.toLowerCase().includes(q));
             renderMarket(filtered, 'market-list');
         }
 
-        // --- SETTINGS: CURRENCY (unchanged) ---
+        // --- SETTINGS: CURRENCY ---
         function changeCurrency() {
             currentCurrency = document.getElementById('currency-select').value;
             document.getElementById('user-balance').innerText = getPrice(0); 
@@ -289,33 +282,29 @@
             filterNFTs(); renderFavorites();
         }
 
+        // --- МОДИФИЦИРОВАННАЯ ФУНКЦИЯ openNFT (УСТРАНЕНИЕ ЗАВИСАНИЙ) ---
         function openNFT(id) {
-    const item = collections.find(c => c.id === id);
-    currentOpenId = id;
+            const item = collections.find(c => c.id === id);
+            currentOpenId = id;
 
-    document.getElementById('m-title').innerText = item.name;
-    document.getElementById('m-price').innerText = getPrice(item.basePrice);
-    document.getElementById('m-img').src = item.img;
-    
-    updateModalFavBtn(id);
-    // Сначала открываем модальное окно, чтобы Webview начал его рендерить
-    openModal('nft-modal');
+            document.getElementById('m-title').innerText = item.name;
+            document.getElementById('m-price').innerText = getPrice(item.basePrice);
+            document.getElementById('m-img').src = item.img;
+            
+            updateModalFavBtn(id);
+            openModal('nft-modal');
 
-    // !!! КРИТИЧЕСКИЙ FIX: Задержка 300 мс !!!
-    // Даем Webview Телеграма достаточно времени (в 6 раз больше), чтобы
-    // полностью отобразить Canvas и определить его размеры, прежде чем запускать сложную отрисовку.
-    setTimeout(() => {
-        // Проверка, что окно все еще открыто, на случай быстрого закрытия
-        if (document.getElementById('nft-modal').style.display !== 'flex') return;
+            // !!! КРИТИЧЕСКИЙ FIX: Задержка 300 мс !!!
+            // Даем Webview Телеграма достаточно времени, чтобы открыть модальное окно
+            // и определить размеры Canvas, прежде чем запускать сложную отрисовку.
+            setTimeout(() => {
+                if (document.getElementById('nft-modal').style.display !== 'flex') return;
 
-        // 1. Генерируем историю
-        const history = generateHistory(item.basePrice, 5);
-        renderHistory(history);
-        
-        // 2. Отрисовываем график
-        drawChart(history.map(h => h.rawPrice));
-    }, 300); 
-}
+                const history = generateHistory(item.basePrice, 5);
+                renderHistory(history);
+                drawChart(history.map(h => h.rawPrice));
+            }, 300); 
+        }
 
         // --- HISTORY GENERATION ---
         function generateHistory(currentBasePrice, days) {
@@ -327,13 +316,10 @@
                 const date = new Date(today);
                 date.setDate(today.getDate() - i);
                 
-                // Calculate random change (-5% to +5%)
                 const percentageChange = parseFloat((Math.random() * 10 - 5).toFixed(2));
                 
-                // Calculate previous price based on current price and change
                 let prevPrice;
                 if (i === 0) {
-                    // For today, we use a random shift from the basePrice to show a day's movement
                     prevPrice = price / (1 + percentageChange / 100); 
                 } else {
                     prevPrice = price / (1 - percentageChange / 100);
@@ -348,7 +334,7 @@
                 
                 price = prevPrice;
             }
-            return history.reverse(); // Show oldest first
+            return history.reverse();
         }
 
         function renderHistory(history) {
@@ -372,7 +358,8 @@
         // --- ADVANCED CHART DRAWING ---
         function drawChart(prices) {
             const canvas = document.getElementById('priceChart');
-            if (canvas.clientWidth === 0) return; 
+            // Усиленная проверка размеров
+            if (canvas.clientWidth === 0 || canvas.clientHeight === 0) return; 
 
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
@@ -383,8 +370,8 @@
             ctx.clearRect(0, 0, w, h);
             
             // 1. Normalize prices to fit canvas height
-            const minPrice = Math.min(...prices) * 0.95; // 5% buffer
-            const maxPrice = Math.max(...prices) * 1.05; // 5% buffer
+            const minPrice = Math.min(...prices) * 0.95; 
+            const maxPrice = Math.max(...prices) * 1.05; 
             const priceRange = maxPrice - minPrice;
             const scaleY = (priceRange > 0) ? h / priceRange : 0;
             const numPoints = prices.length;
@@ -395,7 +382,6 @@
                 y: h - (p - minPrice) * scaleY
             }));
             
-            // Determine color based on overall change (current price vs start price)
             const lineColor = prices[numPoints - 1] >= prices[0] ? '#34c759' : '#ff3b30';
 
             // 2. Draw Gradient Area
@@ -407,7 +393,7 @@
             ctx.closePath();
             
             const grad = ctx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, lineColor + '33'); // 33 is opacity for rgba
+            grad.addColorStop(0, lineColor + '33'); 
             grad.addColorStop(1, lineColor + '00');
             ctx.fillStyle = grad;
             ctx.fill();
@@ -425,16 +411,27 @@
             const lastPoint = points[numPoints - 1];
             ctx.fillStyle = lineColor;
             ctx.beginPath();
-            ctx.arc(lastPoint.x, lastPoint.y, 4, 0, $2\pi$); // Marker at the end
+            ctx.arc(lastPoint.x, lastPoint.y, 4, 0, $2\pi$); 
             ctx.fill();
         }
 
-        // --- UI UTILS (unchanged) ---
+        // --- UI UTILS ---
+        // УСИЛЕННАЯ ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (FIXED)
         function switchTab(tabId, el) {
+            // Скрываем все секции
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            
+            // Показываем нужную секцию
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Обновляем класс активности в нижнем меню
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+            if (el) {
+                el.classList.add('active');
+            }
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -479,5 +476,3 @@
     </script>
 </body>
 </html>
-
-
