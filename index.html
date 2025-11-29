@@ -289,26 +289,31 @@
             filterNFTs(); renderFavorites();
         }
 
-        // --- MODAL: NFT DETAILS (Updated) ---
         function openNFT(id) {
-            const item = collections.find(c => c.id === id);
-            currentOpenId = id;
+    const item = collections.find(c => c.id === id);
+    currentOpenId = id;
 
-            document.getElementById('m-title').innerText = item.name;
-            document.getElementById('m-price').innerText = getPrice(item.basePrice);
-            document.getElementById('m-img').src = item.img;
-            
-            updateModalFavBtn(id);
-            openModal('nft-modal');
+    document.getElementById('m-title').innerText = item.name;
+    document.getElementById('m-price').innerText = getPrice(item.basePrice);
+    document.getElementById('m-img').src = item.img;
+    
+    updateModalFavBtn(id);
+    openModal('nft-modal');
 
-            // Generate history and draw chart for the current item
-            const history = generateHistory(item.basePrice, 5);
-            renderHistory(history);
+    // !!! ГЛАВНЫЙ FIX: Запускаем отрисовку с небольшой задержкой (50 мс) !!!
+    // Это дает Webview время, чтобы обновить DOM и определить размеры Canvas.
+    setTimeout(() => {
+        // Убедимся, что модальное окно все еще открыто
+        if (document.getElementById('nft-modal').style.display !== 'flex') return;
 
-            requestAnimationFrame(() => {
-                drawChart(history.map(h => h.rawPrice));
-            });
-        }
+        // 1. Генерируем историю
+        const history = generateHistory(item.basePrice, 5);
+        renderHistory(history);
+        
+        // 2. Отрисовываем график
+        drawChart(history.map(h => h.rawPrice));
+    }, 50); // Задержка 50 миллисекунд
+}
 
         // --- HISTORY GENERATION ---
         function generateHistory(currentBasePrice, days) {
@@ -472,3 +477,4 @@
     </script>
 </body>
 </html>
+
