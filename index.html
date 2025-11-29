@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 19.0 (Multiple Lottie Skulls)</title>
+    <title>Gifts Market 20.0 (Multiple Lottie Collections)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -204,19 +204,27 @@
     <script>
         // --- CONFIG & DATA ---
         
-        // НОВЫЕ, БОЛЕЕ СТАБИЛЬНЫЕ ССЫЛКИ НА ИЗОБРАЖЕНИЯ
-        const IMAGE_PEPE_1_URL = "https://i.imgur.com/W2d0fJ3.png"; 
-        const IMAGE_PEPE_2_URL = "https://i.imgur.com/W2d0fJ3.png"; 
-        
-        // --- НОВЫЕ ССЫЛКИ НА Electric Skulls (Fragment/TonViewer) ---
+        // --- SKULL LOTTIE VARIANTS (Fragment/TonViewer) ---
         const SKULL_1_STATIC = "https://nft.fragment.com/gift/electricskull-5813.webp"; 
         const SKULL_1_LOTTIE = "https://nft.fragment.com/gift/electricskull-5813.lottie.json";
-
         const SKULL_2_STATIC = "https://nft.fragment.com/gift/electricskull-6469.webp"; 
         const SKULL_2_LOTTIE = "https://nft.fragment.com/gift/electricskull-6469.lottie.json"; 
-
         const SKULL_3_STATIC = "https://nft.fragment.com/gift/electricskull-4008.webp"; 
         const SKULL_3_LOTTIE = "https://nft.fragment.com/gift/electricskull-4008.lottie.json";
+        
+        // --- PEPE LOTTIE VARIANTS (Fragment/TonViewer) ---
+        const PEPE_1_STATIC = "https://nft.fragment.com/gift/plushpepe-1111.webp"; 
+        const PEPE_1_LOTTIE = "https://nft.fragment.com/gift/plushpepe-1111.lottie.json";
+        const PEPE_2_STATIC = "https://nft.fragment.com/gift/plushpepe-1002.webp"; 
+        const PEPE_2_LOTTIE = "https://nft.fragment.com/gift/plushpepe-1002.lottie.json"; 
+        const PEPE_3_STATIC = "https://nft.fragment.com/gift/plushpepe-2051.webp"; 
+        const PEPE_3_LOTTIE = "https://nft.fragment.com/gift/plushpepe-2051.lottie.json";
+        
+        // --- FROG LOTTIE VARIANTS (Fragment/TonViewer) ---
+        const FROG_1_STATIC = "https://nft.fragment.com/gift/kissedfrog-5555.webp"; 
+        const FROG_1_LOTTIE = "https://nft.fragment.com/gift/kissedfrog-5555.lottie.json";
+        const FROG_2_STATIC = "https://nft.fragment.com/gift/kissedfrog-3001.webp"; 
+        const FROG_2_LOTTIE = "https://nft.fragment.com/gift/kissedfrog-3001.lottie.json"; 
         
         // Заглушки для других категорий
         const imageThemes = [
@@ -232,8 +240,6 @@
         const models = ["Spectrum", "Pixel", "Metallic", "Diamond", "Vivid"];
         const symbols = ["Star Crown", "Heart", "TON Cube", "Lightning"];
         const backdrops = ["Grape", "Sapphire", "Crimson", "Emerald", "Gold"];
-        let pepeVariant = 0; 
-        let skullVariant = 0; 
         
         // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ ДЛЯ УПРАВЛЕНИЯ АНИМАЦИЕЙ
         let currentLottieAnimation = null;
@@ -246,10 +252,12 @@
             };
         }
 
-        // --- NFT DATA ---
+        // --- NFT DATA (ОБНОВЛЕНО) ---
         const collections = [
-            { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: IMAGE_PEPE_1_URL, startPrice: 14900, model: "Spectrum 3%", symbol: "Star Crown 0.5%", backdrop: "Grape 2%" },
-            { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: IMAGE_PEPE_2_URL, startPrice: 9500, model: "Pixel 4%", symbol: "Heart 1.2%", backdrop: "Sapphire 5%" },
+            // 1. Plush Pepe #1111 (Lottie-Enabled)
+            { id: 1, name: "Plush Pepe #1111", basePrice: 15345.21, img: PEPE_1_STATIC, lottie: PEPE_1_LOTTIE, startPrice: 14900, model: "Spectrum 3%", symbol: "Star Crown 0.5%", backdrop: "Grape 2%" },
+            // 2. Kissed Frog #5555 (Lottie-Enabled)
+            { id: 2, name: "Kissed Frog #5555", basePrice: 9230.77, img: FROG_1_STATIC, lottie: FROG_1_LOTTIE, startPrice: 9500, model: "Pixel 4%", symbol: "Heart 1.2%", backdrop: "Sapphire 5%" },
             { id: 3, name: "Artisan Bricks", basePrice: 4500.00, img: imageThemes[5], startPrice: 4400, ...getRandomRarity() },
             { id: 4, name: "Astral Shards", basePrice: 9800.50, img: imageThemes[2], startPrice: 10000, ...getRandomRarity() },
             { id: 5, name: "B-Day Candles", basePrice: 1500.10, img: imageThemes[1], startPrice: 1450, ...getRandomRarity() },
@@ -268,7 +276,7 @@
             { id: 18, name: "Diamond Rings", basePrice: 11500.45, img: imageThemes[5], startPrice: 11800, ...getRandomRarity() },
             { id: 19, name: "Durov’s Caps", basePrice: 14500.70, img: imageThemes[0], startPrice: 14000, ...getRandomRarity() },
             { id: 20, name: "Easter Eggs", basePrice: 2100.33, img: imageThemes[6], startPrice: 2000, ...getRandomRarity() },
-            // 21. Electric Skulls #5813 (Original)
+            // 21. Electric Skull #5813 (Lottie-Enabled)
             { 
                 id: 21, 
                 name: "Electric Skull #5813", 
@@ -362,7 +370,7 @@
             { id: 103, name: "Winter Wreaths", basePrice: 5100.80, img: imageThemes[3], startPrice: 5200, ...getRandomRarity() },
             { id: 104, name: "Witch Hats", basePrice: 1800.90, img: imageThemes[2], startPrice: 1900, ...getRandomRarity() },
             { id: 105, name: "Xmas Stockings", basePrice: 3500.00, img: imageThemes[4], startPrice: 3400, ...getRandomRarity() },
-            // 106. Electric Skulls #6469 (New)
+            // 106. Electric Skull #6469 (Lottie-Enabled)
             { 
                 id: 106, 
                 name: "Electric Skull #6469", 
@@ -372,7 +380,7 @@
                 startPrice: 3900, 
                 model: "Metallic 0.5%", symbol: "Star Crown 0.2%", backdrop: "Gold 0.1%" 
             },
-            // 107. Electric Skulls #4008 (New)
+            // 107. Electric Skull #4008 (Lottie-Enabled)
             { 
                 id: 107, 
                 name: "Electric Skull #4008", 
@@ -381,6 +389,42 @@
                 lottie: SKULL_3_LOTTIE, 
                 startPrice: 3100, 
                 model: "Pixel 2%", symbol: "TON Cube 0.4%", backdrop: "Sapphire 3%" 
+            },
+            // 108. Plush Pepe #1002 (Lottie-Enabled)
+            { 
+                id: 108, 
+                name: "Plush Pepe #1002", 
+                basePrice: 16100.00, 
+                img: PEPE_2_STATIC, 
+                lottie: PEPE_2_LOTTIE, 
+                startPrice: 16000, 
+                model: "Diamond 0.2%", 
+                symbol: "TON Cube 0.1%", 
+                backdrop: "Emerald 0.1%" 
+            },
+            // 109. Plush Pepe #2051 (Lottie-Enabled)
+            { 
+                id: 109, 
+                name: "Plush Pepe #2051", 
+                basePrice: 14500.00, 
+                img: PEPE_3_STATIC, 
+                lottie: PEPE_3_LOTTIE, 
+                startPrice: 14700, 
+                model: "Vivid 1%", 
+                symbol: "Lightning 0.5%", 
+                backdrop: "Crimson 1%" 
+            },
+            // 110. Kissed Frog #3001 (Lottie-Enabled)
+            { 
+                id: 110, 
+                name: "Kissed Frog #3001", 
+                basePrice: 10200.00, 
+                img: FROG_2_STATIC, 
+                lottie: FROG_2_LOTTIE, 
+                startPrice: 10000, 
+                model: "Metallic 1.5%", 
+                symbol: "Heart 1.0%", 
+                backdrop: "Sapphire 4%" 
             },
         ];
 
