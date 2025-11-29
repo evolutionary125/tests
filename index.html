@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 21.4 (Lottie Stable)</title>
+    <title>Gifts Market 21.6 (Final Stable)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -71,6 +71,7 @@
         .nft-card.no-image .nft-img {
             display: none; /* Скрываем сломанный тег <img> */
         }
+        /* Стили для текста в заглушке */
         .nft-card.no-image div:nth-child(2) { 
              margin-bottom: 8px; /* Восстанавливаем отступ для названия */
         }
@@ -225,7 +226,7 @@
         
         const LOTTIE_BASE = "https://nft.fragment.com/gift/";
         
-        // --- SKULL LOTTIE VARIANTS (Electric Skulls) ---
+        // --- LOTTIE VARIANTS ---
         const SKULL_1_STATIC = LOTTIE_BASE + "electricskull-5813.webp"; 
         const SKULL_1_LOTTIE = LOTTIE_BASE + "electricskull-5813.lottie.json";
         const SKULL_2_STATIC = LOTTIE_BASE + "electricskull-6469.webp"; 
@@ -233,7 +234,6 @@
         const SKULL_3_STATIC = LOTTIE_BASE + "electricskull-4008.webp"; 
         const SKULL_3_LOTTIE = LOTTIE_BASE + "electricskull-4008.lottie.json";
         
-        // --- PEPE LOTTIE VARIANTS (Plush Pepes) ---
         const PEPE_1_STATIC = LOTTIE_BASE + "plushpepe-1111.webp"; 
         const PEPE_1_LOTTIE = LOTTIE_BASE + "plushpepe-1111.lottie.json";
         const PEPE_2_STATIC = LOTTIE_BASE + "plushpepe-1002.webp"; 
@@ -241,67 +241,56 @@
         const PEPE_3_STATIC = LOTTIE_BASE + "plushpepe-2051.webp"; 
         const PEPE_3_LOTTIE = LOTTIE_BASE + "plushpepe-2051.lottie.json";
         
-        // --- FROG LOTTIE VARIANTS (Kissed Frogs) ---
         const FROG_1_STATIC = LOTTIE_BASE + "kissedfrog-5555.webp"; 
         const FROG_1_LOTTIE = LOTTIE_BASE + "kissedfrog-5555.lottie.json";
         const FROG_2_STATIC = LOTTIE_BASE + "kissedfrog-3001.webp"; 
         const FROG_2_LOTTIE = LOTTIE_BASE + "kissedfrog-3001.lottie.json"; 
         
-        // --- CAPS LOTTIE VARIANTS (Durov's Caps) ---
         const CAP_1_STATIC = LOTTIE_BASE + "durovscap-8888.webp"; 
         const CAP_1_LOTTIE = LOTTIE_BASE + "durovscap-8888.lottie.json";
         const CAP_2_STATIC = LOTTIE_BASE + "durovscap-1001.webp"; 
         const CAP_2_LOTTIE = LOTTIE_BASE + "durovscap-1001.lottie.json";
         
-        // --- CANDLES LOTTIE VARIANTS (B-Day Candles) ---
         const CANDLE_1_STATIC = LOTTIE_BASE + "bdaycandle-2024.webp"; 
         const CANDLE_1_LOTTIE = LOTTIE_BASE + "bdaycandle-2024.lottie.json";
         const CANDLE_2_STATIC = LOTTIE_BASE + "bdaycandle-0012.webp"; 
         const CANDLE_2_LOTTIE = LOTTIE_BASE + "bdaycandle-0012.lottie.json";
 
-        // --- CANES LOTTIE VARIANTS (Candy Canes) ---
         const CANE_1_STATIC = LOTTIE_BASE + "candycanes-9001.webp"; 
         const CANE_1_LOTTIE = LOTTIE_BASE + "candycanes-9001.lottie.json";
         const CANE_2_STATIC = LOTTIE_BASE + "candycanes-1212.webp"; 
         const CANE_2_LOTTIE = LOTTIE_BASE + "candycanes-1212.lottie.json";
         
-        // --- DRINKS LOTTIE VARIANTS (Holiday Drinks) ---
         const DRINK_1_STATIC = LOTTIE_BASE + "holidaydrink-4567.webp"; 
         const DRINK_1_LOTTIE = LOTTIE_BASE + "holidaydrink-4567.lottie.json";
         const DRINK_2_STATIC = LOTTIE_BASE + "holidaydrink-9999.webp"; 
         const DRINK_2_LOTTIE = LOTTIE_BASE + "holidaydrink-9999.lottie.json";
 
-        // --- HATS LOTTIE VARIANTS (Santa Hats) ---
         const HAT_1_STATIC = LOTTIE_BASE + "santahat-0001.webp"; 
         const HAT_1_LOTTIE = LOTTIE_BASE + "santahat-0001.lottie.json";
         const HAT_2_STATIC = LOTTIE_BASE + "santahat-0101.webp"; 
         const HAT_2_LOTTIE = LOTTIE_BASE + "santahat-0101.lottie.json";
 
-        // --- STOCKINGS LOTTIE VARIANTS (Xmas Stockings) ---
         const STOCKING_1_STATIC = LOTTIE_BASE + "xmasstocking-3000.webp"; 
         const STOCKING_1_LOTTIE = LOTTIE_BASE + "xmasstocking-3000.lottie.json";
         const STOCKING_2_STATIC = LOTTIE_BASE + "xmasstocking-0005.webp"; 
         const STOCKING_2_LOTTIE = LOTTIE_BASE + "xmasstocking-0005.lottie.json";
 
-        // --- BEARS LOTTIE VARIANTS (Toy Bears) ---
         const BEAR_1_STATIC = LOTTIE_BASE + "toybear-1500.webp"; 
         const BEAR_1_LOTTIE = LOTTIE_BASE + "toybear-1500.lottie.json";
         const BEAR_2_STATIC = LOTTIE_BASE + "toybear-4000.webp"; 
         const BEAR_2_LOTTIE = LOTTIE_BASE + "toybear-4000.lottie.json";
 
-        // --- LOCKETS LOTTIE VARIANTS (Heart Lockets) ---
         const LOCKET_1_STATIC = LOTTIE_BASE + "heartlocket-2222.webp"; 
         const LOCKET_1_LOTTIE = LOTTIE_BASE + "heartlocket-2222.lottie.json";
         const LOCKET_2_STATIC = LOTTIE_BASE + "heartlocket-3333.webp"; 
         const LOCKET_2_LOTTIE = LOTTIE_BASE + "heartlocket-3333.lottie.json";
 
-        // --- NEKO LOTTIE VARIANTS (Neko Helmets) ---
         const NEKO_1_STATIC = LOTTIE_BASE + "nekohelmet-1337.webp"; 
         const NEKO_1_LOTTIE = LOTTIE_BASE + "nekohelmet-1337.lottie.json";
         const NEKO_2_STATIC = LOTTIE_BASE + "nekohelmet-5555.webp"; 
         const NEKO_2_LOTTIE = LOTTIE_BASE + "nekohelmet-5555.lottie.json";
 
-        // --- POTIONS LOTTIE VARIANTS (Magic Potions) ---
         const POTION_1_STATIC = LOTTIE_BASE + "magicpotion-007.webp"; 
         const POTION_1_LOTTIE = LOTTIE_BASE + "magicpotion-007.lottie.json";
         const POTION_2_STATIC = LOTTIE_BASE + "magicpotion-404.webp"; 
@@ -311,9 +300,7 @@
         const symbols = ["Star Crown", "Heart", "TON Cube", "Lightning", "Aurora", "Gears"];
         const backdrops = ["Grape", "Sapphire", "Crimson", "Emerald", "Gold", "Cosmic", "Aqua"];
         
-        // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ ДЛЯ УПРАВЛЕНИЯ АНИМАЦИЕЙ
-        let currentLottieAnimation = null;
-
+        // **!!! ФУНКЦИЯ getRandomRarity ПЕРЕД ОПРЕДЕЛЕНИЕМ COLLECTIONS !!!**
         function getRandomRarity() {
             return {
                 model: `${models[Math.floor(Math.random() * models.length)]} ${Math.floor(Math.random() * 50) / 10 + 0.1}%`,
@@ -322,7 +309,10 @@
             };
         }
         
-        // --- NFT DATA (ВСЕ КОЛЛЕКЦИИ И LOTTIE-ВАРИАНТЫ ПРИСУТСТВУЮТ) ---
+        // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ ДЛЯ УПРАВЛЕНИЯ АНИМАЦИЕЙ
+        let currentLottieAnimation = null;
+
+        // --- NFT DATA ---
         const collections = [
             // Lottie-Enabled Collections (Plush Pepes, Kissed Frogs, Electric Skulls)
             { id: 1, name: "Plush Pepe #1111", basePrice: 15345.21, img: PEPE_1_STATIC, lottie: PEPE_1_LOTTIE, startPrice: 14900, model: "Spectrum 3%", symbol: "Star Crown 0.5%", backdrop: "Grape 2%" },
@@ -527,9 +517,8 @@
                 card.className = 'nft-card';
                 card.onclick = () => openNFT(item.id);
                 
-                // Используем статичную картинку для сетки.
+                // Используем статичную картинку для сетки. 
                 // При ошибке загрузки (onerror) добавляем класс no-image к родительской карточке.
-                // Класс no-image в CSS стилизует карточку как надежную заглушку с названием.
                 card.innerHTML = `
                     <div class="fav-icon" onclick="toggleFav(${item.id}, event)">${heart}</div>
                     <img src="${item.img}" class="nft-img" alt="${item.name}" 
@@ -583,6 +572,7 @@
             const mediaWrapper = document.getElementById('nft-media-wrapper');
             mediaWrapper.innerHTML = ''; // Очищаем контейнер от предыдущего медиа
             mediaWrapper.classList.remove('no-image'); // Убираем класс заглушки на модальном окне
+            mediaWrapper.style.backgroundColor = '#2c2c2e'; // Возвращаем фоновый цвет
 
             // 1. ПРОВЕРКА НА НАЛИЧИЕ LOTTIE-АНИМАЦИИ
             if (item.lottie && typeof lottie !== 'undefined') {
@@ -636,11 +626,8 @@
             const chartColor = item.basePrice > item.startPrice ? '34c759' : 'ff3b30';
             document.getElementById('priceChartPlaceholder').src = `https://placehold.co/400x150/111111/${chartColor}?text=Price+Trend`;
 
-            setTimeout(() => {
-                if (document.getElementById('nft-modal').style.display !== 'flex') return;
-                const history = generateHistory(item.basePrice, 5);
-                renderHistory(history);
-            }, 50); 
+            const history = generateHistory(item.basePrice, 5);
+            renderHistory(history);
         }
 
         // --- HISTORY GENERATION ---
@@ -649,7 +636,7 @@
             let price = currentBasePrice;
             const today = new Date();
 
-            for (let i = 0 < days; i++) {
+            for (let i = 0; i < days; i++) {
                 const date = new Date(today);
                 date.setDate(today.getDate() - i);
                 const percentageChange = parseFloat((Math.random() * 10 - 5).toFixed(2));
@@ -747,16 +734,31 @@
             openModal('payment-modal');
         }
 
-        // --- INIT (ASYNCHRONOUS INITIALIZATION) ---
+        // --- INIT (ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ) ---
         function initializeApp() {
-            document.getElementById('user-balance').innerText = getPrice(0); 
-            document.getElementById('frozen-balance').innerText = getPrice(0);
+            try {
+                // Инициализация баланса и валюты
+                document.getElementById('user-balance').innerText = getPrice(0); 
+                document.getElementById('frozen-balance').innerText = getPrice(0);
 
-            // Откладываем тяжелую отрисовку списка NFT на 50мс
-            setTimeout(() => {
+                // **Отрисовка списка NFT происходит немедленно**
                 renderMarket(collections, 'market-list');
-                renderFavorites();
-            }, 50); 
+                renderFavorites(); 
+
+                // Убеждаемся, что Market активен
+                const marketTab = document.querySelector('.nav-item.active');
+                if (marketTab) {
+                    switchTab('market', marketTab);
+                } else {
+                     // Устанавливаем Market активным, если ничто не было активно
+                    switchTab('market', document.querySelector('.nav-item'));
+                }
+
+                console.log("App Initialized successfully. NFT count:", collections.length);
+            } catch (error) {
+                console.error("FATAL ERROR during initialization:", error);
+                document.getElementById('market-list').innerHTML = `<div style="grid-column: span 2; color: #ff3b30; padding: 30px; text-align: center;">Критическая ошибка загрузки. Проверьте консоль.</div>`;
+            }
         }
 
         initializeApp();
