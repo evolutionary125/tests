@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gifts Market 21.8 (Fix Scaling & Lottie Logic)</title>
+    <title>Gifts Market 21.9 (Final Fix Scaling & Lottie)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -15,7 +15,7 @@
             --secondary-text: #8e8e93; --border-radius: 12px;
         }
 
-        body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 90px; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; padding-bottom: 90px; }
         .container { padding: 16px; }
         .btn { background-color: var(--accent-color); color: white; border: none; padding: 14px 20px; border-radius: var(--border-radius); font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; text-align: center; }
         .btn-green { background-color: var(--green-color); }
@@ -57,6 +57,7 @@
         
         /* Стиль для Lottie-контейнера в модальном окне */
         #nft-media-wrapper { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* Lottie SVG must fill the wrapper */
         #nft-media-wrapper svg { width: 100%; height: 100%; }
 
         /* === СТИЛИ ДЛЯ NFT БЕЗ КАРТИНКИ (СТАБИЛЬНАЯ ЗАГЛУШКА) === */
@@ -140,7 +141,8 @@
             <div class="close-btn" onclick="closeModal('nft-modal')">&times;</div>
             
             <div id="nft-media-wrapper" class="nft-media-box" style="margin-top: 10px; height: 300px;">
-                </div>
+                 <div style="color: #888; font-size: 16px;">Загрузка медиа...</div>
+            </div>
             
             <h2 id="m-title" style="margin: 10px 0 5px;">Title</h2>
             <h3 id="m-price" style="color: var(--green-color); margin: 0;">Price</h3>
@@ -309,6 +311,7 @@
             // Lottie-Enabled Collections (Plush Pepes, Kissed Frogs, Electric Skulls)
             { id: 1, name: "Plush Pepe #1111", basePrice: 15345.21, img: PEPE_1_STATIC, lottie: PEPE_1_LOTTIE, startPrice: 14900, model: "Spectrum 3%", symbol: "Star Crown 0.5%", backdrop: "Grape 2%" },
             { id: 2, name: "Kissed Frog #5555", basePrice: 9230.77, img: FROG_1_STATIC, lottie: FROG_1_LOTTIE, startPrice: 9500, model: "Pixel 4%", symbol: "Heart 1.2%", backdrop: "Sapphire 5%" },
+            // Принудительно отключаем Lottie для этих, чтобы проверить Fallback:
             { id: 3, name: "Artisan Bricks", basePrice: 4500.00, img: LOTTIE_BASE + "artisanbricks-1000.webp", startPrice: 4400, ...getRandomRarity() },
             { id: 4, name: "Astral Shards", basePrice: 9800.50, img: LOTTIE_BASE + "astralshard-100.webp", startPrice: 10000, ...getRandomRarity() },
             // B-Day Candles (Lottie-Enabled)
@@ -558,18 +561,35 @@
             filterNFTs(); renderFavorites();
         }
 
-        // --- openNFT (ОБНОВЛЕНА ДЛЯ КОРРЕКТНОЙ ОБРАБОТКИ LOTTIE/STATIC) ---
+        // --- openNFT (ОБНОВЛЕНА ДЛЯ УСТОЙЧИВОСТИ) ---
         function openNFT(id) {
             const item = collections.find(c => c.id === id);
             currentOpenId = id;
             
             const mediaWrapper = document.getElementById('nft-media-wrapper');
-            mediaWrapper.innerHTML = ''; // Очищаем контейнер от предыдущего медиа
-            mediaWrapper.style.backgroundColor = '#2c2c2e'; // Возвращаем фоновый цвет
+            mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px;">Загрузка медиа...</div>`; // Заглушка
+            mediaWrapper.style.backgroundColor = '#2c2c2e'; 
+
+            // Функция, которая отображает статическую картинку
+            function showStaticImage() {
+                mediaWrapper.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = item.img; 
+                img.style.width = '100%'; 
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '10px'; 
+                
+                img.onerror = function() { 
+                    mediaWrapper.style.backgroundColor = '#121212';
+                    mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px; padding: 50px;">${item.name}<br>(Ошибка загрузки медиа)</div>`; 
+                };
+                mediaWrapper.appendChild(img);
+                currentLottieAnimation = null; 
+            }
 
             // 1. ПРОВЕРКА НА НАЛИЧИЕ LOTTIE-АНИМАЦИИ
             if (item.lottie && typeof lottie !== 'undefined') {
-                // Если есть Lottie: создаем контейнер и загружаем анимацию
                 const lottieDiv = document.createElement('div');
                 lottieDiv.id = 'lottie-player-div';
                 lottieDiv.style.width = '100%';
@@ -578,29 +598,26 @@
 
                 currentLottieAnimation = lottie.loadAnimation({
                     container: lottieDiv,
-                    renderer: 'svg', // SVG для векторной графики
+                    renderer: 'svg',
                     loop: true,
                     autoplay: true,
                     path: item.lottie
                 });
 
+                // **ОБРАБОТЧИК ОШИБКИ LOTTIE:** Если загрузка Lottie не удалась, показываем статичную картинку.
+                currentLottieAnimation.addEventListener('data_failed', () => {
+                    console.error('Lottie data failed to load for:', item.name);
+                    showStaticImage();
+                });
+                // Очистка заглушки после успешной загрузки (Lottie сам займет место)
+                currentLottieAnimation.addEventListener('DOMLoaded', () => {
+                    mediaWrapper.innerHTML = ''; 
+                    mediaWrapper.appendChild(lottieDiv);
+                });
+
             } else {
-                // 2. Если Lottie НЕТ (или не загружена библиотека): отображаем статичное изображение (item.img)
-                const img = document.createElement('img');
-                img.src = item.img; 
-                img.style.width = '100%'; 
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                img.style.borderRadius = '10px'; 
-                
-                // Обработка ошибки загрузки статичного изображения
-                img.onerror = function() { 
-                    this.style.display = 'none'; // Скрываем сломанную иконку
-                    mediaWrapper.style.backgroundColor = '#121212';
-                    mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px; padding: 50px;">${item.name}<br>(Ошибка загрузки медиа)</div>`; 
-                };
-                mediaWrapper.appendChild(img);
-                currentLottieAnimation = null; 
+                // 2. Если Lottie НЕТ, сразу показываем статичное изображение
+                showStaticImage();
             }
 
             document.getElementById('m-title').innerText = item.name;
@@ -726,7 +743,7 @@
             openModal('payment-modal');
         }
 
-        // --- INIT (ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ) ---
+        // --- INIT ---
         function initializeApp() {
             try {
                 // Инициализация баланса и валюты
