@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 7.0 (Canvas Removed)</title>
+    <title>Gifts Market 8.0 (Extended Collections)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -37,7 +37,6 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
         .modal-content { background: #151517; width: 90%; max-width: 400px; padding: 24px; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 16px; right: 16px; font-size: 24px; color: #888; cursor: pointer; }
-        /* Используем placeholder image вместо Canvas */
         #priceChartPlaceholder { width: 100%; height: 150px; background: rgba(255,255,255,0.03); border-radius: 8px; margin: 15px 0; object-fit: cover; }
         .info-box { background: rgba(255, 165, 0, 0.15); color: #ffb340; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 10px; line-height: 1.4; }
         .history-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
@@ -184,16 +183,37 @@
     <script>
         // --- CONFIG & DATA ---
         
+        // РАСШИРЕННЫЕ КОЛЛЕКЦИИ (Стиль Fragment/GetGems)
         const collections = [
-            { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: "https://via.placeholder.com/300/34c759/FFFFFF?text=Plush+Pepe", startPrice: 14900 },
-            { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: "https://via.placeholder.com/300/FF3B30/FFFFFF?text=Kissed+Frog", startPrice: 9500 },
-            { id: 3, name: "Precious Peaches", basePrice: 5500.55, img: "https://via.placeholder.com/300/FF9500/FFFFFF?text=Peach+NFT", startPrice: 5000 },
-            { id: 4, name: "Neko Helmets", basePrice: 20120.90, img: "https://via.placeholder.com/300/5856D6/FFFFFF?text=Neko+Helmet", startPrice: 19000 },
-            { id: 5, name: "Astral Shards", basePrice: 1800.02, img: "https://via.placeholder.com/300/AF52DE/FFFFFF?text=Astral+Shard", startPrice: 1750 },
-            { id: 6, name: "Vintage Cigars", basePrice: 3500.89, img: "https://via.placeholder.com/300/A2845E/FFFFFF?text=Vintage+Cigar", startPrice: 3800 },
-            { id: 7, name: "Scared Cats", basePrice: 50000.11, img: "https://via.placeholder.com/300/FC76FF/FFFFFF?text=Scared+Cat", startPrice: 48000 },
-            { id: 8, name: "Jelly Bunny", basePrice: 300.99, img: "https://via.placeholder.com/300/32D74B/FFFFFF?text=Jelly+Bunny", startPrice: 350 },
-            { id: 9, name: "Santa Hat", basePrice: 4200.67, img: "https://via.placeholder.com/300/C62828/FFFFFF?text=Santa+Hat", startPrice: 4000 }
+            // Fragment Numbers & Domains
+            { id: 1, name: "888 (Number)", basePrice: 1500000.00, img: "https://placehold.co/300x300/FAD02E/000000?text=888", startPrice: 1450000 },
+            { id: 2, name: "car.ton (Domain)", basePrice: 250000.00, img: "https://placehold.co/300x300/00C4CC/000000?text=CAR.TON", startPrice: 240000 },
+            { id: 3, name: "cryptogirl (Username)", basePrice: 120000.00, img: "https://placehold.co/300x300/FF69B4/FFFFFF?text=CryptoGirl", startPrice: 115000 },
+            { id: 4, name: "casino.ton (Domain)", basePrice: 400000.00, img: "https://placehold.co/300x300/FF4500/FFFFFF?text=CASINO.TON", startPrice: 380000 },
+            { id: 5, name: "7777 (Number)", basePrice: 55000.00, img: "https://placehold.co/300x300/B2A0D8/000000?text=7777", startPrice: 53000 },
+            
+            // TON Diamonds
+            { id: 6, name: "TON Diamond #005", basePrice: 950000.00, img: "https://placehold.co/300x300/007AFF/FFFFFF?text=Diamond+005", startPrice: 900000 },
+            { id: 7, name: "TON Diamond #555", basePrice: 45000.00, img: "https://placehold.co/300x300/5856D6/FFFFFF?text=Diamond+555", startPrice: 43000 },
+
+            // GetGems & Themed collections
+            { id: 8, name: "Plush Pepes", basePrice: 15345.21, img: "https://placehold.co/300x300/34C759/000000?text=Plush+Pepe", startPrice: 14900 },
+            { id: 9, name: "Kissed Frogs", basePrice: 9230.77, img: "https://placehold.co/300x300/FF3B30/FFFFFF?text=Kissed+Frog", startPrice: 9500 },
+            { id: 10, name: "Precious Peaches", basePrice: 5500.55, img: "https://placehold.co/300x300/FF9500/FFFFFF?text=Peach+NFT", startPrice: 5000 },
+            { id: 11, name: "Neko Helmets", basePrice: 20120.90, img: "https://placehold.co/300x300/5856D6/FFFFFF?text=Neko+Helmet", startPrice: 19000 },
+            { id: 12, name: "Astral Shards", basePrice: 1800.02, img: "https://placehold.co/300x300/AF52DE/FFFFFF?text=Astral+Shard", startPrice: 1750 },
+            { id: 13, name: "Vintage Cigars", basePrice: 3500.89, img: "https://placehold.co/300x300/A2845E/FFFFFF?text=Vintage+Cigar", startPrice: 3800 },
+            { id: 14, name: "Scared Cats", basePrice: 50000.11, img: "https://placehold.co/300x300/FC76FF/FFFFFF?text=Scared+Cat", startPrice: 48000 },
+            { id: 15, name: "Jelly Bunny", basePrice: 300.99, img: "https://placehold.co/300x300/32D74B/FFFFFF?text=Jelly+Bunny", startPrice: 350 },
+            { id: 16, name: "Santa Hat", basePrice: 4200.67, img: "https://placehold.co/300x300/C62828/FFFFFF?text=Santa+Hat", startPrice: 4000 },
+            
+            // New additions
+            { id: 17, name: "Crypto Punks TON", basePrice: 65000.00, img: "https://placehold.co/300x300/6A5ACD/FFFFFF?text=PUNK", startPrice: 60000 },
+            { id: 18, name: "Moon Runners", basePrice: 7800.50, img: "https://placehold.co/300x300/808080/FFFFFF?text=Moon+Runner", startPrice: 8000 },
+            { id: 19, name: "Mystic Maps", basePrice: 2500.10, img: "https://placehold.co/300x300/008080/FFFFFF?text=Mystic+Map", startPrice: 2400 },
+            { id: 20, name: "Metaverse Land #142", basePrice: 18000.00, img: "https://placehold.co/300x300/FFA07A/000000?text=Land+NFT", startPrice: 17500 },
+            { id: 21, name: "Golden Passport", basePrice: 105000.00, img: "https://placehold.co/300x300/FFD700/000000?text=Passport", startPrice: 100000 },
+            { id: 22, name: "topbot.ton (Domain)", basePrice: 14000.00, img: "https://placehold.co/300x300/A020F0/FFFFFF?text=TOPBOT.TON", startPrice: 14500 }
         ];
 
         const rates = {
@@ -294,7 +314,12 @@
             updateModalFavBtn(id);
             openModal('nft-modal');
 
-            // !!! АСИНХРОННО: Только генерация истории и рендеринг таблицы (без Canvas)
+            // Устанавливаем статическую заглушку, имитирующую график
+            // Вы можете изменить ссылку ниже, чтобы изменить вид "графика"
+            const chartColor = item.basePrice > item.startPrice ? '34c759' : 'ff3b30'; // Цвет по росту/падению
+            document.getElementById('priceChartPlaceholder').src = `https://placehold.co/400x150/111111/${chartColor}?text=Price+Trend`;
+
+            // АСИНХРОННО: Только генерация истории и рендеринг таблицы (без Canvas)
             setTimeout(() => {
                 if (document.getElementById('nft-modal').style.display !== 'flex') return;
 
@@ -352,8 +377,6 @@
             });
         }
 
-        // --- drawChart УДАЛЕН ---
-
         // --- UI UTILS (Fixed) ---
         function switchTab(tabId, el) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -402,13 +425,12 @@
             openModal('payment-modal');
         }
 
-        // --- INIT (NEW ASYNCHRONOUS INITIALIZATION FIX) ---
+        // --- INIT (ASYNCHRONOUS INITIALIZATION) ---
         function initializeApp() {
-            // 1. Устанавливаем отображение баланса сразу
             document.getElementById('user-balance').innerText = getPrice(0); 
             document.getElementById('frozen-balance').innerText = getPrice(0);
 
-            // 2. Откладываем тяжелую отрисовку списка NFT на 50мс, чтобы Webview не завис
+            // Откладываем тяжелую отрисовку списка NFT на 50мс
             setTimeout(() => {
                 renderMarket(collections, 'market-list');
                 renderFavorites();
