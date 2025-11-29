@@ -3,161 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market</title>
+    <title>Gifts Market 4.0 (Canvas-Free)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #0e0e0e;
-            --card-bg: #1c1c1e;
-            --text-color: #ffffff;
-            --accent-color: #007aff;
-            --green-color: #34c759;
-            --red-color: #ff3b30;
-            --secondary-text: #8e8e93;
-            --border-radius: 12px;
+            --bg-color: #0e0e0e; --card-bg: #1c1c1e; --text-color: #ffffff;
+            --accent-color: #007aff; --green-color: #34c759; --red-color: #ff3b30;
+            --secondary-text: #8e8e93; --border-radius: 12px;
         }
 
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            padding-bottom: 90px;
-        }
-
+        body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; padding-bottom: 90px; }
         .container { padding: 16px; }
-        
-        /* Buttons */
-        .btn {
-            background-color: var(--accent-color);
-            color: white; border: none;
-            padding: 14px 20px;
-            border-radius: var(--border-radius);
-            font-size: 16px; font-weight: 600;
-            cursor: pointer; width: 100%;
-            transition: opacity 0.2s;
-            text-align: center;
-        }
-        .btn:active { opacity: 0.8; }
+        .btn { background-color: var(--accent-color); color: white; border: none; padding: 14px 20px; border-radius: var(--border-radius); font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s; text-align: center; }
         .btn-green { background-color: var(--green-color); }
-        .btn-red { background-color: var(--red-color); }
         .btn-outline { background: transparent; border: 1px solid #333; color: var(--text-color); }
-
-        /* Inputs */
-        input, select {
-            width: 100%; padding: 14px;
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: var(--border-radius);
-            color: white; margin-bottom: 12px;
-            box-sizing: border-box; font-size: 16px;
-            appearance: none;
-        }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(28, 28, 30, 0.95);
-            backdrop-filter: blur(10px);
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 tabs now */
-            padding: 10px 0 20px 0;
-            border-top: 1px solid #333;
-            z-index: 100;
-        }
-        .nav-item {
-            color: var(--secondary-text);
-            text-align: center; font-size: 11px;
-            cursor: pointer;
-            display: flex; flex-direction: column; align-items: center;
-        }
+        input, select { width: 100%; padding: 14px; background: var(--card-bg); border: 1px solid #333; border-radius: var(--border-radius); color: white; margin-bottom: 12px; box-sizing: border-box; font-size: 16px; appearance: none; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(10px); display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px 0 20px 0; border-top: 1px solid #333; z-index: 100; }
+        .nav-item { color: var(--secondary-text); text-align: center; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: var(--accent-color); }
         .nav-icon { font-size: 24px; margin-bottom: 4px; }
-
-        /* Market Grid */
-        .market-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
-        }
-        .nft-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 10px; text-align: center;
-            position: relative;
-            transition: transform 0.1s;
-        }
+        .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .nft-card { background: var(--card-bg); border-radius: var(--border-radius); padding: 10px; text-align: center; position: relative; transition: transform 0.1s; }
         .nft-card:active { transform: scale(0.98); }
-        
-        /* NFT Image Styling */
-        .nft-img {
-            width: 100%; aspect-ratio: 1;
-            border-radius: 10px; margin-bottom: 8px;
-            background-color: #2c2c2e;
-            object-fit: cover;
-        }
-        
-        .fav-icon {
-            position: absolute; top: 8px; right: 8px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 50%; width: 30px; height: 30px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; cursor: pointer; z-index: 10;
-        }
-
-        /* Sections */
+        .nft-img { width: 100%; aspect-ratio: 1; border-radius: 10px; margin-bottom: 8px; background-color: #2c2c2e; object-fit: cover; }
+        .fav-icon { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; z-index: 10; }
         .section { display: none; animation: fadeIn 0.2s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Profile & Settings */
-        .list-group {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden; margin-bottom: 20px;
-        }
-        .list-item {
-            padding: 16px;
-            border-bottom: 1px solid #333;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .list-group { background: var(--card-bg); border-radius: var(--border-radius); overflow: hidden; margin-bottom: 20px; }
+        .list-item { padding: 16px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .list-item:last-child { border-bottom: none; }
+        .balance-card { background: linear-gradient(135deg, #007aff, #005ecb); padding: 24px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
+        .modal-content { background: #151517; width: 90%; max-width: 400px; padding: 24px; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 16px; right: 16px; font-size: 24px; color: #888; cursor: pointer; }
+        .info-box { background: rgba(255, 165, 0, 0.15); color: #ffb340; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 10px; line-height: 1.4; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        .history-table th, .history-table td { padding: 8px 0; border-bottom: 1px solid #2c2c2e; text-align: left; }
+        .history-table th { color: var(--secondary-text); }
+        .history-table .change-up { color: var(--green-color); }
+        .history-table .change-down { color: var(--red-color); }
         
-        .balance-card {
-            background: linear-gradient(135deg, #007aff, #005ecb);
-            padding: 24px; border-radius: 16px;
-            text-align: center; margin-bottom: 20px;
-        }
-
-        /* Modals */
-        .modal {
-            display: none; position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 200;
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #151517; width: 90%; max-width: 400px;
-            padding: 24px; border-radius: 16px;
-            position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .close-btn {
-            position: absolute; top: 16px; right: 16px;
-            font-size: 24px; color: #888; cursor: pointer;
-        }
-
-        /* Canvas Chart */
-        #priceChart {
-            width: 100%; height: 150px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px; margin: 15px 0;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: rgba(255, 165, 0, 0.15); color: #ffb340;
-            padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 10px;
-            line-height: 1.4;
-        }
+        /* Удаляем стили для Canvas, так как он больше не нужен */
+        #priceChart { display: none; } 
     </style>
 </head>
 <body>
@@ -177,33 +65,23 @@
 
     <div id="profile" class="section container">
         <h2>👤 Личный кабинет</h2>
-        
         <div class="balance-card">
             <div style="opacity: 0.8; font-size: 14px;">Общий баланс</div>
             <div class="balance" id="user-balance" style="font-size: 32px; font-weight: bold; margin: 8px 0;">0.00 RUB</div>
             <div style="font-size: 12px;">ID: <span id="user-id">...</span> | Verif <span style="color:#fff;">✔</span></div>
         </div>
-
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
             <button class="btn btn-green" onclick="openModal('deposit-modal')">Пополнить</button>
             <button class="btn btn-outline" onclick="openModal('withdraw-modal')">Вывести</button>
         </div>
-
         <div class="list-group">
-            <div class="list-item">
-                <span>На выводе</span>
-                <span id="frozen-balance">0.00</span>
-            </div>
-            <div class="list-item">
-                <span>Всего сделок</span>
-                <span>0</span>
-            </div>
+            <div class="list-item"><span>На выводе</span><span id="frozen-balance">0.00</span></div>
+            <div class="list-item"><span>Всего сделок</span><span>0</span></div>
         </div>
     </div>
 
     <div id="settings" class="section container">
         <h2>⚙️ Настройки</h2>
-        
         <div class="list-group">
             <div class="list-item">
                 <span>Валюта отображения</span>
@@ -216,7 +94,6 @@
                 </select>
             </div>
         </div>
-
         <div class="info-box">
             Комиссия сервиса при продаже: <b>2%</b>.<br>
             Техническая поддержка работает 24/7.
@@ -226,18 +103,10 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('market', this)">
-            <span class="nav-icon">🛒</span>Market
-        </div>
-        <div class="nav-item" onclick="switchTab('favorites', this)">
-            <span class="nav-icon">❤️</span>Favs
-        </div>
-        <div class="nav-item" onclick="switchTab('profile', this)">
-            <span class="nav-icon">👤</span>Profile
-        </div>
-        <div class="nav-item" onclick="switchTab('settings', this)">
-            <span class="nav-icon">⚙️</span>Set
-        </div>
+        <div class="nav-item active" onclick="switchTab('market', this)"><span class="nav-icon">🛒</span>Market</div>
+        <div class="nav-item" onclick="switchTab('favorites', this)"><span class="nav-icon">❤️</span>Favs</div>
+        <div class="nav-item" onclick="switchTab('profile', this)"><span class="nav-icon">👤</span>Profile</div>
+        <div class="nav-item" onclick="switchTab('settings', this)"><span class="nav-icon">⚙️</span>Set</div>
     </div>
 
     <div id="nft-modal" class="modal">
@@ -249,8 +118,16 @@
             <h2 id="m-title" style="margin: 10px 0 5px;">Title</h2>
             <h3 id="m-price" style="color: var(--green-color); margin: 0;">Price</h3>
             
-            <p style="font-size: 12px; color: #888; margin-top: 15px;">Динамика цены (24ч):</p>
-            <canvas id="priceChart"></canvas>
+            <p style="font-size: 12px; color: #888; margin-top: 15px;">**История цен (5 дней):**</p>
+            <canvas id="priceChart" style="display: none;"></canvas>
+
+            <table class="history-table">
+                <thead>
+                    <tr><th>Дата</th><th>Цена</th><th>Изменение</th></tr>
+                </thead>
+                <tbody id="price-history">
+                    </tbody>
+            </table>
             
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-green">Купить</button>
@@ -263,35 +140,15 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('deposit-modal')">&times;</div>
             <h3>Пополнение</h3>
-            
             <label>Способ:</label>
             <select id="dep-method" onchange="toggleDepFields()">
                 <option value="card">Банковская карта</option>
                 <option value="crypto">Криптовалюта</option>
             </select>
-
-            <div id="bank-wrap">
-                <select id="bank-name">
-                    <option>СберБанк</option>
-                    <option>Т-Банк (Тинькофф)</option>
-                    <option>Альфа Банк</option>
-                    <option>ВТБ</option>
-                    <option>СБП (Другой банк)</option>
-                </select>
-            </div>
-            
-            <div id="crypto-wrap" style="display:none;">
-                <select id="crypto-coin">
-                    <option value="btc">Bitcoin (BTC)</option>
-                    <option value="eth">Ethereum (ETH)</option>
-                    <option value="usdt">USDT (TRC20)</option>
-                    <option value="ton">TON</option>
-                </select>
-            </div>
-
+            <div id="bank-wrap"><select id="bank-name"><option>СберБанк</option><option>Т-Банк (Тинькофф)</option><option>Альфа Банк</option><option>ВТБ</option><option>СБП (Другой банк)</option></select></div>
+            <div id="crypto-wrap" style="display:none;"><select id="crypto-coin"><option value="btc">Bitcoin (BTC)</option><option value="eth">Ethereum (ETH)</option><option value="usdt">USDT (TRC20)</option><option value="ton">TON</option></select></div>
             <label>Сумма:</label>
             <input type="number" id="dep-amount" placeholder="500">
-            
             <button class="btn btn-green" onclick="goToPayment()">Перейти к оплате</button>
         </div>
     </div>
@@ -301,18 +158,13 @@
             <div class="close-btn" onclick="closeModal('payment-modal')">&times;</div>
             <h3>Реквизиты для оплаты</h3>
             <p style="font-size: 14px; color: #ccc;">Совершите перевод на указанные реквизиты:</p>
-            
             <div class="info-box" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #444;">
-                <div style="font-size: 12px; color: #888;">Способ:</div>
-                <b id="pay-method-name">Сбербанк</b>
+                <div style="font-size: 12px; color: #888;">Способ:</div><b id="pay-method-name">Сбербанк</b>
                 <hr style="border-color: #444; margin: 10px 0;">
-                <div style="font-size: 12px; color: #888;">Реквизиты / Кошелек:</div>
-                <b id="pay-details" style="font-size: 18px; word-break: break-all;">0000 0000 0000 0000</b>
+                <div style="font-size: 12px; color: #888;">Реквизиты / Кошелек:</div><b id="pay-details" style="font-size: 18px; word-break: break-all;">0000 0000 0000 0000</b>
                 <hr style="border-color: #444; margin: 10px 0;">
-                <div style="font-size: 12px; color: #888;">Сумма к оплате:</div>
-                <b id="pay-sum" style="color: var(--green-color); font-size: 20px;">1000 RUB</b>
+                <div style="font-size: 12px; color: #888;">Сумма к оплате:</div><b id="pay-sum" style="color: var(--green-color); font-size: 20px;">1000 RUB</b>
             </div>
-
             <br>
             <button class="btn btn-green" onclick="closeModal('payment-modal'); closeModal('deposit-modal'); alert('Заявка создана! Ожидайте поступления.');">Я оплатил</button>
         </div>
@@ -322,12 +174,7 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('withdraw-modal')">&times;</div>
             <h3>Вывод средств</h3>
-            <select>
-                <option>На карту</option>
-                <option>USDT</option>
-                <option>BTC</option>
-                <option>TON</option>
-            </select>
+            <select><option>На карту</option><option>USDT</option><option>BTC</option><option>TON</option></select>
             <input type="text" placeholder="Реквизиты (Карта / Кошелек)">
             <input type="number" placeholder="Сумма">
             <button class="btn">Создать заявку</button>
@@ -336,56 +183,45 @@
 
     <script>
         // --- CONFIG & DATA ---
-        // ЗАМЕНИ ПУСТЫЕ КАВЫЧКИ В img НА СВОИ ССЫЛКИ НА КАРТИНКИ
+        
+        // ОБНОВЛЕННЫЕ КОЛЛЕКЦИИ С FRAGMENT.COM/GIFTS
         const collections = [
-            { id: 1, name: "Red Star", price: 1500, img: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png" },
-            { id: 2, name: "Blue Star", price: 2300, img: "https://cdn-icons-png.flaticon.com/512/1828/1828970.png" },
-            { id: 3, name: "Delicious Cake", price: 500, img: "https://i.imgur.com/70OKdAP.png" },
-            { id: 4, name: "Green Star", price: 1200, img: "https://cdn-icons-png.flaticon.com/512/1828/1828979.png" },
-            { id: 5, name: "Spicy Pumpkin", price: 800, img: "https://cdn-icons-png.flaticon.com/512/1998/1998749.png" },
-            { id: 6, name: "Magic Potion", price: 3500, img: "https://cdn-icons-png.flaticon.com/512/9165/9165578.png" },
-            { id: 7, name: "Santa's Gift", price: 5000, img: "https://cdn-icons-png.flaticon.com/512/744/744546.png" },
-            { id: 8, name: "Festive Hat", price: 300, img: "https://cdn-icons-png.flaticon.com/512/2416/2416039.png" },
-            { id: 9, name: "Love Potion", price: 4200, img: "https://cdn-icons-png.flaticon.com/512/2829/2829824.png" }
+            { id: 1, name: "Plush Pepes", basePrice: 15345.21, img: "https://cdn-icons-png.flaticon.com/512/3256/3256958.png", startPrice: 14900 },
+            { id: 2, name: "Kissed Frogs", basePrice: 9230.77, img: "https://cdn-icons-png.flaticon.com/512/3067/3067823.png", startPrice: 9500 },
+            { id: 3, name: "Precious Peaches", basePrice: 5500.55, img: "https://cdn-icons-png.flaticon.com/512/815/815340.png", startPrice: 5000 },
+            { id: 4, name: "Neko Helmets", basePrice: 20120.90, img: "https://cdn-icons-png.flaticon.com/512/3133/3133649.png", startPrice: 19000 },
+            { id: 5, name: "Astral Shards", basePrice: 1800.02, img: "https://cdn-icons-png.flaticon.com/512/3074/3074360.png", startPrice: 1750 },
+            { id: 6, name: "Vintage Cigars", basePrice: 3500.89, img: "https://cdn-icons-png.flaticon.com/512/7036/7036496.png", startPrice: 3800 },
+            { id: 7, name: "Scared Cats", basePrice: 50000.11, img: "https://cdn-icons-png.flaticon.com/512/616/616521.png", startPrice: 48000 },
+            { id: 8, name: "Jelly Bunny", basePrice: 300.99, img: "https://cdn-icons-png.flaticon.com/512/9165/9165578.png", startPrice: 350 },
+            { id: 9, name: "Santa Hat", basePrice: 4200.67, img: "https://cdn-icons-png.flaticon.com/512/744/744546.png", startPrice: 4000 }
         ];
 
-        // Курсы валют (примерные статические)
         const rates = {
-            'RUB': { val: 1, sign: '₽' },
-            'USD': { val: 0.010, sign: '$' },
-            'EUR': { val: 0.0095, sign: '€' },
-            'KZT': { val: 5.1, sign: '₸' },
-            'UAH': { val: 0.40, sign: '₴' }
+            'RUB': { val: 1, sign: '₽' }, 'USD': { val: 0.010, sign: '$' }, 'EUR': { val: 0.0095, sign: '€' },
+            'KZT': { val: 5.1, sign: '₸' }, 'UAH': { val: 0.40, sign: '₴' }
         };
 
-        // Реквизиты (ВСТАВЬ СВОИ ДАННЫЕ СЮДА)
         const requisites = {
-            'card': '0000 0000 0000 0000 (Sber/Tinkoff)',
-            'btc': 'bc1q_YOUR_BTC',
-            'eth': '0x_YOUR_ETH',
-            'usdt': 'T_YOUR_TRC20',
-            'ton': 'UQ_YOUR_TON'
+            'card': '0000 0000 0000 0000 (Sber/Tinkoff)', 'btc': 'bc1q_YOUR_BTC', 'eth': '0x_YOUR_ETH',
+            'usdt': 'T_YOUR_TRC20', 'ton': 'UQ_YOUR_TON'
         };
 
-        // State
         let currentCurrency = 'RUB';
-        let favorites = []; // Array of IDs
-        let currentOpenId = null; // Currently opened NFT ID
+        let favorites = [];
+        let currentOpenId = null;
 
-        // Init Telegram
         const tg = window.Telegram.WebApp;
         tg.expand();
         document.getElementById('user-id').innerText = tg.initDataUnsafe?.user?.id || "88005553535";
 
         // --- CORE FUNCTIONS ---
 
-        // Convert Price helper
         function getPrice(rubPrice) {
             const rate = rates[currentCurrency];
             return (rubPrice * rate.val).toFixed(2) + ' ' + rate.sign;
         }
 
-        // Render Market Items
         function renderMarket(items, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -401,13 +237,13 @@
                 
                 const card = document.createElement('div');
                 card.className = 'nft-card';
-                card.onclick = () => openNFT(item.id); // Click on card opens details
+                card.onclick = () => openNFT(item.id);
                 
                 card.innerHTML = `
                     <div class="fav-icon" onclick="toggleFav(${item.id}, event)">${heart}</div>
-                    <img src="${item.img}" class="nft-img" onerror="this.style.display='none'">
+                    <img src="${item.img}" class="nft-img" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/12181/12181313.png';">
                     <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
-                    <div style="color: var(--green-color); font-weight: bold; margin-top: 4px;">${getPrice(item.price)}</div>
+                    <div style="color: var(--green-color); font-weight: bold; margin-top: 4px;">${getPrice(item.basePrice)}</div>
                 `;
                 container.appendChild(card);
             });
@@ -415,38 +251,18 @@
 
         // --- FAVORITES LOGIC ---
         function toggleFav(id, event) {
-            if(event) event.stopPropagation(); // Stop opening modal
-
-            if (favorites.includes(id)) {
-                favorites = favorites.filter(favId => favId !== id);
-            } else {
-                favorites.push(id);
-            }
-            // Re-render both views
-            filterNFTs(); 
-            renderFavorites();
-            
-            // If modal is open, update its button too
-            if(document.getElementById('nft-modal').style.display === 'flex' && currentOpenId === id) {
-                updateModalFavBtn(id);
-            }
+            if(event) event.stopPropagation();
+            favorites = favorites.includes(id) ? favorites.filter(favId => favId !== id) : [...favorites, id];
+            filterNFTs(); renderFavorites();
+            if(document.getElementById('nft-modal').style.display === 'flex' && currentOpenId === id) updateModalFavBtn(id);
         }
 
-        function toggleFavFromModal() {
-            if(currentOpenId) toggleFav(currentOpenId, null);
-        }
-
+        function toggleFavFromModal() { if(currentOpenId) toggleFav(currentOpenId, null); }
         function updateModalFavBtn(id) {
             const btn = document.getElementById('m-fav-btn');
-            if(favorites.includes(id)) {
-                btn.innerText = '❤️ В избранном';
-                btn.style.borderColor = 'var(--red-color)';
-            } else {
-                btn.innerText = '🤍 В избранное';
-                btn.style.borderColor = '#333';
-            }
+            if(favorites.includes(id)) { btn.innerText = '❤️ В избранном'; btn.style.borderColor = 'var(--red-color)'; } 
+            else { btn.innerText = '🤍 В избранное'; btn.style.borderColor = '#333'; }
         }
-
         function renderFavorites() {
             const favItems = collections.filter(c => favorites.includes(c.id));
             renderMarket(favItems, 'fav-list');
@@ -462,82 +278,112 @@
         // --- SETTINGS: CURRENCY ---
         function changeCurrency() {
             currentCurrency = document.getElementById('currency-select').value;
-            // Update Balances visually (fake logic for display)
             document.getElementById('user-balance').innerText = getPrice(0); 
             document.getElementById('frozen-balance').innerText = getPrice(0);
-            // Re-render market prices
-            filterNFTs();
-            renderFavorites();
+            filterNFTs(); renderFavorites();
         }
 
-        // --- MODAL: NFT DETAILS (Fixed Crash) ---
+        // --- МОДИФИЦИРОВАННАЯ ФУНКЦИЯ openNFT (Canvas-FREE) ---
         function openNFT(id) {
             const item = collections.find(c => c.id === id);
             currentOpenId = id;
 
             document.getElementById('m-title').innerText = item.name;
-            document.getElementById('m-price').innerText = getPrice(item.price);
+            document.getElementById('m-price').innerText = getPrice(item.basePrice);
             document.getElementById('m-img').src = item.img;
             
             updateModalFavBtn(id);
             openModal('nft-modal');
 
-            // FIX: Wait for modal to be visible before drawing chart to avoid divide by zero
-            requestAnimationFrame(() => {
-                drawChart();
+            // !!! Запускаем только легкую операцию (генерация истории) без Canvas
+            setTimeout(() => {
+                if (document.getElementById('nft-modal').style.display !== 'flex') return;
+
+                const history = generateHistory(item.basePrice, 5);
+                renderHistory(history);
+            }, 50); // Небольшая задержка для рендеринга модального окна
+        }
+
+        // --- HISTORY GENERATION ---
+        function generateHistory(currentBasePrice, days) {
+            const history = [];
+            let price = currentBasePrice;
+            const today = new Date();
+
+            for (let i = 0; i < days; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                
+                const percentageChange = parseFloat((Math.random() * 10 - 5).toFixed(2));
+                
+                let prevPrice;
+                if (i === 0) {
+                    prevPrice = price / (1 + percentageChange / 100); 
+                } else {
+                    prevPrice = price / (1 - percentageChange / 100);
+                }
+                
+                history.push({
+                    date: date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }),
+                    rawPrice: price,
+                    change: percentageChange,
+                    formattedPrice: getPrice(price),
+                });
+                
+                price = prevPrice;
+            }
+            return history.reverse();
+        }
+
+        function renderHistory(history) {
+            const tbody = document.getElementById('price-history');
+            tbody.innerHTML = '';
+
+            history.forEach(day => {
+                const changeClass = day.change >= 0 ? 'change-up' : 'change-down';
+                const changeText = day.change >= 0 ? `+${day.change}%` : `${day.change}%`;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${day.date}</td>
+                    <td>${getPrice(day.rawPrice)}</td>
+                    <td class="${changeClass}">${changeText}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
-        // --- CANVAS CHART (SAFE VERSION) ---
-        function drawChart() {
-            const canvas = document.getElementById('priceChart');
-            // FIX: Check if width is valid
-            if (canvas.clientWidth === 0) return; 
-
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            
-            // Pseudo-random chart based on day
-            const dateSeed = new Date().getDate();
-            ctx.beginPath();
-            ctx.strokeStyle = '#34c759';
-            ctx.lineWidth = 2;
-
-            let prevY = h/2;
-            ctx.moveTo(0, prevY);
-
-            const steps = 10;
-            const stepW = w / steps;
-
-            for(let i=1; i<=steps; i++) {
-                const x = i * stepW;
-                // Random walk
-                const change = (Math.sin(i * dateSeed) * h/3); 
-                let y = (h/2) + change;
-                // Clamp
-                if (y < 10) y = 10; if (y > h-10) y = h-10;
-                
-                ctx.lineTo(x, y);
-            }
-            
-            ctx.stroke();
-            
-            // Gradient
-            ctx.lineTo(w, h);
-            ctx.lineTo(0, h);
-            const grad = ctx.createLinearGradient(0,0,0,h);
-            grad.addColorStop(0, 'rgba(52,199,89, 0.2)');
-            grad.addColorStop(1, 'rgba(52,199,89, 0)');
-            ctx.fillStyle = grad;
-            ctx.fill();
+        // --- ADVANCED CHART DRAWING (УДАЛЕНА ИЗ ВЫЗОВА, НО ОСТАВЛЕНА КАК ЗАГЛУШКА) ---
+        function drawChart(prices) {
+            // Эта функция больше не используется, чтобы избежать зависаний.
+            // При необходимости ее можно вернуть, если проблема будет решена на уровне Telegram.
         }
 
-        // --- PAYMENTS ---
+        // --- UI UTILS (Fixed) ---
+        function switchTab(tabId, el) {
+            // Скрываем все секции
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Показываем нужную секцию
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Обновляем класс активности в нижнем меню
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (el) {
+                el.classList.add('active');
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) { e.target.style.display = "none"; }
+        }
+
         function toggleDepFields() {
             const method = document.getElementById('dep-method').value;
             document.getElementById('bank-wrap').style.display = method === 'card' ? 'block' : 'none';
@@ -547,15 +393,9 @@
         function goToPayment() {
             const methodType = document.getElementById('dep-method').value;
             const amount = document.getElementById('dep-amount').value;
-
-            if(!amount || amount <= 0) {
-                alert("Введите сумму корректно");
-                return;
-            }
-
+            if(!amount || amount <= 0) { alert("Введите сумму корректно"); return; }
             let name = "";
             let req = "";
-
             if (methodType === 'card') {
                 name = document.getElementById('bank-name').value;
                 req = requisites.card;
@@ -565,32 +405,11 @@
                 req = requisites[coin] || "Адрес не найден";
             }
 
-            // Fill Payment Modal
             document.getElementById('pay-method-name').innerText = name;
             document.getElementById('pay-details').innerText = req;
             document.getElementById('pay-sum').innerText = amount + ' ' + (methodType === 'card' ? 'RUB' : name.split(' ')[0]);
 
-            openModal('payment-modal'); // Open second modal on top
-        }
-
-
-        // --- UI UTILS ---
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // Close modal on outside click
-        window.onclick = function(e) {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = "none";
-            }
+            openModal('payment-modal');
         }
 
         // --- INIT ---
