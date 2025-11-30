@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 22.2 (Stable + Filters)</title>
+    <title>Mini Fragment Market 26.0</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -57,7 +57,7 @@
         .meta-table .meta-rarity { color: var(--accent-color); font-size: 12px; float: right; }
         
         /* Стиль для Lottie-контейнера */
-        #nft-media-wrapper { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #nft-media-wrapper { display: flex; align-items: center; justify-content: center; overflow: hidden; height: 150px; background: #222; border-radius: 10px;}
         #nft-media-wrapper svg { width: 100%; height: 100%; }
 
         /* === СТИЛИ ДЛЯ NFT БЕЗ КАРТИНКИ (СТАБИЛЬНАЯ ЗАГЛУШКА) === */
@@ -70,7 +70,8 @@
             background-color: #121212;
         }
         .nft-card.no-image .nft-img {
-            display: none;
+            /* Скрываем img, когда он не загрузился */
+            display: none; 
         }
         .nft-card.no-image div:nth-child(2) { 
              margin-bottom: 8px;
@@ -78,22 +79,41 @@
         .nft-card.no-image .fav-icon {
             top: 18px;
         }
+        .nft-card .image-placeholder-content {
+            /* Контейнер заглушки */
+            display: none; 
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+        /* Отображаем заглушку, когда класс no-image активен */
+        .nft-card.no-image .image-placeholder-content {
+            display: flex; 
+        }
+
     </style>
 </head>
 <body>
 
     <div id="market" class="section active container">
-        <h2 id="market-title">🎁 Gifts Market</h2>
-        <input type="text" id="search" placeholder="Поиск подарков..." onkeyup="filterNFTs()">
+        <h2 id="market-title">🎁 Mini Fragment Market</h2>
+        <input type="text" id="search" placeholder="Поиск NFT..." onkeyup="filterNFTs()">
         
         <div class="filter-grid">
             <select id="rarity-filter" onchange="filterNFTs()">
-                <option value="all">Все коллекции / Модели</option>
+                <option value="all">Все коллекции</option>
                 </select>
             <select id="price-filter" onchange="filterNFTs()">
                 <option value="all">Любая цена</option>
-                <option value="low">0₽ - 5,000₽</option>
-                <option value="mid">5,000₽ - 15,000₽</option>
+                <option value="low">0₽ - 7,000₽</option>
+                <option value="mid">7,000₽ - 15,000₽</option>
                 <option value="high">15,000₽+</option>
             </select>
         </div>
@@ -104,7 +124,7 @@
     <div id="favorites" class="section container">
         <h2>❤️ Избранное</h2>
         <div id="fav-list" class="market-grid">
-            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных подарков</div>
+            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных NFT</div>
         </div>
     </div>
 
@@ -165,9 +185,9 @@
             <h3 id="m-price" style="color: var(--green-color); margin: 0;">Price</h3>
             
             <table class="meta-table">
-                <tr><td class="meta-label">Модель:</td><td class="meta-value" id="m-model"></td></tr>
+                <tr><td class="meta-label">Коллекция:</td><td class="meta-value" id="m-model"></td></tr>
                 <tr><td class="meta-label">Символ:</td><td class="meta-value" id="m-symbol"></td></tr>
-                <tr><td class="meta-label">Задний фон:</td><td class="meta-value" id="m-backdrop"></td></tr>
+                <tr><td class="meta-label">Рарность/Фон:</td><td class="meta-value" id="m-backdrop"></td></tr>
             </table>
 
             <p style="font-size: 12px; color: #888; margin-top: 15px;">Динамика цены (5 дней):</p>
@@ -194,32 +214,14 @@
             <div class="close-btn" onclick="closeModal('deposit-modal')">&times;</div>
             <h3>Пополнение</h3>
             <label>Способ:</label>
-            <select id="dep-method" onchange="toggleDepFields()">
-                <option value="card">Банковская карта</option>
-                <option value="crypto">Криптовалюта</option>
+            <select id="deposit-method">
+                <option>TON Coin</option>
+                <option>USDT TRC20</option>
+                <option>Visa/MasterCard RUB</option>
             </select>
-            <div id="bank-wrap"><select id="bank-name"><option>СберБанк</option><option>Т-Банк (Тинькофф)</option><option>Альфа Банк</option><option>ВТБ</option><option>СБП (Другой банк)</option></select></div>
-            <div id="crypto-wrap" style="display:none;"><select id="crypto-coin"><option value="btc">Bitcoin (BTC)</option><option value="eth">Ethereum (ETH)</option><option value="usdt">USDT (TRC20)</option><option value="ton">TON</option></select></div>
-            <label>Сумма:</label>
-            <input type="number" id="dep-amount" placeholder="500">
-            <button class="btn btn-green" onclick="goToPayment()">Перейти к оплате</button>
-        </div>
-    </div>
-
-    <div id="payment-modal" class="modal" style="z-index: 210;">
-        <div class="modal-content">
-            <div class="close-btn" onclick="closeModal('payment-modal')">&times;</div>
-            <h3>Реквизиты для оплаты</h3>
-            <p style="font-size: 14px; color: #ccc;">Совершите перевод на указанные реквизиты:</p>
-            <div class="info-box" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #444;">
-                <div style="font-size: 12px; color: #888;">Способ:</div><b id="pay-method-name">Сбербанк</b>
-                <hr style="border-color: #444; margin: 10px 0;">
-                <div style="font-size: 12px; color: #888;">Реквизиты / Кошелек:</div><b id="pay-details" style="font-size: 18px; word-break: break-all;">0000 0000 0000 0000</b>
-                <hr style="border-color: #444; margin: 10px 0;">
-                <div style="font-size: 12px; color: #888;">Сумма к оплате:</div><b id="pay-sum" style="color: var(--green-color); font-size: 20px;">1000 RUB</b>
-            </div>
-            <br>
-            <button class="btn btn-green" onclick="closeModal('payment-modal'); closeModal('deposit-modal'); alert('Заявка создана! Ожидайте поступления.');">Я оплатил</button>
+            <label>Сумма (RUB):</label>
+            <input type="number" placeholder="От 1,000" id="deposit-amount">
+            <button class="btn btn-green" onclick="startPayment('deposit')">Начать оплату</button>
         </div>
     </div>
 
@@ -227,402 +229,51 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('withdraw-modal')">&times;</div>
             <h3>Вывод средств</h3>
-            <select><option>На карту</option><option>USDT</option><option>BTC</option><option>TON</option></select>
-            <input type="text" placeholder="Реквизиты (Карта / Кошелек)">
-            <input type="number" placeholder="Сумма">
-            <button class="btn">Создать заявку</button>
+            <label>Способ:</label>
+            <select id="withdraw-method">
+                <option>TON Coin (Wallet)</option>
+                <option>USDT TRC20</option>
+                <option>Карта РФ</option>
+            </select>
+            <label>Адрес/Реквизиты:</label>
+            <input type="text" placeholder="Введите адрес кошелька или номер карты" id="withdraw-address">
+            <label>Сумма (RUB):</label>
+            <input type="number" placeholder="От 500" id="withdraw-amount">
+            <button class="btn btn-red" onclick="startPayment('withdraw')">Подтвердить вывод</button>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="close-btn" onclick="closeModal('payment-modal')">&times;</div>
+            <h3>Ожидание оплаты</h3>
+            <div id="payment-details" style="background: #222; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; font-size: 14px;">
+                <p>Сумма: <b id="p-amount">...</b></p>
+                <p>Метод: <b id="p-method">...</b></p>
+                <p>Статус: <b style="color: yellow;">Ожидание...</b></p>
+            </div>
+            <p style="font-size: 12px; color: #888;">Пожалуйста, следуйте инструкциям в вашем кошельке или банковском приложении.</p>
+            <button class="btn btn-outline" onclick="closeModal('payment-modal')">Закрыть</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIG & DATA ---
-        
-        const LOTTIE_BASE = "https://nft.fragment.com/gift/";
-        const GENERIC_ID = "5000"; // Стандартный ID для заглушек
-        
-        // **СТАБИЛЬНАЯ ФУНКЦИЯ:** Генерирует только путь к .webp, Lottie-путь для неизвестных коллекций исключен.
-        function generatePath(baseName, id = GENERIC_ID) {
-            return {
-                img: `${LOTTIE_BASE}${baseName}-${id}.webp`,
-                // lottie: удалено для стабильности
-            };
+        // --- (1) ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+        function getPrice(amount) {
+            const currency = document.getElementById('currency-select').value;
+            const rates = { 'RUB': 1, 'USD': 0.0105, 'EUR': 0.0098, 'KZT': 4.8, 'UAH': 0.38 };
+            const symbols = { 'RUB': '₽', 'USD': '$', 'EUR': '€', 'KZT': '₸', 'UAH': '₴' };
+            const converted = (amount * rates[currency]).toFixed(2);
+            return `${converted} ${symbols[currency]}`;
         }
 
-        // ЯВНЫЕ ССЫЛКИ НА ПРОВЕРЕННЫЕ LOTTIE ФАЙЛЫ (для 13 коллекций)
-        const LOTTIE_PATHS = {
-            1: LOTTIE_BASE + "plushpepe-1152.lottie.json",
-            2: LOTTIE_BASE + "kissedfrog-5348.lottie.json",
-            19: LOTTIE_BASE + "durovscap-8721.lottie.json",
-            21: LOTTIE_BASE + "electricskull-5813.lottie.json",
-            5: LOTTIE_BASE + "bdaycandle-2024.lottie.json",
-            12: LOTTIE_BASE + "candycanes-9001.lottie.json",
-            36: LOTTIE_BASE + "holidaydrink-4567.lottie.json",
-            74: LOTTIE_BASE + "santahat-0001.lottie.json",
-            104: LOTTIE_BASE + "xmasstocking-3000.lottie.json",
-            95: LOTTIE_BASE + "toybear-1500.lottie.json",
-            33: LOTTIE_BASE + "heartlocket-2134.lottie.json",
-            65: LOTTIE_BASE + "nekohelmet-1337.lottie.json",
-            54: LOTTIE_BASE + "magicpotion-007.lottie.json",
-        };
-        
-        const models = ["Spectrum", "Pixel", "Metallic", "Diamond", "Vivid", "Rare", "Phantom"];
-        const symbols = ["Star Crown", "Heart", "TON Cube", "Lightning", "Aurora", "Gears"];
-        const backdrops = ["Grape", "Sapphire", "Crimson", "Emerald", "Gold", "Cosmic", "Aqua"];
-        
-        function getRandomRarity() {
-            return {
-                model: `${models[Math.floor(Math.random() * models.length)]} ${Math.floor(Math.random() * 50) / 10 + 0.1}%`,
-                symbol: `${symbols[Math.floor(Math.random() * symbols.length)]} ${Math.floor(Math.random() * 20) / 10 + 0.1}%`,
-                backdrop: `${backdrops[Math.floor(Math.random() * backdrops.length)]} ${Math.floor(Math.random() * 10 + 1)}%`
-            };
-        }
-        
-        let currentLottieAnimation = null;
-
-        // --- NFT DATA (EXPANDED TO OVER 200 GIFTS) ---
-        // ВАЖНО: поле 'lottie' добавляется только для проверенных ID через Object.assign
-        
-        const collections = [
-            // --- 1. UNIQUE / LOTTIE-ENABLED GIFTS (ОСТАВЛЕНЫ, НО ID ОБНОВЛЕНЫ) ---
-            { id: 1, name: "Plush Pepe #1152", basePrice: 15321.50, img: LOTTIE_BASE + "plushpepe-1152.webp", startPrice: 15000, ...getRandomRarity() },
-            { id: 2, name: "Kissed Frog #5348", basePrice: 9152.88, img: LOTTIE_BASE + "kissedfrog-5348.webp", startPrice: 9300, ...getRandomRarity() },
-            { id: 19, name: "Durov’s Cap #8721", basePrice: 14550.90, img: LOTTIE_BASE + "durovscap-8721.webp", startPrice: 14600, ...getRandomRarity() },
-            { id: 21, name: "Electric Skull #5813", basePrice: 3350.22, img: LOTTIE_BASE + "electricskull-5813.webp", startPrice: 3400, ...getRandomRarity() },
-            { id: 5, name: "B-Day Candle #2024", basePrice: 1505.44, img: LOTTIE_BASE + "bdaycandle-2024.webp", startPrice: 1550, ...getRandomRarity() },
-            { id: 12, name: "Candy Cane #9001", basePrice: 3105.15, img: LOTTIE_BASE + "candycanes-9001.webp", startPrice: 3150, ...getRandomRarity() },
-            { id: 36, name: "Holiday Drink #4567", basePrice: 3450.35, img: LOTTIE_BASE + "holidaydrink-4567.webp", startPrice: 3500, ...getRandomRarity() },
-            { id: 74, name: "Santa Hat #0001", basePrice: 4010.00, img: LOTTIE_BASE + "santahat-0001.webp", startPrice: 4050, ...getRandomRarity() },
-            { id: 104, name: "Xmas Stocking #3000", basePrice: 3150.00, img: LOTTIE_BASE + "xmasstocking-3000.webp", startPrice: 3200, ...getRandomRarity() },
-            { id: 95, name: "Toy Bear #1500", basePrice: 2050.00, img: LOTTIE_BASE + "toybear-1500.webp", startPrice: 2100, ...getRandomRarity() },
-            { id: 33, name: "Heart Locket #2134", basePrice: 16050.75, img: LOTTIE_BASE + "heartlocket-2134.webp", startPrice: 16100, ...getRandomRarity() },
-            { id: 65, name: "Neko Helmet #1337", basePrice: 11000.55, img: LOTTIE_BASE + "nekohelmet-1337.webp", startPrice: 11200, ...getRandomRarity() },
-            { id: 54, name: "Magic Potion #007", basePrice: 5000.40, img: LOTTIE_BASE + "magicpotion-007.webp", startPrice: 5100, ...getRandomRarity() },
-
-            // --- 2. GENERAL GIFT COLLECTIONS (200+ СТАТИЧЕСКИХ ЗАГЛУШЕК) ---
-            { id: 3, name: "Artisan Bricks", basePrice: 4511.00, ...generatePath('artisanbricks'), startPrice: 4450, ...getRandomRarity() },
-            { id: 4, name: "Astral Shards", basePrice: 9870.25, ...generatePath('astralshards'), startPrice: 9900, ...getRandomRarity() },
-            { id: 6, name: "Berry Boxes", basePrice: 7245.99, ...generatePath('berryboxes'), startPrice: 7100, ...getRandomRarity() },
-            { id: 7, name: "Big Years", basePrice: 6812.10, ...generatePath('bigyears'), startPrice: 6900, ...getRandomRarity() },
-            { id: 8, name: "Bling Binkies", basePrice: 12530.50, ...generatePath('blingbinkies'), startPrice: 12400, ...getRandomRarity() },
-            { id: 9, name: "Bonded Rings", basePrice: 10120.00, ...generatePath('bondedrings'), startPrice: 10300, ...getRandomRarity() },
-            { id: 10, name: "Bow Ties", basePrice: 5315.77, ...generatePath('bowties'), startPrice: 5350, ...getRandomRarity() },
-            { id: 11, name: "Bunny Muffins", basePrice: 6450.05, ...generatePath('bunnymuffins'), startPrice: 6500, ...getRandomRarity() },
-            { id: 13, name: "Clover Pins", basePrice: 8755.02, ...generatePath('cloverpins'), startPrice: 8800, ...getRandomRarity() },
-            { id: 14, name: "Cookie Hearts", basePrice: 9110.89, ...generatePath('cookiehearts'), startPrice: 9200, ...getRandomRarity() },
-            { id: 15, name: "Crystal Balls", basePrice: 6520.30, ...generatePath('crystalballs'), startPrice: 6450, ...getRandomRarity() },
-            { id: 16, name: "Cupid Charms", basePrice: 3010.99, ...generatePath('cupidcharms'), startPrice: 3100, ...getRandomRarity() },
-            { id: 17, name: "Desk Calendars", basePrice: 1800.00, ...generatePath('deskcalendars'), startPrice: 1850, ...getRandomRarity() },
-            { id: 18, name: "Diamond Rings", basePrice: 11570.45, ...generatePath('diamondrings'), startPrice: 11600, ...getRandomRarity() },
-            { id: 20, name: "Easter Eggs", basePrice: 2125.33, ...generatePath('eastereggs'), startPrice: 2150, ...getRandomRarity() },
-            { id: 22, name: "Eternal Candles", basePrice: 9175.15, ...generatePath('eternalcandles'), startPrice: 9200, ...getRandomRarity() },
-            { id: 23, name: "Eternal Roses", basePrice: 4030.80, ...generatePath('eternalroses'), startPrice: 4100, ...getRandomRarity() },
-            { id: 24, name: "Evil Eyes", basePrice: 1495.90, ...generatePath('evileyes'), startPrice: 1500, ...getRandomRarity() },
-            { id: 25, name: "Faith Amulets", basePrice: 3510.60, ...generatePath('faithamulets'), startPrice: 3550, ...getRandomRarity() },
-            { id: 26, name: "Flying Brooms", basePrice: 5420.75, ...generatePath('flyingbrooms'), startPrice: 5450, ...getRandomRarity() },
-            { id: 27, name: "Fresh Socks", basePrice: 3820.10, ...generatePath('freshsocks'), startPrice: 3850, ...getRandomRarity() },
-            { id: 28, name: "Gem Signets", basePrice: 14050.50, ...generatePath('gemsignets'), startPrice: 14100, ...getRandomRarity() },
-            { id: 29, name: "Genie Lamps", basePrice: 10150.99, ...generatePath('genielamps'), startPrice: 10200, ...getRandomRarity() },
-            { id: 30, name: "Ginger Cookies", basePrice: 2155.30, ...generatePath('gingercookies'), startPrice: 2200, ...getRandomRarity() },
-            { id: 31, name: "Hanging Stars", basePrice: 4350.40, ...generatePath('hangingstars'), startPrice: 4400, ...getRandomRarity() },
-            { id: 32, name: "Happy Brownies", basePrice: 2450.50, ...generatePath('happybrownies'), startPrice: 2500, ...getRandomRarity() },
-            { id: 34, name: "Heroic Helmets", basePrice: 15550.90, ...generatePath('heroichelmets'), startPrice: 15600, ...getRandomRarity() },
-            { id: 35, name: "Hex Pots", basePrice: 2250.10, ...generatePath('hexpots'), startPrice: 2300, ...getRandomRarity() },
-            { id: 37, name: "Homemade Cakes", basePrice: 1950.20, ...generatePath('homemadecakes'), startPrice: 2000, ...getRandomRarity() },
-            { id: 38, name: "Hypno Lollipops", basePrice: 5950.44, ...generatePath('hypnolollipops'), startPrice: 6000, ...getRandomRarity() },
-            { id: 39, name: "Ice Creams", basePrice: 2355.55, ...generatePath('icecreams'), startPrice: 2400, ...getRandomRarity() },
-            { id: 40, name: "Input Keys", basePrice: 5350.66, ...generatePath('inputkeys'), startPrice: 5400, ...getRandomRarity() },
-            { id: 41, name: "Instant Ramens", basePrice: 2955.77, ...generatePath('instantramens'), startPrice: 3000, ...getRandomRarity() },
-            { id: 42, name: "Ion Gems", basePrice: 11050.88, ...generatePath('iongems'), startPrice: 10800, ...getRandomRarity() },
-            { id: 43, name: "Ionic Dryers", basePrice: 15150.99, ...generatePath('ionicdryers'), startPrice: 15300, ...getRandomRarity() },
-            { id: 44, name: "Jacks-in-the-Box", basePrice: 5550.00, ...generatePath('jackinthebox'), startPrice: 5400, ...getRandomRarity() },
-            { id: 45, name: "Jelly Bunnies", basePrice: 7850.11, ...generatePath('jellybunnies'), startPrice: 7600, ...getRandomRarity() },
-            { id: 46, name: "Jester Hats", basePrice: 5950.22, ...generatePath('jesterhats'), startPrice: 6000, ...getRandomRarity() },
-            { id: 47, name: "Jingle Bells", basePrice: 3850.33, ...generatePath('jinglebells'), startPrice: 3900, ...getRandomRarity() },
-            { id: 48, name: "Jolly Chimps", basePrice: 7750.44, ...generatePath('jollychimps'), startPrice: 7500, ...getRandomRarity() },
-            { id: 49, name: "Joyful Bundles", basePrice: 12550.55, ...generatePath('joyfulbundles'), startPrice: 12700, ...getRandomRarity() },
-            { id: 50, name: "Light Swords", basePrice: 8850.99, ...generatePath('lightswords'), startPrice: 9000, ...getRandomRarity() },
-            { id: 52, name: "Loot Bags", basePrice: 5250.20, ...generatePath('lootbags'), startPrice: 5300, ...getRandomRarity() },
-            { id: 53, name: "Love Candles", basePrice: 10550.30, ...generatePath('lovecandles'), startPrice: 10400, ...getRandomRarity() },
-            { id: 55, name: "Low Riders", basePrice: 5550.50, ...generatePath('lowriders'), startPrice: 5400, ...getRandomRarity() },
-            { id: 56, name: "Lunar Snakes", basePrice: 4950.60, ...generatePath('lunarsnakes'), startPrice: 5000, ...getRandomRarity() },
-            { id: 57, name: "Lush Bouquets", basePrice: 9350.70, ...generatePath('lushbouquets'), startPrice: 9500, ...getRandomRarity() },
-            { id: 58, name: "Love Potions", basePrice: 4650.40, ...generatePath('lovepotions'), startPrice: 4800, ...getRandomRarity() },
-            { id: 59, name: "Mad Pumpkins", basePrice: 3250.80, ...generatePath('madpumpkins'), startPrice: 3100, ...getRandomRarity() },
-            { id: 60, name: "Mighty Arms", basePrice: 17050.90, ...generatePath('mightyarms'), startPrice: 17200, ...getRandomRarity() },
-            { id: 61, name: "Mini Oscars", basePrice: 14550.00, ...generatePath('minioscars'), startPrice: 14300, ...getRandomRarity() },
-            { id: 62, name: "Money Pots", basePrice: 19050.11, ...generatePath('moneypots'), startPrice: 19200, ...getRandomRarity() },
-            { id: 63, name: "Moon Pendants", basePrice: 4150.22, ...generatePath('moonpendants'), startPrice: 4000, ...getRandomRarity() },
-            { id: 64, name: "Mousse Cakes", basePrice: 13550.33, ...generatePath('moussecakes'), startPrice: 13700, ...getRandomRarity() },
-            { id: 66, name: "Nail Bracelets", basePrice: 16150.44, ...generatePath('nailbracelets'), startPrice: 16000, ...getRandomRarity() },
-            { id: 67, name: "Party Sparklers", basePrice: 2850.66, ...generatePath('partysparklers'), startPrice: 2900, ...getRandomRarity() },
-            { id: 68, name: "Perfume Bottles", basePrice: 15350.77, ...generatePath('perfumebottles'), startPrice: 15100, ...getRandomRarity() },
-            { id: 69, name: "Pet Snakes", basePrice: 5150.88, ...generatePath('petsnakes'), startPrice: 5300, ...getRandomRarity() },
-            { id: 70, name: "Precious Peaches", basePrice: 12850.99, ...generatePath('preciouspeaches'), startPrice: 12600, ...getRandomRarity() },
-            { id: 71, name: "Pretty Posies", basePrice: 18550.10, ...generatePath('prettyposies'), startPrice: 18700, ...getRandomRarity() },
-            { id: 72, name: "Record Players", basePrice: 6550.44, ...generatePath('recordplayers'), startPrice: 6400, ...getRandomRarity() },
-            { id: 73, name: "Restless Jars", basePrice: 5150.55, ...generatePath('restlessjars'), startPrice: 5200, ...getRandomRarity() },
-            { id: 75, name: "Sakura Flowers", basePrice: 4850.66, ...generatePath('sakuraflowers'), startPrice: 4900, ...getRandomRarity() },
-            { id: 76, name: "Scared Cats", basePrice: 2250.88, ...generatePath('scaredcats'), startPrice: 2300, ...getRandomRarity() },
-            { id: 77, name: "Sharp Tongues", basePrice: 6050.99, ...generatePath('sharptongues'), startPrice: 5900, ...getRandomRarity() },
-            { id: 78, name: "Signet Rings", basePrice: 11850.10, ...generatePath('signetrings'), startPrice: 11700, ...getRandomRarity() },
-            { id: 79, name: "Skull Flowers", basePrice: 5650.20, ...generatePath('skullflowers'), startPrice: 5800, ...getRandomRarity() },
-            { id: 80, name: "Sky Stilettos", basePrice: 10150.30, ...generatePath('skystilettos'), startPrice: 10000, ...getRandomRarity() },
-            { id: 81, name: "Sleigh Bells", basePrice: 8550.40, ...generatePath('sleighbells'), startPrice: 8400, ...getRandomRarity() },
-            { id: 82, name: "Snake Boxes", basePrice: 7050.50, ...generatePath('snakeboxes'), startPrice: 7100, ...getRandomRarity() },
-            { id: 83, name: "Snoop Cigars", basePrice: 4950.60, ...generatePath('snoopcigars'), startPrice: 4700, ...getRandomRarity() },
-            { id: 84, name: "Snoop Doggs", basePrice: 5350.70, ...generatePath('snoopdoggs'), startPrice: 5200, ...getRandomRarity() },
-            { id: 85, name: "Snow Globes", basePrice: 6650.80, ...generatePath('snowglobes'), startPrice: 6500, ...getRandomRarity() },
-            { id: 86, name: "Snow Mittens", basePrice: 7950.90, ...generatePath('snowmittens'), startPrice: 8000, ...getRandomRarity() },
-            { id: 87, name: "Spiced Wines", basePrice: 3550.00, ...generatePath('spicedwines'), startPrice: 3700, ...getRandomRarity() },
-            { id: 88, name: "Spring Baskets", basePrice: 8250.11, ...generatePath('springbaskets'), startPrice: 8100, ...getRandomRarity() },
-            { id: 89, name: "Spy Agarics", basePrice: 1950.22, ...generatePath('spyagarics'), startPrice: 2000, ...getRandomRarity() },
-            { id: 90, name: "Star Notepads", basePrice: 4750.33, ...generatePath('starnotepads'), startPrice: 4900, ...getRandomRarity() },
-            { id: 91, name: "Stellar Rockets", basePrice: 3950.44, ...generatePath('stellarrockets'), startPrice: 3800, ...getRandomRarity() },
-            { id: 92, name: "Swag Bags", basePrice: 2550.66, ...generatePath('swagbags'), startPrice: 2600, ...getRandomRarity() },
-            { id: 93, name: "Swiss Watches", basePrice: 8750.77, ...generatePath('swisswatches'), startPrice: 8600, ...getRandomRarity() },
-            { id: 94, name: "Tama Gadgets", basePrice: 6550.88, ...generatePath('tamagadgets'), startPrice: 6600, ...getRandomRarity() },
-            { id: 96, name: "Top Hats", basePrice: 7150.99, ...generatePath('tophats'), startPrice: 7000, ...getRandomRarity() },
-            { id: 97, name: "Trapped Hearts", basePrice: 4350.20, ...generatePath('trappedhearts'), startPrice: 4200, ...getRandomRarity() },
-            { id: 98, name: "Valentine Boxes", basePrice: 11050.30, ...generatePath('valentineboxes'), startPrice: 10900, ...getRandomRarity() },
-            { id: 99, name: "Vintage Cigars", basePrice: 6150.40, ...generatePath('vintagecigars'), startPrice: 6000, ...getRandomRarity() },
-            { id: 100, name: "Voodoo Dolls", basePrice: 5450.50, ...generatePath('voodoodolls'), startPrice: 5500, ...getRandomRarity() },
-            { id: 101, name: "Westside Signs", basePrice: 8850.90, ...generatePath('westsidesigns'), startPrice: 8700, ...getRandomRarity() },
-            { id: 102, name: "Whip Cupcakes", basePrice: 4650.10, ...generatePath('whipcupcakes'), startPrice: 4700, ...getRandomRarity() },
-            { id: 103, name: "Winter Wreaths", basePrice: 3250.20, ...generatePath('winterwreaths'), startPrice: 3300, ...getRandomRarity() },
-            { id: 105, name: "Witch Hats", basePrice: 1550.30, ...generatePath('witchhats'), startPrice: 1600, ...getRandomRarity() },
-            { id: 106, name: "Lol Pops", basePrice: 4550.22, ...generatePath('lolpops'), startPrice: 4300, ...getRandomRarity() },
-            
-            // --- ДОБАВЛЕНО 195 НОВЫХ NFT (С ID 107 по 300) ---
-            { id: 107, name: "Lucky Coins", basePrice: 2100.50, ...generatePath('luckycoins'), startPrice: 2000, ...getRandomRarity() },
-            { id: 108, name: "Space Helmets", basePrice: 13500.10, ...generatePath('spacehelmets'), startPrice: 13600, ...getRandomRarity() },
-            { id: 109, name: "Golden Keys", basePrice: 7800.90, ...generatePath('goldenkeys'), startPrice: 7700, ...getRandomRarity() },
-            { id: 110, name: "Mystic Totems", basePrice: 3500.45, ...generatePath('mystictotems'), startPrice: 3450, ...getRandomRarity() },
-            { id: 111, name: "Cyber Specs", basePrice: 11200.70, ...generatePath('cyberspecs'), startPrice: 11300, ...getRandomRarity() },
-            { id: 112, name: "Pixel Swords", basePrice: 6200.30, ...generatePath('pixelswords'), startPrice: 6100, ...getRandomRarity() },
-            { id: 113, name: "Rainbow Hearts", basePrice: 5500.65, ...generatePath('rainbowhearts'), startPrice: 5600, ...getRandomRarity() },
-            { id: 114, name: "Shadow Masks", basePrice: 8900.22, ...generatePath('shadowmasks'), startPrice: 9000, ...getRandomRarity() },
-            { id: 115, name: "Treasure Chests", basePrice: 18500.00, ...generatePath('treasurechests'), startPrice: 18400, ...getRandomRarity() },
-            { id: 116, name: "Ancient Scrolls", basePrice: 4100.15, ...generatePath('ancientscrolls'), startPrice: 4200, ...getRandomRarity() },
-            { id: 117, name: "Dream Catchers", basePrice: 2900.88, ...generatePath('dreamcatchers'), startPrice: 2800, ...getRandomRarity() },
-            { id: 118, name: "Electric Guitars", basePrice: 15500.50, ...generatePath('electricguitars'), startPrice: 15400, ...getRandomRarity() },
-            { id: 119, name: "Star Gems", basePrice: 9999.99, ...generatePath('stargems'), startPrice: 10000, ...getRandomRarity() },
-            { id: 120, name: "Time Clocks", basePrice: 7070.70, ...generatePath('timeclocks'), startPrice: 7100, ...getRandomRarity() },
-            { id: 121, name: "Virtual Reality Headsets", basePrice: 19999.00, ...generatePath('vrheadsets'), startPrice: 20100, ...getRandomRarity() },
-            { id: 122, name: "Zen Gardens", basePrice: 3100.40, ...generatePath('zengardens'), startPrice: 3000, ...getRandomRarity() },
-            { id: 123, name: "Robot Dogs", basePrice: 12000.80, ...generatePath('robotdogs'), startPrice: 12100, ...getRandomRarity() },
-            { id: 124, name: "Floating Islands", basePrice: 8800.60, ...generatePath('floatingislands'), startPrice: 8900, ...getRandomRarity() },
-            { id: 125, name: "Cosmic Dust", basePrice: 4500.25, ...generatePath('cosmicdust'), startPrice: 4600, ...getRandomRarity() },
-            { id: 126, name: "Magic Carpets", basePrice: 14700.10, ...generatePath('magiccarpets'), startPrice: 14600, ...getRandomRarity() },
-            { id: 127, name: "Dragon Scales", basePrice: 17200.55, ...generatePath('dragonscales'), startPrice: 17300, ...getRandomRarity() },
-            { id: 128, name: "Pet Snakes", basePrice: 5320.45, ...generatePath('petsnakes'), startPrice: 5220, ...getRandomRarity() },
-            { id: 129, name: "Nail Bracelets", basePrice: 8550.21, ...generatePath('nailbracelets'), startPrice: 8400, ...getRandomRarity() },
-            { id: 130, name: "Precious Peaches", basePrice: 12800.99, ...generatePath('preciouspeaches'), startPrice: 12600, ...getRandomRarity() },
-            { id: 131, name: "Mini Oscars", basePrice: 14500.00, ...generatePath('minioscars'), startPrice: 14300, ...getRandomRarity() },
-            { id: 132, name: "Swiss Watches", basePrice: 8700.77, ...generatePath('swisswatches'), startPrice: 8600, ...getRandomRarity() },
-            { id: 133, name: "Stellar Rockets", basePrice: 3900.44, ...generatePath('stellarrockets'), startPrice: 3800, ...getRandomRarity() },
-            { id: 134, name: "Moon Flowers", basePrice: 16800.20, ...generatePath('moonflowers'), startPrice: 16900, ...getRandomRarity() },
-            { id: 135, name: "Sun Charms", basePrice: 2800.60, ...generatePath('suncharms'), startPrice: 2750, ...getRandomRarity() },
-            { id: 136, name: "Venus Flytraps", basePrice: 4200.75, ...generatePath('venusflytraps'), startPrice: 4300, ...getRandomRarity() },
-            { id: 137, name: "Jupiter Rings", basePrice: 9100.30, ...generatePath('jupiterrings'), startPrice: 9000, ...getRandomRarity() },
-            { id: 138, name: "Neptune Tridents", basePrice: 11100.90, ...generatePath('neptunetrident'), startPrice: 11200, ...getRandomRarity() },
-            { id: 139, name: "Mars Rovers", basePrice: 13300.15, ...generatePath('marsrovers'), startPrice: 13200, ...getRandomRarity() },
-            { id: 140, name: "Uranus Clouds", basePrice: 5600.40, ...generatePath('uranusclouds'), startPrice: 5500, ...getRandomRarity() },
-            { id: 141, name: "Saturn Moons", basePrice: 7700.85, ...generatePath('saturnmoons'), startPrice: 7600, ...getRandomRarity() },
-            { id: 142, name: "Pluto Hearts", basePrice: 1550.99, ...generatePath('plutohearts'), startPrice: 1600, ...getRandomRarity() },
-            { id: 143, name: "Comet Dust", basePrice: 3400.60, ...generatePath('cometdust'), startPrice: 3300, ...getRandomRarity() },
-            { id: 144, name: "Galaxy Swirls", basePrice: 18200.25, ...generatePath('galaxyswirls'), startPrice: 18300, ...getRandomRarity() },
-            { id: 145, name: "Meteorite Shards", basePrice: 6300.70, ...generatePath('meteoriteshards'), startPrice: 6400, ...getRandomRarity() },
-            { id: 146, name: "Aurora Lights", basePrice: 10500.10, ...generatePath('auroralights'), startPrice: 10400, ...getRandomRarity() },
-            { id: 147, name: "Telescopes", basePrice: 12200.50, ...generatePath('telescopes'), startPrice: 12300, ...getRandomRarity() },
-            { id: 148, name: "Astro Coins", basePrice: 4000.90, ...generatePath('astrocoins'), startPrice: 3900, ...getRandomRarity() },
-            { id: 149, name: "Zero Gravity Rings", basePrice: 9500.35, ...generatePath('zerogravityrings'), startPrice: 9600, ...getRandomRarity() },
-            { id: 150, name: "Wormhole Keys", basePrice: 16500.80, ...generatePath('wormholekeys'), startPrice: 16400, ...getRandomRarity() },
-            { id: 151, name: "Black Holes", basePrice: 21000.00, ...generatePath('blackholes'), startPrice: 21200, ...getRandomRarity() },
-            { id: 152, name: "Rocket Fuel", basePrice: 2050.40, ...generatePath('rocketfuel'), startPrice: 2100, ...getRandomRarity() },
-            { id: 153, name: "Space Suits", basePrice: 17500.55, ...generatePath('spacesuits'), startPrice: 17400, ...getRandomRarity() },
-            { id: 154, name: "Laser Pointers", basePrice: 1800.75, ...generatePath('laserpointers'), startPrice: 1850, ...getRandomRarity() },
-            { id: 155, name: "Alien Pets", basePrice: 15000.30, ...generatePath('alienpets'), startPrice: 15100, ...getRandomRarity() },
-            { id: 156, name: "Crystal Skulls", basePrice: 7000.11, ...generatePath('crystalskulls'), startPrice: 6900, ...getRandomRarity() },
-            { id: 157, name: "Ancient Maps", basePrice: 5200.44, ...generatePath('ancientmaps'), startPrice: 5300, ...getRandomRarity() },
-            { id: 158, name: "Lava Lamps", basePrice: 3900.80, ...generatePath('lavalamps'), startPrice: 4000, ...getRandomRarity() },
-            { id: 159, name: "Graffiti Cans", basePrice: 2500.20, ...generatePath('graffiticans'), startPrice: 2450, ...getRandomRarity() },
-            { id: 160, name: "Headphones", basePrice: 11500.60, ...generatePath('headphones'), startPrice: 11400, ...getRandomRarity() },
-            { id: 161, name: "Vinyl Records", basePrice: 6800.95, ...generatePath('vinylrecords'), startPrice: 6900, ...getRandomRarity() },
-            { id: 162, name: "Gamer Mice", basePrice: 8400.33, ...generatePath('gamermice'), startPrice: 8500, ...getRandomRarity() },
-            { id: 163, name: "Keyboards", basePrice: 13000.20, ...generatePath('keyboards'), startPrice: 13100, ...getRandomRarity() },
-            { id: 164, name: "Console Controllers", basePrice: 5100.70, ...generatePath('consolecontrollers'), startPrice: 5000, ...getRandomRarity() },
-            { id: 165, name: "Game Cartridges", basePrice: 3200.99, ...generatePath('gamecartridges'), startPrice: 3300, ...getRandomRarity() },
-            { id: 166, name: "Arcade Tokens", basePrice: 1900.50, ...generatePath('arcadetokens'), startPrice: 1850, ...getRandomRarity() },
-            { id: 167, name: "Pixelated Glasses", basePrice: 4700.10, ...generatePath('pixelglasses'), startPrice: 4800, ...getRandomRarity() },
-            { id: 168, name: "Retro Boomboxes", basePrice: 9700.80, ...generatePath('retroboomboxes'), startPrice: 9600, ...getRandomRarity() },
-            { id: 169, name: "Walkie Talkies", basePrice: 7500.45, ...generatePath('walkietalkies'), startPrice: 7600, ...getRandomRarity() },
-            { id: 170, name: "Cursed Tapes", basePrice: 1400.60, ...generatePath('cursedtapes'), startPrice: 1500, ...getRandomRarity() },
-            { id: 171, name: "Drones", basePrice: 16000.25, ...generatePath('drones'), startPrice: 15900, ...getRandomRarity() },
-            { id: 172, name: "Smart Rings", basePrice: 11900.90, ...generatePath('smartrings'), startPrice: 12000, ...getRandomRarity() },
-            { id: 173, name: "Holographic Projectors", basePrice: 18800.15, ...generatePath('holographicprojectors'), startPrice: 18700, ...getRandomRarity() },
-            { id: 174, name: "Floating Speakers", basePrice: 6000.55, ...generatePath('floatingspeakers'), startPrice: 6100, ...getRandomRarity() },
-            { id: 175, name: "Nano Bots", basePrice: 14900.30, ...generatePath('nanobots'), startPrice: 14800, ...getRandomRarity() },
-            { id: 176, name: "Glow Sticks", basePrice: 1200.40, ...generatePath('glowsticks'), startPrice: 1150, ...getRandomRarity() },
-            { id: 177, name: "Party Horns", basePrice: 900.80, ...generatePath('partyhorns'), startPrice: 950, ...getRandomRarity() },
-            { id: 178, name: "Confetti Cannons", basePrice: 3700.65, ...generatePath('confetticannons'), startPrice: 3800, ...getRandomRarity() },
-            { id: 179, name: "Disco Balls", basePrice: 8200.22, ...generatePath('discoballs'), startPrice: 8300, ...getRandomRarity() },
-            { id: 180, name: "Limousines", basePrice: 22000.00, ...generatePath('limousines'), startPrice: 21900, ...getRandomRarity() },
-            { id: 181, name: "VIP Passes", basePrice: 10800.50, ...generatePath('vippasses'), startPrice: 10700, ...getRandomRarity() },
-            { id: 182, name: "Champagne Bottles", basePrice: 5700.10, ...generatePath('champagnebottles'), startPrice: 5800, ...getRandomRarity() },
-            { id: 183, name: "Microphones", basePrice: 4400.90, ...generatePath('microphones'), startPrice: 4500, ...getRandomRarity() },
-            { id: 184, name: "Golden Statues", basePrice: 19500.70, ...generatePath('goldenstatues'), startPrice: 19600, ...getRandomRarity() },
-            { id: 185, name: "Diamond Necklaces", basePrice: 25000.00, ...generatePath('diamondnecklaces'), startPrice: 24800, ...getRandomRarity() },
-            { id: 186, name: "Luxury Perfumes", basePrice: 13900.45, ...generatePath('luxuryperfumes'), startPrice: 13800, ...getRandomRarity() },
-            { id: 187, name: "Yachts", basePrice: 30000.00, ...generatePath('yachts'), startPrice: 29800, ...getRandomRarity() },
-            { id: 188, name: "Private Jets", basePrice: 35000.00, ...generatePath('privatejets'), startPrice: 35200, ...getRandomRarity() },
-            { id: 189, name: "Rare Wines", basePrice: 9900.60, ...generatePath('rarewines'), startPrice: 9800, ...getRandomRarity() },
-            { id: 190, name: "Gold Bars", basePrice: 17700.33, ...generatePath('goldbars'), startPrice: 17600, ...getRandomRarity() },
-            { id: 191, name: "Silk Robes", basePrice: 4100.55, ...generatePath('silkrobes'), startPrice: 4200, ...getRandomRarity() },
-            { id: 192, name: "Exotic Birds", basePrice: 6900.80, ...generatePath('exoticbirds'), startPrice: 7000, ...getRandomRarity() },
-            { id: 193, name: "Fountain Pens", basePrice: 5400.20, ...generatePath('fountainpens'), startPrice: 5350, ...getRandomRarity() },
-            { id: 194, name: "Monocles", basePrice: 2300.99, ...generatePath('monocles'), startPrice: 2350, ...getRandomRarity() },
-            { id: 195, name: "Pocket Watches", basePrice: 7200.40, ...generatePath('pocketwatches'), startPrice: 7100, ...getRandomRarity() },
-            { id: 196, name: "Antique Books", basePrice: 8000.10, ...generatePath('antiquebooks'), startPrice: 7900, ...getRandomRarity() },
-            { id: 197, name: "Sealed Letters", basePrice: 3100.50, ...generatePath('sealedletters'), startPrice: 3200, ...getRandomRarity() },
-            { id: 198, name: "Compass Roses", basePrice: 5800.75, ...generatePath('compassroses'), startPrice: 5900, ...getRandomRarity() },
-            { id: 199, name: "Globe Models", basePrice: 11100.22, ...generatePath('globemodels'), startPrice: 11000, ...getRandomRarity() },
-            { id: 200, name: "Hourglasses", basePrice: 4900.90, ...generatePath('hourglasses'), startPrice: 5000, ...getRandomRarity() },
-            { id: 201, name: "Quill Pens", basePrice: 1600.60, ...generatePath('quillpens'), startPrice: 1650, ...getRandomRarity() },
-            { id: 202, name: "Tapestries", basePrice: 14000.30, ...generatePath('tapestries'), startPrice: 14100, ...getRandomRarity() },
-            { id: 203, name: "Wax Seals", basePrice: 2900.15, ...generatePath('waxseals'), startPrice: 2850, ...getRandomRarity() },
-            { id: 204, name: "Wishing Wells", basePrice: 9300.88, ...generatePath('wishingwells'), startPrice: 9200, ...getRandomRarity() },
-            { id: 205, name: "Zodiac Signs", basePrice: 6500.40, ...generatePath('zodiacsigns'), startPrice: 6600, ...getRandomRarity() },
-            { id: 206, name: "Tarot Cards", basePrice: 3800.55, ...generatePath('tarotcards'), startPrice: 3900, ...getRandomRarity() },
-            { id: 207, name: "Alchemist Tools", basePrice: 17000.10, ...generatePath('alchemisttools'), startPrice: 17100, ...getRandomRarity() },
-            { id: 208, name: "Crystal Amulets", basePrice: 8500.99, ...generatePath('crystalamulet'), startPrice: 8600, ...getRandomRarity() },
-            { id: 209, name: "Mystic Runes", basePrice: 4600.70, ...generatePath('mysticrunes'), startPrice: 4700, ...getRandomRarity() },
-            { id: 210, name: "Phoenix Feathers", basePrice: 19000.00, ...generatePath('phoenixfeathers'), startPrice: 18900, ...getRandomRarity() },
-            { id: 211, name: "Dragon Eggs", basePrice: 23000.50, ...generatePath('dragoneggs'), startPrice: 23200, ...getRandomRarity() },
-            { id: 212, name: "Fairy Dust", basePrice: 1300.20, ...generatePath('fairydust'), startPrice: 1250, ...getRandomRarity() },
-            { id: 213, name: "Unicorn Horns", basePrice: 28000.11, ...generatePath('unicornhorns'), startPrice: 27800, ...getRandomRarity() },
-            { id: 214, name: "Griffin Claws", basePrice: 16800.77, ...generatePath('griffinclaws'), startPrice: 16900, ...getRandomRarity() },
-            { id: 215, name: "Mermaid Scales", basePrice: 9000.30, ...generatePath('mermaidscales'), startPrice: 9100, ...getRandomRarity() },
-            { id: 216, name: "Werewolf Fangs", basePrice: 7000.90, ...generatePath('werewolffangs'), startPrice: 6900, ...getRandomRarity() },
-            { id: 217, name: "Vampire Capes", basePrice: 11000.50, ...generatePath('vampirecapes'), startPrice: 10900, ...getRandomRarity() },
-            { id: 218, name: "Ghost Chains", basePrice: 3300.40, ...generatePath('ghostchains'), startPrice: 3400, ...getRandomRarity() },
-            { id: 219, name: "Zombies Brains", basePrice: 2000.10, ...generatePath('zombiebrains'), startPrice: 1950, ...getRandomRarity() },
-            { id: 220, name: "Mummy Wraps", basePrice: 4100.60, ...generatePath('mummywraps'), startPrice: 4200, ...getRandomRarity() },
-            { id: 221, name: "Witches Brooms", basePrice: 5500.85, ...generatePath('witchesbrooms'), startPrice: 5400, ...getRandomRarity() },
-            { id: 222, name: "Wizard Wands", basePrice: 12500.99, ...generatePath('wizardwands'), startPrice: 12600, ...getRandomRarity() },
-            { id: 223, name: "Troll Clubs", basePrice: 8800.25, ...generatePath('trollclubs'), startPrice: 8900, ...getRandomRarity() },
-            { id: 224, name: "Goblin Gold", basePrice: 15500.40, ...generatePath('goblingold'), startPrice: 15400, ...getRandomRarity() },
-            { id: 225, name: "Elf Arrows", basePrice: 6100.70, ...generatePath('elfarrows'), startPrice: 6200, ...getRandomRarity() },
-            { id: 226, name: "Dwarf Axes", basePrice: 10100.10, ...generatePath('dwarfaxes'), startPrice: 10000, ...getRandomRarity() },
-            { id: 227, name: "Orc Shields", basePrice: 4900.50, ...generatePath('orcshields'), startPrice: 5000, ...getRandomRarity() },
-            { id: 228, name: "Hobbit Pipes", basePrice: 2500.80, ...generatePath('hobbitpipes'), startPrice: 2450, ...getRandomRarity() },
-            { id: 229, name: "Giant Beans", basePrice: 1800.33, ...generatePath('giantbeans'), startPrice: 1750, ...getRandomRarity() },
-            { id: 230, name: "Genie Lamps", basePrice: 13000.65, ...generatePath('genielamps'), startPrice: 13100, ...getRandomRarity() },
-            { id: 231, name: "Kraken Tentacles", basePrice: 20000.90, ...generatePath('krakententacles'), startPrice: 19900, ...getRandomRarity() },
-            { id: 232, name: "Loch Ness Photos", basePrice: 1500.11, ...generatePath('lochnessphotos'), startPrice: 1550, ...getRandomRarity() },
-            { id: 233, name: "Bigfoot Prints", basePrice: 2700.55, ...generatePath('bigfootprints'), startPrice: 2600, ...getRandomRarity() },
-            { id: 234, name: "Yeti Fur", basePrice: 9900.20, ...generatePath('yetifur'), startPrice: 10000, ...getRandomRarity() },
-            { id: 235, name: "Chupacabra Blood", basePrice: 7700.80, ...generatePath('chupacabrablood'), startPrice: 7600, ...getRandomRarity() },
-            { id: 236, name: "Mothman Wings", basePrice: 11100.45, ...generatePath('mothmanwings'), startPrice: 11200, ...getRandomRarity() },
-            { id: 237, name: "Jersey Devil Hooves", basePrice: 6000.99, ...generatePath('jerseydevilhooves'), startPrice: 6100, ...getRandomRarity() },
-            { id: 238, name: "Banshee Screams", basePrice: 4200.10, ...generatePath('bansheescreams'), startPrice: 4300, ...getRandomRarity() },
-            { id: 239, name: "Gargoyle Statues", basePrice: 14500.60, ...generatePath('gargoylestatues'), startPrice: 14400, ...getRandomRarity() },
-            { id: 240, name: "Sphinx Riddles", basePrice: 16000.35, ...generatePath('sphinxriddles'), startPrice: 16100, ...getRandomRarity() },
-            { id: 241, name: "Pegasus Feathers", basePrice: 18200.88, ...generatePath('pegasusfeathers'), startPrice: 18300, ...getRandomRarity() },
-            { id: 242, name: "Centaur Bows", basePrice: 9100.50, ...generatePath('centaurbows'), startPrice: 9000, ...getRandomRarity() },
-            { id: 243, name: "Minotaur Horns", basePrice: 13500.10, ...generatePath('minotaurhorns'), startPrice: 13400, ...getRandomRarity() },
-            { id: 244, name: "Cyclops Eyes", basePrice: 7500.70, ...generatePath('cyclopseyes'), startPrice: 7600, ...getRandomRarity() },
-            { id: 245, name: "Hydra Heads", basePrice: 15500.99, ...generatePath('hydraheads'), startPrice: 15600, ...getRandomRarity() },
-            { id: 246, name: "Medusa Hair", basePrice: 19900.00, ...generatePath('medusahair'), startPrice: 19800, ...getRandomRarity() },
-            { id: 247, name: "Chimera Breath", basePrice: 11200.25, ...generatePath('chimerabreath'), startPrice: 11300, ...getRandomRarity() },
-            { id: 248, name: "Cerberus Collars", basePrice: 20100.50, ...generatePath('cerberuscollars'), startPrice: 20200, ...getRandomRarity() },
-            { id: 249, name: "Harpy Feathers", basePrice: 5500.40, ...generatePath('harpyfeathers'), startPrice: 5400, ...getRandomRarity() },
-            { id: 250, name: "Siren Songs", basePrice: 3800.80, ...generatePath('sirensongs'), startPrice: 3900, ...getRandomRarity() },
-            { id: 251, name: "Angel Wings", basePrice: 17500.60, ...generatePath('angelwings'), startPrice: 17400, ...getRandomRarity() },
-            { id: 252, name: "Demon Horns", basePrice: 14100.33, ...generatePath('demonhorns'), startPrice: 14200, ...getRandomRarity() },
-            { id: 253, name: "Seraphim Fire", basePrice: 22500.77, ...generatePath('seraphimfire'), startPrice: 22400, ...getRandomRarity() },
-            { id: 254, name: "Cherubim Bows", basePrice: 9500.15, ...generatePath('cherubimbows'), startPrice: 9600, ...getRandomRarity() },
-            { id: 255, name: "Archangel Swords", basePrice: 25500.00, ...generatePath('archangelswords'), startPrice: 25600, ...getRandomRarity() },
-            { id: 256, name: "Ogre Clubs", basePrice: 3100.40, ...generatePath('ogreclubs'), startPrice: 3000, ...getRandomRarity() },
-            { id: 257, name: "Imp Tails", basePrice: 1800.90, ...generatePath('imptails'), startPrice: 1850, ...getRandomRarity() },
-            { id: 258, name: "Skeletons Keys", basePrice: 4700.50, ...generatePath('skeletonkeys'), startPrice: 4600, ...getRandomRarity() },
-            { id: 259, name: "Ghouls Eyes", basePrice: 2900.22, ...generatePath('ghoulseyes'), startPrice: 2950, ...getRandomRarity() },
-            { id: 260, name: "Wraith Cloaks", basePrice: 6200.70, ...generatePath('wraithcloaks'), startPrice: 6100, ...getRandomRarity() },
-            { id: 261, name: "Lich Phylacteries", basePrice: 17900.80, ...generatePath('lichphylacteries'), startPrice: 18000, ...getRandomRarity() },
-            { id: 262, name: "Golem Cores", basePrice: 15500.30, ...generatePath('golemcores'), startPrice: 15400, ...getRandomRarity() },
-            { id: 263, name: "Sphinx Claws", basePrice: 8800.99, ...generatePath('sphinxclaws'), startPrice: 8900, ...getRandomRarity() },
-            { id: 264, name: "Basilisk Venom", basePrice: 12000.55, ...generatePath('basiliskvenom'), startPrice: 12100, ...getRandomRarity() },
-            { id: 265, name: "Cockatrice Eggs", basePrice: 7000.10, ...generatePath('cockatriceeggs'), startPrice: 6900, ...getRandomRarity() },
-            { id: 266, name: "Dryad Leaves", basePrice: 4500.60, ...generatePath('dryadleaves'), startPrice: 4600, ...getRandomRarity() },
-            { id: 267, name: "Nymph Tears", basePrice: 3300.95, ...generatePath('nymphstears'), startPrice: 3200, ...getRandomRarity() },
-            { id: 268, name: "Satyrs Flutes", basePrice: 5100.44, ...generatePath('satyrsflutes'), startPrice: 5200, ...getRandomRarity() },
-            { id: 269, name: "Faun Hooves", basePrice: 2100.77, ...generatePath('faunhooves'), startPrice: 2050, ...getRandomRarity() },
-            { id: 270, name: "Sprite Wings", basePrice: 1100.30, ...generatePath('spritewings'), startPrice: 1150, ...getRandomRarity() },
-            { id: 271, name: "Leprechaun Gold", basePrice: 26000.50, ...generatePath('leprechaungold'), startPrice: 25800, ...getRandomRarity() },
-            { id: 272, name: "Banshee Veil", basePrice: 4100.99, ...generatePath('bansheeveil'), startPrice: 4200, ...getRandomRarity() },
-            { id: 273, name: "Pheonix Tears", basePrice: 19000.10, ...generatePath('phoenixtears'), startPrice: 19100, ...getRandomRarity() },
-            { id: 274, name: "Wyvern Claws", basePrice: 14500.60, ...generatePath('wyvernclaws'), startPrice: 14400, ...getRandomRarity() },
-            { id: 275, name: "Gnome Hats", basePrice: 3200.70, ...generatePath('gnomehats'), startPrice: 3300, ...getRandomRarity() },
-            { id: 276, name: "Troll Bridges", basePrice: 10500.80, ...generatePath('trollbridges'), startPrice: 10400, ...getRandomRarity() },
-            { id: 277, name: "Werewolf Pelt", basePrice: 8700.35, ...generatePath('werewolfpelt'), startPrice: 8800, ...getRandomRarity() },
-            { id: 278, name: "Vampire Dust", basePrice: 6100.90, ...generatePath('vampiredust'), startPrice: 6000, ...getRandomRarity() },
-            { id: 279, name: "Ghost Lanterns", basePrice: 4900.25, ...generatePath('ghostlanterns'), startPrice: 5000, ...getRandomRarity() },
-            { id: 280, name: "Zombie Virus", basePrice: 1900.66, ...generatePath('zombievirus'), startPrice: 1850, ...getRandomRarity() },
-            { id: 281, name: "Mummy Curses", basePrice: 3500.40, ...generatePath('mummycurses'), startPrice: 3600, ...getRandomRarity() },
-            { id: 282, name: "Witch Brew", basePrice: 5800.80, ...generatePath('witchbrew'), startPrice: 5700, ...getRandomRarity() },
-            { id: 283, name: "Wizard Scrolls", basePrice: 12200.50, ...generatePath('wizardscrolls'), startPrice: 12300, ...getRandomRarity() },
-            { id: 284, name: "Troll Skulls", basePrice: 9500.11, ...generatePath('trollskulls'), startPrice: 9400, ...getRandomRarity() },
-            { id: 285, name: "Goblin Trinkets", basePrice: 14800.70, ...generatePath('goblintrinkets'), startPrice: 14900, ...getRandomRarity() },
-            { id: 286, name: "Elf Harp", basePrice: 6900.33, ...generatePath('elfharp'), startPrice: 6800, ...getRandomRarity() },
-            { id: 287, name: "Dwarf Hammer", basePrice: 10900.55, ...generatePath('dwarfhammer'), startPrice: 11000, ...getRandomRarity() },
-            { id: 288, name: "Orc Totems", basePrice: 5300.99, ...generatePath('orctotems'), startPrice: 5400, ...getRandomRarity() },
-            { id: 289, name: "Hobbit Bread", basePrice: 2700.10, ...generatePath('hobbitbread'), startPrice: 2650, ...getRandomRarity() },
-            { id: 290, name: "Giant Clubs", basePrice: 1600.50, ...generatePath('giantclubs'), startPrice: 1650, ...getRandomRarity() },
-            { id: 291, name: "Kraken Ink", basePrice: 21500.75, ...generatePath('krakenink'), startPrice: 21400, ...getRandomRarity() },
-            { id: 292, name: "Loch Ness Maps", basePrice: 1700.30, ...generatePath('lochnessmaps'), startPrice: 1750, ...getRandomRarity() },
-            { id: 293, name: "Bigfoot Hair", basePrice: 2900.80, ...generatePath('bigfoothair'), startPrice: 3000, ...getRandomRarity() },
-            { id: 294, name: "Yeti Footprints", basePrice: 9000.60, ...generatePath('yetifootprints'), startPrice: 8900, ...getRandomRarity() },
-            { id: 295, name: "Chupacabra Fangs", basePrice: 7200.22, ...generatePath('chupacabrafangs'), startPrice: 7300, ...getRandomRarity() },
-            { id: 296, name: "Mothman Dust", basePrice: 10500.40, ...generatePath('mothmandust'), startPrice: 10400, ...getRandomRarity() },
-            { id: 297, name: "Jersey Devil Bones", basePrice: 6500.99, ...generatePath('jerseydevilbones'), startPrice: 6600, ...getRandomRarity() },
-            { id: 298, name: "Banshee Dolls", basePrice: 4000.10, ...generatePath('bansheedolls'), startPrice: 3900, ...getRandomRarity() },
-            { id: 299, name: "Gargoyle Feathers", basePrice: 15100.70, ...generatePath('gargoylefeathers'), startPrice: 15200, ...getRandomRarity() },
-            { id: 300, name: "Sphinx Statues", basePrice: 16800.50, ...generatePath('sphinxstatues'), startPrice: 16700, ...getRandomRarity() },
-        ];
-
-        // Добавляем lottie-пути только для проверенных ID
-        collections.forEach(item => {
-            if (LOTTIE_PATHS[item.id]) {
-                item.lottie = LOTTIE_PATHS[item.id];
-            }
-        });
-
-
-        const rates = {
-            'RUB': { val: 1, sign: '₽' }, 'USD': { val: 0.010, sign: '$' }, 'EUR': { val: 0.0095, sign: '€' },
-            'KZT': { val: 5.1, sign: '₸' }, 'UAH': { val: 0.40, sign: '₴' }
-        };
-
-        const requisites = {
-            'card': '0000 0000 0000 0000 (Sber/Tinkoff)', 'btc': 'bc1q_YOUR_BTC', 'eth': '0x_YOUR_ETH',
-            'usdt': 'T_YOUR_TRC20', 'ton': 'UQ_YOUR_TON'
-        };
-
-        let currentCurrency = 'RUB';
-        let favorites = [];
-        let currentOpenId = null;
-
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        document.getElementById('user-id').innerText = tg.initDataUnsafe?.user?.id || "88005553535";
-
-        // --- CORE FUNCTIONS ---
-
-        function getPrice(rubPrice) {
-            const rate = rates[currentCurrency];
-            return (rubPrice * rate.val).toFixed(2) + ' ' + rate.sign;
+        function changeCurrency() {
+            renderMarket(collections, 'market-list');
+            renderFavorites();
+            document.getElementById('user-balance').innerText = getPrice(0); 
+            document.getElementById('frozen-balance').innerText = getPrice(0);
         }
 
-        // --- SHUFFLE ARRAY FUNCTION ---
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -630,305 +281,379 @@
             }
         }
 
-        function renderMarket(items, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
+        function generatePriceHistory(basePrice) {
+            const history = [];
+            let currentPrice = basePrice;
+            const today = new Date();
+            
+            for (let i = 0; i < 5; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                
+                // Random change: -5% to +5%
+                const changePercent = (Math.random() * 10 - 5).toFixed(1); 
+                const changeAmount = Math.round(currentPrice * (changePercent / 100));
+                
+                const dayPrice = currentPrice - changeAmount;
 
-            if(items.length === 0 && containerId === 'fav-list') {
-                container.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных NFT</div>`;
-                return;
-            } else if (items.length === 0 && containerId === 'market-list') {
-                 container.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">По вашему запросу ничего не найдено.</div>`;
+                history.push({
+                    date: date.toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' }),
+                    price: dayPrice,
+                    change: changeAmount
+                });
+                currentPrice = dayPrice;
+            }
+            return history.reverse(); 
+        }
+
+        // --- (2) КОЛЛЕКЦИЯ NFT (ТОЛЬКО СУЩЕСТВУЮЩИЕ КОЛЛЕКЦИИ TELEGRAM) ---
+        
+        // Используем 12 коллекций из списка пользователя для имитации разнообразия
+        const baseNfts = [
+            // Collection Name, Base Price, Symbol/ID style, Color hint for rarity
+            { title: 'Artisan Brick', model: 'Artisan Bricks', symbol: 'ART-BRICK', priceBase: 12500, color: 'Brown/Earth' },
+            { title: 'Astral Shard', model: 'Astral Shards', symbol: 'AST-SHARD', priceBase: 7800, color: 'Purple/Cosmic' },
+            { title: 'B-Day Candle', model: 'B-Day Candles', symbol: 'BDAY-CANDLE', priceBase: 3500, color: 'Yellow/Flame' },
+            { title: 'Durov\'s Cap', model: 'Durov\'s Caps', symbol: 'DUROV-CAP', priceBase: 25000, color: 'Blue/Legendary' },
+            { title: 'Snoop Dogg', model: 'Snoop Doggs', symbol: 'SNOOP-DOGG', priceBase: 9900, color: 'Green/Smoke' },
+            { title: 'Heroic Helmet', model: 'Heroic Helmets', symbol: 'HERO-HELM', priceBase: 18000, color: 'Red/Epic' },
+            { title: 'Jester Hat', model: 'Jester Hats', symbol: 'JEST-HAT', priceBase: 6500, color: 'Pink/Fun' },
+            { title: 'Moon Pendant', model: 'Moon Pendants', symbol: 'MOON-PEND', priceBase: 5200, color: 'Gray/Night' },
+            { title: 'Pretty Posy', model: 'Pretty Posies', symbol: 'PRETTY-POS', priceBase: 15000, color: 'Orange/Floral' },
+            { title: 'Skull Flower', model: 'Skull Flowers', symbol: 'SKULL-FLOW', priceBase: 4800, color: 'Black/Dark' },
+            { title: 'Swiss Watch', model: 'Swiss Watches', symbol: 'SWISS-W', priceBase: 11000, color: 'Silver/Lux' },
+            { title: 'Voodoo Doll', model: 'Voodoo Dolls', symbol: 'VOO-DOLL', priceBase: 7100, color: 'DarkGreen/Magic' },
+        ];
+
+        const collections = [];
+        let nftCounter = 200000000; // Начинаем с нового большого числа для уникальности
+
+        for (let i = 0; i < 360; i++) { // Генерируем 360 NFT
+            const base = baseNfts[i % baseNfts.length];
+            const uniqueId = nftCounter++;
+            
+            // Random price generation with variance (до +/- 30%)
+            const price = Math.round(base.priceBase * (1 + (Math.random() - 0.5) * 0.6)); 
+
+            // Генерируем ID строку для путей (имитация Fragment's long IDs)
+            const idString = uniqueId.toString().padStart(9, '0'); 
+
+            collections.push({
+                id: uniqueId,
+                // Title format like: Collection Name #Last4Digits
+                title: `${base.title} #${uniqueId.toString().slice(-4)}`, 
+                model: base.model, // Используется для фильтрации и отображения коллекции
+                symbol: base.symbol,
+                backdrop: base.color,
+                price: price,
+                // --- СУЩЕСТВУЮЩИЕ ПУТИ WEBP И LOTTIE (Имитация Fragment) ---
+                // Эти пути будут 404, что активирует наш стабильный заглушечный код.
+                // TON Weaver Lottie files will have this format, which we imitate.
+                img: `https://fragment.com/storage/media/gif_webp/${idString}_v1.webp`,
+                lottie: `https://fragment.com/storage/media/lottie/${idString}_v1.json`,
+                isFav: false,
+                history: generatePriceHistory(price)
+            });
+        }
+        
+        // --- (3) ГЛАВНАЯ ФУНКЦИЯ ОТРЕЗКИ NFT НА ЭКРАН (С ДОБАВЛЕНИЕМ FALLBACK) ---
+        function createNftCard(nft) {
+            const card = document.createElement('div');
+            card.className = 'nft-card';
+            card.setAttribute('data-id', nft.id);
+            card.setAttribute('onclick', `openNftModal(${nft.id})`);
+
+            const isFavClass = nft.isFav ? 'active' : '';
+
+            card.innerHTML = `
+                <div class="fav-icon ${isFavClass}" onclick="event.stopPropagation(); toggleFavorite(${nft.id});">
+                    ${nft.isFav ? '★' : '☆'}
+                </div>
+                <img class="nft-img" data-src="${nft.img}" alt="${nft.title}">
+                
+                <div class="image-placeholder-content">
+                    <span style="font-size: 30px;">🎁</span>
+                    <div style="margin-top: 5px; font-size: 10px; color: #555;">${nft.model.toUpperCase()}</div>
+                    <div style="font-size: 9px; color: #444;">LOAD ERROR</div>
+                </div>
+                
+                <div style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nft.title}</div>
+                <div style="font-size: 12px; color: var(--secondary-text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nft.model}</div>
+                <div style="font-weight: bold; color: var(--green-color); font-size: 14px;">${getPrice(nft.price)}</div>
+            `;
+
+            // --- ЛОГИКА СТАБИЛЬНОГО FALLBACK ---
+            const imgElement = card.querySelector('.nft-img');
+            imgElement.onerror = function() {
+                // Добавляем класс, который активирует стилизованную заглушку в CSS
+                card.classList.add('no-image');
+                // Очищаем data-src, чтобы предотвратить повторную попытку загрузки
+                imgElement.removeAttribute('data-src'); 
+            };
+
+            // Загружаем через src, чтобы триггернуть ошибку, если файла нет (404)
+            if (imgElement.dataset.src) {
+                imgElement.src = imgElement.dataset.src;
+            }
+            // ------------------------------------
+
+            return card;
+        }
+
+
+        // --- (4) ФУНКЦИИ УПРАВЛЕНИЯ ИНТЕРФЕЙСОМ ---
+
+        // Сохранение/Загрузка избранного (имитация)
+        let favorites = new Set(JSON.parse(localStorage.getItem('nft_favorites') || '[]'));
+        function saveFavorites() {
+            localStorage.setItem('nft_favorites', JSON.stringify(Array.from(favorites)));
+        }
+
+        // Рендеринг списка NFT
+        function renderMarket(nfts, targetId) {
+            const list = document.getElementById(targetId);
+            list.innerHTML = '';
+            if (nfts.length === 0) {
+                 list.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Ничего не найдено. Попробуйте изменить фильтры.</div>`;
                  return;
             }
 
-            items.forEach(item => {
-                const isFav = favorites.includes(item.id);
-                const heart = isFav ? '❤️' : '🤍';
-                
-                const card = document.createElement('div');
-                card.className = 'nft-card';
-                card.onclick = () => openNFT(item.id);
-                
-                // Используем статичную картинку для сетки.
-                // При ошибке загрузки (onerror) добавляем класс no-image к родительской карточке.
-                card.innerHTML = `
-                    <div class="fav-icon" onclick="toggleFav(${item.id}, event)">${heart}</div>
-                    <img src="${item.img}" class="nft-img" alt="${item.name}" 
-                         onerror="this.parentElement.classList.add('no-image'); this.onerror=null;">
-                    <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
-                    <div style="color: var(--green-color); font-weight: bold; margin-top: 4px;">${getPrice(item.basePrice)}</div>
-                `;
-                container.appendChild(card);
+            // Создаем уникальные опции для фильтра по коллекциям
+            if (targetId === 'market-list') {
+                const models = [...new Set(collections.map(nft => nft.model))].sort();
+                const filter = document.getElementById('rarity-filter');
+                filter.innerHTML = '<option value="all">Все коллекции</option>';
+                models.forEach(model => {
+                    filter.innerHTML += `<option value="${model}">${model}</option>`;
+                });
+            }
+
+            nfts.forEach(nft => {
+                list.appendChild(createNftCard(nft));
             });
         }
-
-        // --- FAVORITES LOGIC ---
-        function toggleFav(id, event) {
-            if(event) event.stopPropagation();
-            favorites = favorites.includes(id) ? favorites.filter(favId => favId !== id) : [...favorites, id];
-            filterNFTs(); renderFavorites();
-            if(document.getElementById('nft-modal').style.display === 'flex' && currentOpenId === id) updateModalFavBtn(id);
-        }
-
-        function toggleFavFromModal() { if(currentOpenId) toggleFav(currentOpenId, null); }
-        function updateModalFavBtn(id) {
-            const btn = document.getElementById('m-fav-btn');
-            if(favorites.includes(id)) { btn.innerText = '❤️ В избранном'; btn.style.borderColor = 'var(--red-color)'; } 
-            else { btn.innerText = '🤍 В избранное'; btn.style.borderColor = '#333'; }
-        }
+        
         function renderFavorites() {
-            const favItems = collections.filter(c => favorites.includes(c.id));
-            renderMarket(favItems, 'fav-list');
+            const favNfts = collections.filter(nft => favorites.has(nft.id));
+            renderMarket(favNfts, 'fav-list');
         }
 
-        // --- SEARCH & FILTER (ОБНОВЛЕННАЯ ЛОГИКА) ---
-        function filterNFTs() {
-            const q = document.getElementById('search').value.toLowerCase();
-            const rarity = document.getElementById('rarity-filter').value;
-            const priceRange = document.getElementById('price-filter').value;
+        function toggleFavorite(id) {
+            const nft = collections.find(n => n.id === id);
+            if (!nft) return;
 
-            let filtered = collections.filter(c => {
-                // 1. Text Search
-                const matchesQuery = c.name.toLowerCase().includes(q);
-                
-                // 2. Rarity/Model Filter
-                // Получаем только название модели (например, 'Spectrum' из 'Spectrum 1.5%')
-                const modelName = c.model.split(' ')[0]; 
-                const matchesRarity = rarity === 'all' || modelName === rarity;
-                
-                // 3. Price Filter
-                let matchesPrice = true;
-                const price = c.basePrice;
-                
-                if (priceRange === 'low') {
-                    matchesPrice = price >= 0 && price <= 5000;
-                } else if (priceRange === 'mid') {
-                    matchesPrice = price > 5000 && price <= 15000;
-                } else if (priceRange === 'high') {
-                    matchesPrice = price > 15000;
+            nft.isFav = !nft.isFav;
+            
+            if (nft.isFav) {
+                favorites.add(id);
+            } else {
+                favorites.delete(id);
+            }
+            
+            // Обновляем иконку на самой карточке
+            const card = document.querySelector(`.nft-card[data-id="${id}"]`);
+            if (card) {
+                const favIcon = card.querySelector('.fav-icon');
+                if (favIcon) {
+                    favIcon.innerHTML = nft.isFav ? '★' : '☆';
+                    favIcon.classList.toggle('active', nft.isFav);
+                }
+            }
+            
+            // Обновляем модальное окно, если открыто
+            const modalFavBtn = document.getElementById('m-fav-btn');
+            if (modalFavBtn && modalFavBtn.getAttribute('data-id') == id) {
+                 modalFavBtn.innerHTML = nft.isFav ? '★ В избранном' : '☆ Добавить в избранное';
+            }
+
+            saveFavorites();
+            renderFavorites(); // Перерисовываем избранное
+        }
+        
+        function toggleFavFromModal() {
+            const modalFavBtn = document.getElementById('m-fav-btn');
+            const id = parseInt(modalFavBtn.getAttribute('data-id'));
+            toggleFavorite(id);
+        }
+
+        // Фильтрация
+        function filterNFTs() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const rarityFilter = document.getElementById('rarity-filter').value;
+            const priceFilter = document.getElementById('price-filter').value;
+
+            const filtered = collections.filter(nft => {
+                // Search term filter (Title or Model)
+                const searchMatch = nft.title.toLowerCase().includes(searchTerm) || 
+                                    nft.model.toLowerCase().includes(searchTerm);
+
+                // Rarity/Model filter
+                const rarityMatch = rarityFilter === 'all' || nft.model === rarityFilter;
+
+                // Price filter
+                let priceMatch = true;
+                if (priceFilter === 'low') {
+                    priceMatch = nft.price >= 0 && nft.price <= 7000;
+                } else if (priceFilter === 'mid') {
+                    priceMatch = nft.price > 7000 && nft.price <= 15000;
+                } else if (priceFilter === 'high') {
+                    priceMatch = nft.price > 15000;
                 }
 
-                return matchesQuery && matchesRarity && matchesPrice;
+                return searchMatch && rarityMatch && priceMatch;
             });
 
             renderMarket(filtered, 'market-list');
         }
 
-        // --- SETTINGS: CURRENCY ---
-        function changeCurrency() {
-            currentCurrency = document.getElementById('currency-select').value;
-            document.getElementById('user-balance').innerText = getPrice(0); 
-            document.getElementById('frozen-balance').innerText = getPrice(0);
-            filterNFTs(); renderFavorites();
+
+        // Управление вкладками
+        let currentLottieAnimation = null; // Для хранения текущей Lottie-анимации
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            element.classList.add('active');
+            
+            if (tabId === 'favorites') {
+                renderFavorites();
+            }
+
+             // Остановка Lottie при переключении
+            if (currentLottieAnimation) {
+                currentLottieAnimation.destroy();
+                currentLottieAnimation = null;
+                document.getElementById('nft-media-wrapper').innerHTML = ''; // Очистка контейнера
+            }
+        }
+        
+        // Управление модальными окнами
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
         }
 
-        // --- openNFT (ОБНОВЛЕНА ДЛЯ РАБОТЫ С LOTTIE) ---
-        function openNFT(id) {
-            const item = collections.find(c => c.id === id);
-            currentOpenId = id;
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+
+            // Очистка Lottie при закрытии модального окна NFT
+            if (modalId === 'nft-modal' && currentLottieAnimation) {
+                currentLottieAnimation.destroy();
+                currentLottieAnimation = null;
+                document.getElementById('nft-media-wrapper').innerHTML = '';
+            }
+        }
+        
+        function openNftModal(id) {
+            const nft = collections.find(n => n.id === id);
+            if (!nft) return;
+
+            // Заполнение общей информации
+            document.getElementById('m-title').innerText = nft.title;
+            document.getElementById('m-price').innerText = getPrice(nft.price);
+            document.getElementById('m-model').innerText = nft.model;
+            document.getElementById('m-symbol').innerText = nft.symbol;
+            document.getElementById('m-backdrop').innerText = nft.backdrop;
+
+            // Кнопка избранного
+            const modalFavBtn = document.getElementById('m-fav-btn');
+            modalFavBtn.setAttribute('data-id', id);
+            modalFavBtn.innerHTML = nft.isFav ? '★ В избранном' : '☆ Добавить в избранное';
+
+            // История цены
+            const historyBody = document.getElementById('price-history');
+            historyBody.innerHTML = '';
+            nft.history.forEach(item => {
+                const trend = item.change >= 0 ? 'change-up' : 'change-down';
+                const sign = item.change >= 0 ? '▲' : '▼';
+                historyBody.innerHTML += `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td>${getPrice(item.price)}</td>
+                        <td class="${trend}">${sign} ${getPrice(Math.abs(item.change))}</td>
+                    </tr>
+                `;
+            });
             
+            // --- ЗАГРУЗКА LOTTIE (Критическая часть) ---
             const mediaWrapper = document.getElementById('nft-media-wrapper');
-            mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px;">Загрузка медиа...</div>`;
-            mediaWrapper.style.backgroundColor = '#2c2c2e';
+            mediaWrapper.innerHTML = ''; // Очищаем от предыдущей Lottie/WebP
 
-            // 1. ОТОБРАЖЕНИЕ LOTTIE ИЛИ СТАТИКИ
-            if (item.lottie && typeof lottie !== 'undefined') {
-                // Если есть Lottie, пробуем его загрузить
-                mediaWrapper.innerHTML = '';
-                const lottieDiv = document.createElement('div');
-                lottieDiv.id = 'lottie-player-div';
-                lottieDiv.style.width = '100%';
-                lottieDiv.style.height = '100%';
-                mediaWrapper.appendChild(lottieDiv);
+            if (currentLottieAnimation) {
+                currentLottieAnimation.destroy();
+                currentLottieAnimation = null;
+            }
 
+            if (nft.lottie) {
+                // Попытка загрузить Lottie-файл с фейкового пути
                 currentLottieAnimation = lottie.loadAnimation({
-                    container: lottieDiv,
+                    container: mediaWrapper,
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
-                    path: item.lottie
-                });
-
-                // **ОБЛЕГЧЕННЫЙ FALLBACK:** Если Lottie не загрузился (ошибка 404), отображаем статическое изображение
-                let lottieLoaded = false;
-                currentLottieAnimation.addEventListener('DOMLoaded', () => { lottieLoaded = true; });
-                
-                setTimeout(() => {
-                    if (!lottieLoaded) {
-                        console.warn('Lottie failed to load or render. Falling back to static image.');
-                        showStaticImage(item, mediaWrapper);
+                    path: nft.lottie, // Путь к Lottie-файлу
+                    rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
                     }
-                }, 3000); // 3 секунды ожидания
-
-            } else {
-                // Если Lottie нет, сразу показываем статичное изображение
-                showStaticImage(item, mediaWrapper);
-            }
-
-            document.getElementById('m-title').innerText = item.name;
-            document.getElementById('m-price').innerText = getPrice(item.basePrice);
-            
-            // Populate Metadata 
-            document.getElementById('m-model').innerHTML = item.model.split(' ')[0] + ' <span class="meta-rarity">' + item.model.split(' ')[1] + '</span>';
-            document.getElementById('m-symbol').innerHTML = item.symbol.split(' ')[0] + ' <span class="meta-rarity">' + item.symbol.split(' ')[1] + '</span>';
-            document.getElementById('m-backdrop').innerHTML = item.backdrop.split(' ')[0] + ' <span class="meta-rarity">' + item.backdrop.split(' ')[1] + '</span>';
-            
-            updateModalFavBtn(id);
-            openModal('nft-modal');
-
-            // Устанавливаем статическую заглушку, имитирующую график
-            const chartColor = item.basePrice > item.startPrice ? '34c759' : 'ff3b30';
-            document.getElementById('priceChartPlaceholder').src = `https://placehold.co/400x150/111111/${chartColor}?text=Price+Trend`;
-
-            const history = generateHistory(item.basePrice, 5);
-            renderHistory(history);
-        }
-
-        // Отдельная функция для показа статической картинки
-        function showStaticImage(item, mediaWrapper) {
-            if(currentLottieAnimation) {
-                 currentLottieAnimation.destroy();
-                 currentLottieAnimation = null;
-            }
-            mediaWrapper.innerHTML = '';
-            const img = document.createElement('img');
-            img.src = item.img;
-            img.style.width = '100%'; 
-            img.style.height = '100%';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '10px'; 
-            
-            img.onerror = function() { 
-                mediaWrapper.style.backgroundColor = '#121212';
-                mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px; padding: 50px;">${item.name}<br>(Ошибка загрузки медиа)</div>`; 
-            };
-            mediaWrapper.appendChild(img);
-        }
-
-        // --- HISTORY GENERATION ---
-        function generateHistory(currentBasePrice, days) {
-            const history = [];
-            let price = currentBasePrice;
-            const today = new Date();
-
-            for (let i = 0; i < days; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                const percentageChange = parseFloat((Math.random() * 10 - 5).toFixed(2));
-                
-                let prevPrice;
-                if (i === 0) {
-                    prevPrice = price / (1 + percentageChange / 100); 
-                } else {
-                    prevPrice = price / (1 - percentageChange / 100);
-                }
-                
-                history.push({
-                    date: date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }),
-                    rawPrice: price,
-                    change: percentageChange,
-                    formattedPrice: getPrice(price),
                 });
                 
-                price = prevPrice;
-            }
-            return history.reverse();
-        }
-
-        function renderHistory(history) {
-            const tbody = document.getElementById('price-history');
-            tbody.innerHTML = '';
-
-            history.forEach(day => {
-                const changeClass = day.change >= 0 ? 'change-up' : 'change-down';
-                const changeText = day.change >= 0 ? `+${day.change}%` : `${day.change}%`;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${day.date}</td>
-                    <td>${getPrice(day.rawPrice)}</td>
-                    <td class="${changeClass}">${changeText}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // --- UI UTILS ---
-        function switchTab(tabId, el) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const targetSection = document.getElementById(tabId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if (el) {
-                el.classList.add('active');
-            }
-        }
-
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        
-        // ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА С ОСТАНОВКОЙ LOTTIE
-        function closeModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            if (id === 'nft-modal' && currentLottieAnimation) {
-                currentLottieAnimation.destroy(); // Уничтожаем анимацию для освобождения ресурсов
-                currentLottieAnimation = null;
-            }
-        }
-        
-        window.onclick = function(e) {
-            if (e.target.classList.contains('modal')) { e.target.style.display = "none"; }
-        }
-
-        function toggleDepFields() {
-            const method = document.getElementById('dep-method').value;
-            document.getElementById('bank-wrap').style.display = method === 'card' ? 'block' : 'none';
-            document.getElementById('crypto-wrap').style.display = method === 'crypto' ? 'block' : 'none';
-        }
-
-        function goToPayment() {
-            const methodType = document.getElementById('dep-method').value;
-            const amount = document.getElementById('dep-amount').value;
-            if(!amount || amount <= 0) { alert("Введите сумму корректно"); return; }
-            let name = "";
-            let req = "";
-            if (methodType === 'card') {
-                name = document.getElementById('bank-name').value;
-                req = requisites.card;
+                // Обработчик ошибки: если Lottie не загрузится (404), отображаем заглушку/WebP
+                currentLottieAnimation.addEventListener('data_failed', () => {
+                    console.warn('404: Lottie failed to load for NFT ID:', nft.id);
+                    // Показываем статичный WebP/Fallback Image
+                    mediaWrapper.innerHTML = `<img src="${nft.img}" alt="${nft.title}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">`;
+                    
+                    // Если и WebP не загрузится, используем финальную стилизованную заглушку
+                    const fallbackImg = mediaWrapper.querySelector('img');
+                    if(fallbackImg) {
+                         fallbackImg.onerror = () => {
+                             mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
+                         };
+                    } else {
+                         mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
+                    }
+                });
+            } else if (nft.img) {
+                 // Если нет Lottie, но есть WebP/Image
+                 mediaWrapper.innerHTML = `<img src="${nft.img}" alt="${nft.title}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">`;
             } else {
-                const coin = document.getElementById('crypto-coin').value;
-                name = document.getElementById('crypto-coin').options[document.getElementById('crypto-coin').selectedIndex].text;
-                req = requisites[coin] || "Адрес не найден";
+                 mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
+            }
+            // ------------------------------------
+
+            openModal('nft-modal');
+        }
+
+        // Имитация начала платежа
+        function startPayment(type) {
+            closeModal(`${type}-modal`);
+            
+            const amount = document.getElementById(`${type}-amount`).value || 'N/A';
+            let method = '';
+            
+            if (type === 'deposit') {
+                method = document.getElementById('deposit-method').value;
+            } else {
+                method = document.getElementById('withdraw-method').value;
+                // В реальном приложении здесь была бы проверка и отправка запроса на вывод
             }
 
-            document.getElementById('pay-method-name').innerText = name;
-            document.getElementById('pay-details').innerText = req;
-            document.getElementById('pay-sum').innerText = amount + ' ' + (methodType === 'card' ? 'RUB' : name.split(' ')[0]);
+            document.getElementById('p-amount').innerText = amount;
+            document.getElementById('p-method').innerText = method;
 
             openModal('payment-modal');
         }
 
-        // --- INIT ---
+        // --- INIT (ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ) ---
         function initializeApp() {
             try {
+                 // Перемешиваем, чтобы список не был однообразным
+                shuffleArray(collections);
+                
                 // Инициализация баланса и валюты
                 document.getElementById('user-balance').innerText = getPrice(0); 
                 document.getElementById('frozen-balance').innerText = getPrice(0);
-
-                // Заполняем фильтр коллекций/моделей
-                const rarityFilter = document.getElementById('rarity-filter');
-                models.forEach(model => {
-                    const option = document.createElement('option');
-                    option.value = model;
-                    option.text = `Модель: ${model}`;
-                    rarityFilter.appendChild(option);
-                });
-
-
-                // ПЕРЕМЕШИВАЕМ КОЛЛЕКЦИЮ
-                shuffleArray(collections);
 
                 // **Отрисовка списка NFT происходит немедленно**
                 renderMarket(collections, 'market-list');
