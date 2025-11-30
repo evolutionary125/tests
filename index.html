@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gifts Market 21.6 (Final Stable)</title>
+    <title>Gifts Market 22.0 (Only Gifts)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -59,39 +59,37 @@
         #nft-media-wrapper svg { width: 100%; height: 100%; }
 
         /* === СТИЛИ ДЛЯ NFT БЕЗ КАРТИНКИ (СТАБИЛЬНАЯ ЗАГЛУШКА) === */
-        /* При ошибке загрузки изображения, родительской карточке добавляется класс 'no-image' */
         .nft-card.no-image {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 180px; /* Фиксированная высота для карточек без изображения */
-            background-color: #121212; /* Более темный фон для заглушки */
+            min-height: 180px;
+            background-color: #121212;
         }
         .nft-card.no-image .nft-img {
-            display: none; /* Скрываем сломанный тег <img> */
+            display: none;
         }
-        /* Стили для текста в заглушке */
         .nft-card.no-image div:nth-child(2) { 
-             margin-bottom: 8px; /* Восстанавливаем отступ для названия */
+             margin-bottom: 8px;
         }
         .nft-card.no-image .fav-icon {
-            top: 18px; /* Поднимаем иконку фаворита */
+            top: 18px;
         }
     </style>
 </head>
 <body>
 
     <div id="market" class="section active container">
-        <h2 id="market-title">🖼️ NFT Gifts Market (Fragment Style)</h2>
-        <input type="text" id="search" placeholder="Поиск коллекции..." onkeyup="filterNFTs()">
+        <h2 id="market-title">🎁 Gifts Market</h2>
+        <input type="text" id="search" placeholder="Поиск подарков..." onkeyup="filterNFTs()">
         <div class="market-grid" id="market-list"></div>
     </div>
 
     <div id="favorites" class="section container">
         <h2>❤️ Избранное</h2>
         <div id="fav-list" class="market-grid">
-            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных NFT</div>
+            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных подарков</div>
         </div>
     </div>
 
@@ -135,7 +133,7 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('market', this)"><span class="nav-icon">🛒</span>Market</div>
+        <div class="nav-item active" onclick="switchTab('market', this)"><span class="nav-icon">🎁</span>Market</div>
         <div class="nav-item" onclick="switchTab('favorites', this)"><span class="nav-icon">❤️</span>Favs</div>
         <div class="nav-item" onclick="switchTab('profile', this)"><span class="nav-icon">👤</span>Profile</div>
         <div class="nav-item" onclick="switchTab('settings', this)"><span class="nav-icon">⚙️</span>Set</div>
@@ -225,473 +223,206 @@
         // --- CONFIG & DATA ---
         
         const LOTTIE_BASE = "https://nft.fragment.com/gift/";
+        const GENERIC_ID = "5000"; // Стандартный ID для заглушек
         
-        // --- LOTTIE VARIANTS ---
-        const SKULL_1_STATIC = LOTTIE_BASE + "electricskull-5813.webp"; 
-        const SKULL_1_LOTTIE = LOTTIE_BASE + "electricskull-5813.lottie.json";
-        const SKULL_2_STATIC = LOTTIE_BASE + "electricskull-6469.webp"; 
-        const SKULL_2_LOTTIE = LOTTIE_BASE + "electricskull-6469.lottie.json"; 
-        const SKULL_3_STATIC = LOTTIE_BASE + "electricskull-4008.webp"; 
-        const SKULL_3_LOTTIE = LOTTIE_BASE + "electricskull-4008.lottie.json";
-        
-        const PEPE_1_STATIC = LOTTIE_BASE + "plushpepe-1111.webp"; 
-        const PEPE_1_LOTTIE = LOTTIE_BASE + "plushpepe-1111.lottie.json";
-        const PEPE_2_STATIC = LOTTIE_BASE + "plushpepe-1002.webp"; 
-        const PEPE_2_LOTTIE = LOTTIE_BASE + "plushpepe-1002.lottie.json"; 
-        const PEPE_3_STATIC = LOTTIE_BASE + "plushpepe-2051.webp"; 
-        const PEPE_3_LOTTIE = LOTTIE_BASE + "plushpepe-2051.lottie.json";
-        
-        const FROG_1_STATIC = LOTTIE_BASE + "kissedfrog-5555.webp"; 
-        const FROG_1_LOTTIE = LOTTIE_BASE + "kissedfrog-5555.lottie.json";
-        const FROG_2_STATIC = LOTTIE_BASE + "kissedfrog-3001.webp"; 
-        const FROG_2_LOTTIE = LOTTIE_BASE + "kissedfrog-3001.lottie.json"; 
-        
-        const CAP_1_STATIC = LOTTIE_BASE + "durovscap-8888.webp"; 
-        const CAP_1_LOTTIE = LOTTIE_BASE + "durovscap-8888.lottie.json";
-        const CAP_2_STATIC = LOTTIE_BASE + "durovscap-1001.webp"; 
-        const CAP_2_LOTTIE = LOTTIE_BASE + "durovscap-1001.lottie.json";
-        
-        const CANDLE_1_STATIC = LOTTIE_BASE + "bdaycandle-2024.webp"; 
-        const CANDLE_1_LOTTIE = LOTTIE_BASE + "bdaycandle-2024.lottie.json";
-        const CANDLE_2_STATIC = LOTTIE_BASE + "bdaycandle-0012.webp"; 
-        const CANDLE_2_LOTTIE = LOTTIE_BASE + "bdaycandle-0012.lottie.json";
-
-        const CANE_1_STATIC = LOTTIE_BASE + "candycanes-9001.webp"; 
-        const CANE_1_LOTTIE = LOTTIE_BASE + "candycanes-9001.lottie.json";
-        const CANE_2_STATIC = LOTTIE_BASE + "candycanes-1212.webp"; 
-        const CANE_2_LOTTIE = LOTTIE_BASE + "candycanes-1212.lottie.json";
-        
-        const DRINK_1_STATIC = LOTTIE_BASE + "holidaydrink-4567.webp"; 
-        const DRINK_1_LOTTIE = LOTTIE_BASE + "holidaydrink-4567.lottie.json";
-        const DRINK_2_STATIC = LOTTIE_BASE + "holidaydrink-9999.webp"; 
-        const DRINK_2_LOTTIE = LOTTIE_BASE + "holidaydrink-9999.lottie.json";
-
-        const HAT_1_STATIC = LOTTIE_BASE + "santahat-0001.webp"; 
-        const HAT_1_LOTTIE = LOTTIE_BASE + "santahat-0001.lottie.json";
-        const HAT_2_STATIC = LOTTIE_BASE + "santahat-0101.webp"; 
-        const HAT_2_LOTTIE = LOTTIE_BASE + "santahat-0101.lottie.json";
-
-        const STOCKING_1_STATIC = LOTTIE_BASE + "xmasstocking-3000.webp"; 
-        const STOCKING_1_LOTTIE = LOTTIE_BASE + "xmasstocking-3000.lottie.json";
-        const STOCKING_2_STATIC = LOTTIE_BASE + "xmasstocking-0005.webp"; 
-        const STOCKING_2_LOTTIE = LOTTIE_BASE + "xmasstocking-0005.lottie.json";
-
-        const BEAR_1_STATIC = LOTTIE_BASE + "toybear-1500.webp"; 
-        const BEAR_1_LOTTIE = LOTTIE_BASE + "toybear-1500.lottie.json";
-        const BEAR_2_STATIC = LOTTIE_BASE + "toybear-4000.webp"; 
-        const BEAR_2_LOTTIE = LOTTIE_BASE + "toybear-4000.lottie.json";
-
-        const LOCKET_1_STATIC = LOTTIE_BASE + "heartlocket-2222.webp"; 
-        const LOCKET_1_LOTTIE = LOTTIE_BASE + "heartlocket-2222.lottie.json";
-        const LOCKET_2_STATIC = LOTTIE_BASE + "heartlocket-3333.webp"; 
-        const LOCKET_2_LOTTIE = LOTTIE_BASE + "heartlocket-3333.lottie.json";
-
-        const NEKO_1_STATIC = LOTTIE_BASE + "nekohelmet-1337.webp"; 
-        const NEKO_1_LOTTIE = LOTTIE_BASE + "nekohelmet-1337.lottie.json";
-        const NEKO_2_STATIC = LOTTIE_BASE + "nekohelmet-5555.webp"; 
-        const NEKO_2_LOTTIE = LOTTIE_BASE + "nekohelmet-5555.lottie.json";
-        
-        // --- NEW: PET SNAKES VARIANTS (12 ITEMS) ---
-        const SNAKE_1_STATIC = LOTTIE_BASE + "petsnake-1001.webp";
-        const SNAKE_1_LOTTIE = LOTTIE_BASE + "petsnake-1001.lottie.json";
-        const SNAKE_2_STATIC = LOTTIE_BASE + "petsnake-1002.webp";
-        const SNAKE_2_LOTTIE = LOTTIE_BASE + "petsnake-1002.lottie.json";
-        const SNAKE_3_STATIC = LOTTIE_BASE + "petsnake-1003.webp";
-        const SNAKE_3_LOTTIE = LOTTIE_BASE + "petsnake-1003.lottie.json";
-        const SNAKE_4_STATIC = LOTTIE_BASE + "petsnake-1004.webp";
-        const SNAKE_4_LOTTIE = LOTTIE_BASE + "petsnake-1004.lottie.json";
-        const SNAKE_5_STATIC = LOTTIE_BASE + "petsnake-1005.webp";
-        const SNAKE_5_LOTTIE = LOTTIE_BASE + "petsnake-1005.lottie.json";
-        const SNAKE_6_STATIC = LOTTIE_BASE + "petsnake-1006.webp";
-        const SNAKE_6_LOTTIE = LOTTIE_BASE + "petsnake-1006.lottie.json";
-        const SNAKE_7_STATIC = LOTTIE_BASE + "petsnake-1007.webp";
-        const SNAKE_7_LOTTIE = LOTTIE_BASE + "petsnake-1007.lottie.json";
-        const SNAKE_8_STATIC = LOTTIE_BASE + "petsnake-1008.webp";
-        const SNAKE_8_LOTTIE = LOTTIE_BASE + "petsnake-1008.lottie.json";
-        const SNAKE_9_STATIC = LOTTIE_BASE + "petsnake-1009.webp";
-        const SNAKE_9_LOTTIE = LOTTIE_BASE + "petsnake-1009.lottie.json";
-        const SNAKE_10_STATIC = LOTTIE_BASE + "petsnake-1010.webp";
-        const SNAKE_10_LOTTIE = LOTTIE_BASE + "petsnake-1010.lottie.json";
-        const SNAKE_11_STATIC = LOTTIE_BASE + "petsnake-1011.webp";
-        const SNAKE_11_LOTTIE = LOTTIE_BASE + "petsnake-1011.lottie.json";
-        const SNAKE_12_STATIC = LOTTIE_BASE + "petsnake-1012.webp";
-        const SNAKE_12_LOTTIE = LOTTIE_BASE + "petsnake-1012.lottie.json";
-
-        // --- NEW: NAIL BRACELETS VARIANTS (15 ITEMS) ---
-        const BRACELET_1_STATIC = LOTTIE_BASE + "nailbracelet-2001.webp";
-        const BRACELET_1_LOTTIE = LOTTIE_BASE + "nailbracelet-2001.lottie.json";
-        const BRACELET_2_STATIC = LOTTIE_BASE + "nailbracelet-2002.webp";
-        const BRACELET_2_LOTTIE = LOTTIE_BASE + "nailbracelet-2002.lottie.json";
-        const BRACELET_3_STATIC = LOTTIE_BASE + "nailbracelet-2003.webp";
-        const BRACELET_3_LOTTIE = LOTTIE_BASE + "nailbracelet-2003.lottie.json";
-        const BRACELET_4_STATIC = LOTTIE_BASE + "nailbracelet-2004.webp";
-        const BRACELET_4_LOTTIE = LOTTIE_BASE + "nailbracelet-2004.lottie.json";
-        const BRACELET_5_STATIC = LOTTIE_BASE + "nailbracelet-2005.webp";
-        const BRACELET_5_LOTTIE = LOTTIE_BASE + "nailbracelet-2005.lottie.json";
-        const BRACELET_6_STATIC = LOTTIE_BASE + "nailbracelet-2006.webp";
-        const BRACELET_6_LOTTIE = LOTTIE_BASE + "nailbracelet-2006.lottie.json";
-        const BRACELET_7_STATIC = LOTTIE_BASE + "nailbracelet-2007.webp";
-        const BRACELET_7_LOTTIE = LOTTIE_BASE + "nailbracelet-2007.lottie.json";
-        const BRACELET_8_STATIC = LOTTIE_BASE + "nailbracelet-2008.webp";
-        const BRACELET_8_LOTTIE = LOTTIE_BASE + "nailbracelet-2008.lottie.json";
-        const BRACELET_9_STATIC = LOTTIE_BASE + "nailbracelet-2009.webp";
-        const BRACELET_9_LOTTIE = LOTTIE_BASE + "nailbracelet-2009.lottie.json";
-        const BRACELET_10_STATIC = LOTTIE_BASE + "nailbracelet-2010.webp";
-        const BRACELET_10_LOTTIE = LOTTIE_BASE + "nailbracelet-2010.lottie.json";
-        const BRACELET_11_STATIC = LOTTIE_BASE + "nailbracelet-2011.webp";
-        const BRACELET_11_LOTTIE = LOTTIE_BASE + "nailbracelet-2011.lottie.json";
-        const BRACELET_12_STATIC = LOTTIE_BASE + "nailbracelet-2012.webp";
-        const BRACELET_12_LOTTIE = LOTTIE_BASE + "nailbracelet-2012.lottie.json";
-        const BRACELET_13_STATIC = LOTTIE_BASE + "nailbracelet-2013.webp";
-        const BRACELET_13_LOTTIE = LOTTIE_BASE + "nailbracelet-2013.lottie.json";
-        const BRACELET_14_STATIC = LOTTIE_BASE + "nailbracelet-2014.webp";
-        const BRACELET_14_LOTTIE = LOTTIE_BASE + "nailbracelet-2014.lottie.json";
-        const BRACELET_15_STATIC = LOTTIE_BASE + "nailbracelet-2015.webp";
-        const BRACELET_15_LOTTIE = LOTTIE_BASE + "nailbracelet-2015.lottie.json";
-
-
-        const POTION_1_STATIC = LOTTIE_BASE + "magicpotion-007.webp"; 
-        const POTION_1_LOTTIE = LOTTIE_BASE + "magicpotion-007.lottie.json";
-        const POTION_2_STATIC = LOTTIE_BASE + "magicpotion-404.webp"; 
-        const POTION_2_LOTTIE = LOTTIE_BASE + "magicpotion-404.lottie.json";
+        // Функция для генерации путей
+        function generatePath(baseName, id = GENERIC_ID) {
+            return {
+                img: `${LOTTIE_BASE}${baseName}-${id}.webp`,
+                lottie: `${LOTTIE_BASE}${baseName}-${id}.lottie.json`
+            };
+        }
 
         const models = ["Spectrum", "Pixel", "Metallic", "Diamond", "Vivid", "Rare", "Phantom"];
         const symbols = ["Star Crown", "Heart", "TON Cube", "Lightning", "Aurora", "Gears"];
         const backdrops = ["Grape", "Sapphire", "Crimson", "Emerald", "Gold", "Cosmic", "Aqua"];
         
-        // **!!! ФУНКЦИЯ getRandomRarity ПЕРЕД ОПРЕДЕЛЕНИЕМ COLLECTIONS !!!**
         function getRandomRarity() {
             return {
-                model: `${models[Math.floor(Math.random() * models.length)]} ${Math.floor(Math.random() * 50) / 10 + 0.1} %`,
-                symbol: `${symbols[Math.floor(Math.random() * symbols.length)]} ${Math.floor(Math.random() * 20) / 10 + 0.1} %`,
-                backdrop: `${backdrops[Math.floor(Math.random() * backdrops.length)]} ${Math.floor(Math.random() * 10 + 1)} %`
+                model: `${models[Math.floor(Math.random() * models.length)]} ${Math.floor(Math.random() * 50) / 10 + 0.1}%`,
+                symbol: `${symbols[Math.floor(Math.random() * symbols.length)]} ${Math.floor(Math.random() * 20) / 10 + 0.1}%`,
+                backdrop: `${backdrops[Math.floor(Math.random() * backdrops.length)]} ${Math.floor(Math.random() * 10 + 1)}%`
             };
         }
         
-        // ГЛОБАЛЬНАЯ ПЕРЕМЕННАЯ ДЛЯ УПРАВЛЕНИЯ АНИМАЦИЕЙ
         let currentLottieAnimation = null;
 
-        // --- NFT DATA ---
+        // --- NFT DATA (ONLY GIFTS) ---
         const collections = [
-            // Lottie-Enabled Collections (Plush Pepes, Kissed Frogs, Electric Skulls)
-            { id: 1, name: "Plush Pepe #1111", basePrice: 15345.21, img: PEPE_1_STATIC, lottie: PEPE_1_LOTTIE, startPrice: 14900, model: "Spectrum 3%", symbol: "Star Crown 0.5%", backdrop: "Grape 2%" },
-            { id: 2, name: "Kissed Frog #5555", basePrice: 9230.77, img: FROG_1_STATIC, lottie: FROG_1_LOTTIE, startPrice: 9500, model: "Pixel 4%", symbol: "Heart 1.2%", backdrop: "Sapphire 5%" },
-            // Artisan Bricks (id: 3) - УДАЛЕНО
-            { 
-                id: 4, 
-                name: "Astral Shards", 
-                basePrice: 9800.50, 
-                img: LOTTIE_BASE + "astralshard-100.webp", 
-                lottie: LOTTIE_BASE + "astralshard-100.lottie.json", 
-                startPrice: 10000, 
-                ...getRandomRarity() 
-            },
-            // B-Day Candles (Lottie-Enabled)
-            { id: 5, name: "B-Day Candle #2024", basePrice: 1500.10, img: CANDLE_1_STATIC, lottie: CANDLE_1_LOTTIE, startPrice: 1450, model: "Vivid 1%", symbol: "Aurora 0.3%", backdrop: "Crimson 1%" },
-            { 
-                id: 6, 
-                name: "Berry Boxes", 
-                basePrice: 7200.00, 
-                img: LOTTIE_BASE + "berrybox-200.webp", 
-                lottie: LOTTIE_BASE + "berrybox-200.lottie.json", 
-                startPrice: 7500, 
-                ...getRandomRarity() 
-            },
-            { 
-                id: 7, 
-                name: "Big Years", 
-                basePrice: 6800.99, 
-                img: LOTTIE_BASE + "bigyear-300.webp", 
-                lottie: LOTTIE_BASE + "bigyear-300.lottie.json", 
-                startPrice: 6500, 
-                ...getRandomRarity() 
-            },
-            { 
-                id: 8, 
-                name: "Bling Binkies", 
-                basePrice: 12500.88, 
-                img: LOTTIE_BASE + "blingbinky-400.webp", 
-                lottie: LOTTIE_BASE + "blingbinky-400.lottie.json", 
-                startPrice: 12000, 
-                ...getRandomRarity() 
-            },
-            { 
-                id: 9, 
-                name: "Bonded Rings", 
-                basePrice: 10100.00, 
-                img: LOTTIE_BASE + "bondedring-500.webp", 
-                lottie: LOTTIE_BASE + "bondedring-500.lottie.json", 
-                startPrice: 9800, 
-                ...getRandomRarity() 
-            },
-            { 
-                id: 10, 
-                name: "Bow Ties", 
-                basePrice: 5300.77, 
-                img: LOTTIE_BASE + "bowtie-600.webp", 
-                lottie: LOTTIE_BASE + "bowtie-600.lottie.json", 
-                startPrice: 5100, 
-                ...getRandomRarity() 
-            },
-            { 
-                id: 11, 
-                name: "Bunny Muffins", 
-                basePrice: 6400.55, 
-                img: LOTTIE_BASE + "bunnymuffin-700.webp", 
-                lottie: LOTTIE_BASE + "bunnymuffin-700.lottie.json", 
-                startPrice: 6500, 
-                ...getRandomRarity() 
-            },
-            // Candy Cane #9001 (id: 12) - УДАЛЕНО
-            { id: 13, name: "Clover Pins", basePrice: 8700.02, img: LOTTIE_BASE + "cloverpin-800.webp", lottie: LOTTIE_BASE + "cloverpin-800.lottie.json", startPrice: 8900, ...getRandomRarity() },
-            { id: 14, name: "Cookie Hearts", basePrice: 9100.89, img: LOTTIE_BASE + "cookieheart-900.webp", lottie: LOTTIE_BASE + "cookieheart-900.lottie.json", startPrice: 9300, ...getRandomRarity() },
-            { id: 15, name: "Crystal Balls", basePrice: 6500.11, img: LOTTIE_BASE + "crystalball-1000.webp", lottie: LOTTIE_BASE + "crystalball-1000.lottie.json", startPrice: 6400, ...getRandomRarity() },
-            { id: 16, name: "Cupid Charms", basePrice: 3000.99, img: LOTTIE_BASE + "cupidcharm-1100.webp", lottie: LOTTIE_BASE + "cupidcharm-1100.lottie.json", startPrice: 3200, ...getRandomRarity() },
-            { id: 17, name: "Desk Calendars", basePrice: 1800.67, img: LOTTIE_BASE + "deskcalendar-1200.webp", lottie: LOTTIE_BASE + "deskcalendar-1200.lottie.json", startPrice: 1700, ...getRandomRarity() },
-            { id: 18, name: "Diamond Rings", basePrice: 11500.45, img: LOTTIE_BASE + "diamondring-1300.webp", lottie: LOTTIE_BASE + "diamondring-1300.lottie.json", startPrice: 11700, ...getRandomRarity() },
-            { id: 19, name: "Digital Pets", basePrice: 5600.22, img: LOTTIE_BASE + "digitalpet-1400.webp", lottie: LOTTIE_BASE + "digitalpet-1400.lottie.json", startPrice: 5500, ...getRandomRarity() },
-            { id: 20, name: "Dino Egg", basePrice: 7800.33, img: LOTTIE_BASE + "dinoegg-1500.webp", lottie: LOTTIE_BASE + "dinoegg-1500.lottie.json", startPrice: 7900, ...getRandomRarity() },
-            { id: 21, name: "Dreamcatchers", basePrice: 4200.44, img: LOTTIE_BASE + "dreamcatcher-1600.webp", lottie: LOTTIE_BASE + "dreamcatcher-1600.lottie.json", startPrice: 4000, ...getRandomRarity() },
-            { id: 22, name: "Electric Skulls", basePrice: 14800.55, img: SKULL_1_STATIC, lottie: SKULL_1_LOTTIE, startPrice: 15000, model: "Diamond 0.1%", symbol: "Lightning 0.1%", backdrop: "Cosmic 0.5%" },
-            { id: 23, name: "Enchanted Mirrors", basePrice: 6200.66, img: LOTTIE_BASE + "enchantedmirror-1700.webp", lottie: LOTTIE_BASE + "enchantedmirror-1700.lottie.json", startPrice: 6100, ...getRandomRarity() },
-            { id: 24, name: "Festive Candles", basePrice: 3500.77, img: LOTTIE_BASE + "festivecandle-1800.webp", lottie: LOTTIE_BASE + "festivecandle-1800.lottie.json", startPrice: 3600, ...getRandomRarity() },
-            { id: 25, name: "Flower Bouquets", basePrice: 8900.88, img: LOTTIE_BASE + "flowerbouquet-1900.webp", lottie: LOTTIE_BASE + "flowerbouquet-1900.lottie.json", startPrice: 8700, ...getRandomRarity() },
-            { id: 26, name: "Fortune Cookies", basePrice: 2800.99, img: LOTTIE_BASE + "fortunecookie-2000.webp", lottie: LOTTIE_BASE + "fortunecookie-2000.lottie.json", startPrice: 2700, ...getRandomRarity() },
-            { id: 27, name: "Friendship Bracelets", basePrice: 4900.10, img: LOTTIE_BASE + "friendshipbracelet-2100.webp", lottie: LOTTIE_BASE + "friendshipbracelet-2100.lottie.json", startPrice: 5000, ...getRandomRarity() },
-            { id: 28, name: "Genie Lamps", basePrice: 10400.20, img: LOTTIE_BASE + "genielamp-2200.webp", lottie: LOTTIE_BASE + "genielamp-2200.lottie.json", startPrice: 10600, ...getRandomRarity() },
-            { id: 29, name: "Golden Keys", basePrice: 7700.30, img: LOTTIE_BASE + "goldenkey-2300.webp", lottie: LOTTIE_BASE + "goldenkey-2300.lottie.json", startPrice: 7500, ...getRandomRarity() },
-            { id: 30, name: "Hanging Stars", basePrice: 4500.40, img: LOTTIE_BASE + "hangingstar-2400.webp", lottie: LOTTIE_BASE + "hangingstar-2400.lottie.json", startPrice: 4200, ...getRandomRarity() },
-            { id: 31, name: "Happy Brownies", basePrice: 2400.50, img: LOTTIE_BASE + "happybrownie-2500.webp", lottie: LOTTIE_BASE + "happybrownie-2500.lottie.json", startPrice: 2500, ...getRandomRarity() },
-            // Heart Locket #2222 (id: 33) - УДАЛЕНО
-            { id: 34, name: "Heroic Helmets", basePrice: 15500.90, img: LOTTIE_BASE + "heroichelmet-2600.webp", lottie: LOTTIE_BASE + "heroichelmet-2600.lottie.json", startPrice: 15200, ...getRandomRarity() },
-            { id: 35, name: "Hex Pots", basePrice: 2200.10, img: LOTTIE_BASE + "hexpot-2700.webp", lottie: LOTTIE_BASE + "hexpot-2700.lottie.json", startPrice: 2300, ...getRandomRarity() },
-            // Holiday Drinks (Lottie-Enabled)
-            { id: 36, name: "Holiday Drink #4567", basePrice: 3400.35, img: DRINK_1_STATIC, lottie: DRINK_1_LOTTIE, startPrice: 3300, model: "Pixel 1.5%", symbol: "Star Crown 0.4%", backdrop: "Aqua 2%" },
-            { id: 37, name: "Homemade Cakes", basePrice: 1900.20, img: LOTTIE_BASE + "homemadecake-2800.webp", lottie: LOTTIE_BASE + "homemadecake-2800.lottie.json", startPrice: 1950, ...getRandomRarity() },
-            { id: 38, name: "Homing Pigeons", basePrice: 5800.30, img: LOTTIE_BASE + "homingpigeon-2900.webp", lottie: LOTTIE_BASE + "homingpigeon-2900.lottie.json", startPrice: 5700, ...getRandomRarity() },
-            { id: 39, name: "Hourglasses", basePrice: 4700.40, img: LOTTIE_BASE + "hourglass-3000.webp", lottie: LOTTIE_BASE + "hourglass-3000.lottie.json", startPrice: 4800, ...getRandomRarity() },
-            { id: 40, name: "Inscribed Coins", basePrice: 9300.50, img: LOTTIE_BASE + "inscribedcoin-3100.webp", lottie: LOTTIE_BASE + "inscribedcoin-3100.lottie.json", startPrice: 9400, ...getRandomRarity() },
-            { id: 41, name: "Jelly Bunnies", basePrice: 8500.60, img: LOTTIE_BASE + "jellybunny-3200.webp", lottie: LOTTIE_BASE + "jellybunny-3200.lottie.json", startPrice: 8300, ...getRandomRarity() },
-            { id: 42, name: "Karmic Orbs", basePrice: 7000.70, img: LOTTIE_BASE + "karmicorb-3300.webp", lottie: LOTTIE_BASE + "karmicorb-3300.lottie.json", startPrice: 7100, ...getRandomRarity() },
-            { id: 43, name: "Knot Rings", basePrice: 11200.80, img: LOTTIE_BASE + "knotring-3400.webp", lottie: LOTTIE_BASE + "knotring-3400.lottie.json", startPrice: 11000, ...getRandomRarity() },
-            { id: 44, name: "Legendary Potions", basePrice: 5100.90, img: LOTTIE_BASE + "legendarypotion-3500.webp", lottie: LOTTIE_BASE + "legendarypotion-3500.lottie.json", startPrice: 5200, ...getRandomRarity() },
-            { id: 45, name: "Lemon Cakes", basePrice: 2000.11, img: LOTTIE_BASE + "lemoncake-3600.webp", lottie: LOTTIE_BASE + "lemoncake-3600.lottie.json", startPrice: 2100, ...getRandomRarity() },
-            { id: 46, name: "Light Swords", basePrice: 8800.99, img: LOTTIE_BASE + "lightsword-4100.webp", lottie: LOTTIE_BASE + "lightsword-4100.lottie.json", startPrice: 9000, ...getRandomRarity() },
-            // Lol Pops (id: 51) - УДАЛЕНО
-            { id: 52, name: "Loot Bags", basePrice: 5200.20, img: LOTTIE_BASE + "lootbag-4300.webp", lottie: LOTTIE_BASE + "lootbag-4300.lottie.json", startPrice: 5300, ...getRandomRarity() },
-            { id: 53, name: "Love Candles", basePrice: 10500.30, img: LOTTIE_BASE + "lovecandle-4400.webp", lottie: LOTTIE_BASE + "lovecandle-4400.lottie.json", startPrice: 10400, ...getRandomRarity() },
-            // Magic Potions (Lottie-Enabled)
-            { id: 54, name: "Magic Potion #007", basePrice: 5000.40, img: POTION_1_STATIC, lottie: POTION_1_LOTTIE, startPrice: 5100, model: "Phantom 0.2%", symbol: "Gears 0.1%", backdrop: "Cosmic 0.1%" },
-            { id: 55, name: "Low Riders", basePrice: 5500.50, img: LOTTIE_BASE + "lowrider-4500.webp", lottie: LOTTIE_BASE + "lowrider-4500.lottie.json", startPrice: 5400, ...getRandomRarity() },
-            { id: 56, name: "Lunar Snakes", basePrice: 4900.60, img: LOTTIE_BASE + "lunarsnake-4600.webp", lottie: LOTTIE_BASE + "lunarsnake-4600.lottie.json", startPrice: 5000, ...getRandomRarity() },
-            { id: 57, name: "Maneki Neko", basePrice: 6600.70, img: LOTTIE_BASE + "manekineko-4700.webp", lottie: LOTTIE_BASE + "manekineko-4700.lottie.json", startPrice: 6500, ...getRandomRarity() },
-            { id: 58, name: "Map Scrolls", basePrice: 3200.80, img: LOTTIE_BASE + "mapscroll-4800.webp", lottie: LOTTIE_BASE + "mapscroll-4800.lottie.json", startPrice: 3300, ...getRandomRarity() },
-            { id: 59, name: "Mascot Helmets", basePrice: 13000.90, img: LOTTIE_BASE + "mascothelmet-4900.webp", lottie: LOTTIE_BASE + "mascothelmet-4900.lottie.json", startPrice: 12800, ...getRandomRarity() },
-            { id: 60, name: "Mismatched Socks", basePrice: 1700.00, img: LOTTIE_BASE + "mismatchedsock-5000.webp", lottie: LOTTIE_BASE + "mismatchedsock-5000.lottie.json", startPrice: 1600, ...getRandomRarity() },
-            { id: 61, name: "Moon Pendants", basePrice: 9900.11, img: LOTTIE_BASE + "moonpedant-5100.webp", lottie: LOTTIE_BASE + "moonpedant-5100.lottie.json", startPrice: 10000, ...getRandomRarity() },
-            { id: 62, name: "Neon Signs", basePrice: 5400.22, img: LOTTIE_BASE + "neonsign-5200.webp", lottie: LOTTIE_BASE + "neonsign-5200.lottie.json", startPrice: 5500, ...getRandomRarity() },
-            { id: 63, name: "Neko Helmets", basePrice: 12200.33, img: NEKO_1_STATIC, lottie: NEKO_1_LOTTIE, startPrice: 12500, model: "Rare 0.8%", symbol: "Aurora 0.6%", backdrop: "Gold 1.5%" },
-            { id: 64, name: "Noodle Cups", basePrice: 3100.44, img: LOTTIE_BASE + "noodlecup-5300.webp", lottie: LOTTIE_BASE + "noodlecup-5300.lottie.json", startPrice: 3000, ...getRandomRarity() },
-            { id: 65, name: "Ocean Gems", basePrice: 7500.55, img: LOTTIE_BASE + "oceangem-5400.webp", lottie: LOTTIE_BASE + "oceangem-5400.lottie.json", startPrice: 7400, ...getRandomRarity() },
-            { id: 66, name: "Old Telephones", basePrice: 4100.66, img: LOTTIE_BASE + "oldtelephone-5500.webp", lottie: LOTTIE_BASE + "oldtelephone-5500.lottie.json", startPrice: 4200, ...getRandomRarity() },
-            { id: 67, name: "Paper Cranes", basePrice: 2600.77, img: LOTTIE_BASE + "papercrane-5600.webp", lottie: LOTTIE_BASE + "papercrane-5600.lottie.json", startPrice: 2700, ...getRandomRarity() },
-            { id: 68, name: "Party Horns", basePrice: 1500.88, img: LOTTIE_BASE + "partyhorn-5700.webp", lottie: LOTTIE_BASE + "partyhorn-5700.lottie.json", startPrice: 1400, ...getRandomRarity() },
-            { id: 69, name: "Pixel Hearts", basePrice: 8200.99, img: LOTTIE_BASE + "pixelheart-5800.webp", lottie: LOTTIE_BASE + "pixelheart-5800.lottie.json", startPrice: 8300, ...getRandomRarity() },
-            { id: 70, name: "Power Banks", basePrice: 6800.10, img: LOTTIE_BASE + "powerbank-5900.webp", lottie: LOTTIE_BASE + "powerbank-5900.lottie.json", startPrice: 6900, ...getRandomRarity() },
-            { id: 71, name: "Rainbow Potions", basePrice: 3900.21, img: LOTTIE_BASE + "rainbowpotion-6000.webp", lottie: LOTTIE_BASE + "rainbowpotion-6000.lottie.json", startPrice: 3800, ...getRandomRarity() },
-            { id: 72, name: "Restless Jars", basePrice: 5100.55, img: LOTTIE_BASE + "restlessjar-6100.webp", lottie: LOTTIE_BASE + "restlessjar-6100.lottie.json", startPrice: 5200, ...getRandomRarity() },
-            { id: 73, name: "Sakura Flowers", basePrice: 4800.66, img: LOTTIE_BASE + "sakuraflower-6200.webp", lottie: LOTTIE_BASE + "sakuraflower-6200.lottie.json", startPrice: 4900, ...getRandomRarity() },
-            // Santa Hats (Lottie-Enabled)
-            { id: 74, name: "Santa Hat #0001", basePrice: 3800.77, img: HAT_1_STATIC, lottie: HAT_1_LOTTIE, startPrice: 3700, model: "Rare 0.5%", symbol: "Star Crown 0.2%", backdrop: "Crimson 10%" },
-            { id: 75, name: "Scared Cats", basePrice: 2200.88, img: LOTTIE_BASE + "scaredcat-6300.webp", lottie: LOTTIE_BASE + "scaredcat-6300.lottie.json", startPrice: 2300, ...getRandomRarity() },
-            { id: 76, name: "Sharp Tongues", basePrice: 6000.99, img: LOTTIE_BASE + "sharptongue-6400.webp", lottie: LOTTIE_BASE + "sharptongue-6400.lottie.json", startPrice: 5900, ...getRandomRarity() },
-            { id: 77, name: "Signet Rings", basePrice: 11800.10, img: LOTTIE_BASE + "signetring-6500.webp", lottie: LOTTIE_BASE + "signetring-6500.lottie.json", startPrice: 11600, ...getRandomRarity() },
-            { id: 78, name: "Silenced Mics", basePrice: 5700.21, img: LOTTIE_BASE + "silencedmic-6600.webp", lottie: LOTTIE_BASE + "silencedmic-6600.lottie.json", startPrice: 5800, ...getRandomRarity() },
-            { id: 79, name: "Sleeping Masks", basePrice: 2900.32, img: LOTTIE_BASE + "sleepingmask-6700.webp", lottie: LOTTIE_BASE + "sleepingmask-6700.lottie.json", startPrice: 2800, ...getRandomRarity() },
-            { id: 80, name: "Small Shields", basePrice: 7300.43, img: LOTTIE_BASE + "smallshield-6800.webp", lottie: LOTTIE_BASE + "smallshield-6800.lottie.json", startPrice: 7400, ...getRandomRarity() },
-            { id: 81, name: "Sneaker Charms", basePrice: 4400.54, img: LOTTIE_BASE + "sneakercharm-6900.webp", lottie: LOTTIE_BASE + "sneakercharm-6900.lottie.json", startPrice: 4300, ...getRandomRarity() },
-            { id: 82, name: "Solar System", basePrice: 10800.65, img: LOTTIE_BASE + "solarsystem-7000.webp", lottie: LOTTIE_BASE + "solarsystem-7000.lottie.json", startPrice: 10900, ...getRandomRarity() },
-            { id: 83, name: "Space Helmets", basePrice: 14000.76, img: LOTTIE_BASE + "spacehelmet-7100.webp", lottie: LOTTIE_BASE + "spacehelmet-7100.lottie.json", startPrice: 13800, ...getRandomRarity() },
-            { id: 84, name: "Sparkling Drinks", basePrice: 3700.87, img: LOTTIE_BASE + "sparklingdrink-7200.webp", lottie: LOTTIE_BASE + "sparklingdrink-7200.lottie.json", startPrice: 3900, ...getRandomRarity() },
-            { id: 85, name: "Star Pendants", basePrice: 9600.98, img: LOTTIE_BASE + "starpendants-7300.webp", lottie: LOTTIE_BASE + "starpendants-7300.lottie.json", startPrice: 9500, ...getRandomRarity() },
-            { id: 86, name: "Starfish Charms", basePrice: 2100.10, img: LOTTIE_BASE + "starfishcharm-7400.webp", lottie: LOTTIE_BASE + "starfishcharm-7400.lottie.json", startPrice: 2000, ...getRandomRarity() },
-            { id: 87, name: "Steam Decks", basePrice: 6300.21, img: LOTTIE_BASE + "steamdeck-7500.webp", lottie: LOTTIE_BASE + "steamdeck-7500.lottie.json", startPrice: 6400, ...getRandomRarity() },
-            // Xmas Stocking #3000 (id: 88) - УДАЛЕНО
-            { id: 89, name: "Stellar Orbs", basePrice: 8000.43, img: LOTTIE_BASE + "stellarorb-7700.webp", lottie: LOTTIE_BASE + "stellarorb-7700.lottie.json", startPrice: 8100, ...getRandomRarity() },
-            { id: 90, name: "Stellar Rockets", basePrice: 4600.55, img: LOTTIE_BASE + "stellarrocket-7800.webp", lottie: LOTTIE_BASE + "stellarrocket-7800.lottie.json", startPrice: 3800, ...getRandomRarity() },
-            { id: 91, name: "Swag Bags", basePrice: 2500.66, img: LOTTIE_BASE + "swagbag-7900.webp", lottie: LOTTIE_BASE + "swagbag-7900.lottie.json", startPrice: 2600, ...getRandomRarity() },
-            { id: 92, name: "Swiss Watches", basePrice: 8700.77, img: LOTTIE_BASE + "swisswatch-8000.webp", lottie: LOTTIE_BASE + "swisswatch-8000.lottie.json", startPrice: 8600, ...getRandomRarity() },
-            { id: 93, name: "Tama Gadgets", basePrice: 6500.88, img: LOTTIE_BASE + "tamagadget-8100.webp", lottie: LOTTIE_BASE + "tamagadget-8100.lottie.json", startPrice: 6600, ...getRandomRarity() },
-            { id: 94, name: "Top Hats", basePrice: 7100.99, img: LOTTIE_BASE + "tophat-8200.webp", lottie: LOTTIE_BASE + "tophat-8200.lottie.json", startPrice: 7000, ...getRandomRarity() },
-            // Toy Bears (Lottie-Enabled)
-            { id: 95, name: "Toy Bear #1500", basePrice: 1900.10, img: BEAR_1_STATIC, lottie: BEAR_1_LOTTIE, startPrice: 1950, model: "Pixel 3%", symbol: "Heart 1%", backdrop: "Aqua 1%" },
-            { id: 96, name: "Treasure Chests", basePrice: 12000.21, img: LOTTIE_BASE + "treasurechest-8400.webp", lottie: LOTTIE_BASE + "treasurechest-8400.lottie.json", startPrice: 11900, ...getRandomRarity() },
-            { id: 97, name: "UFOs", basePrice: 5300.32, img: LOTTIE_BASE + "ufo-8500.webp", lottie: LOTTIE_BASE + "ufo-8500.lottie.json", startPrice: 5400, ...getRandomRarity() },
-            { id: 98, name: "Unicorn Pins", basePrice: 3600.43, img: LOTTIE_BASE + "unicornpin-8600.webp", lottie: LOTTIE_BASE + "unicornpin-8600.lottie.json", startPrice: 3500, ...getRandomRarity() },
-            { id: 99, name: "Vinyl Records", basePrice: 8100.54, img: LOTTIE_BASE + "vinylrecord-8700.webp", lottie: LOTTIE_BASE + "vinylrecord-8700.lottie.json", startPrice: 8200, ...getRandomRarity() },
-            { id: 100, name: "Virtual Reality", basePrice: 11100.65, img: LOTTIE_BASE + "virtualreality-8800.webp", lottie: LOTTIE_BASE + "virtualreality-8800.lottie.json", startPrice: 11000, ...getRandomRarity() },
-            { id: 101, name: "Wallets", basePrice: 4800.76, img: LOTTIE_BASE + "wallet-8900.webp", lottie: LOTTIE_BASE + "wallet-8900.lottie.json", startPrice: 4900, ...getRandomRarity() },
-            { id: 102, name: "Watering Cans", basePrice: 2300.87, img: LOTTIE_BASE + "wateringcan-9000.webp", lottie: LOTTIE_BASE + "wateringcan-9000.lottie.json", startPrice: 2400, ...getRandomRarity() },
-            { id: 103, name: "Witch Hats", basePrice: 7600.98, img: LOTTIE_BASE + "witchhat-9100.webp", lottie: LOTTIE_BASE + "witchhat-9100.lottie.json", startPrice: 7500, ...getRandomRarity() },
-            { id: 104, name: "Wristwatches", basePrice: 5000.10, img: LOTTIE_BASE + "wristwatch-9200.webp", lottie: LOTTIE_BASE + "wristwatch-9200.lottie.json", startPrice: 5100, ...getRandomRarity() },
-            { id: 105, name: "X-Ray Eyes", basePrice: 13500.21, img: LOTTIE_BASE + "xrayeyes-9300.webp", lottie: LOTTIE_BASE + "xrayeyes-9300.lottie.json", startPrice: 13600, ...getRandomRarity() },
-            // Durov's Cap (Lottie-Enabled)
-            { id: 106, name: "Durov’s Cap #8888", basePrice: 16000.00, img: CAP_1_STATIC, lottie: CAP_1_LOTTIE, startPrice: 15800, model: "Spectrum 0.1%", symbol: "TON Cube 0.4%", backdrop: "Sapphire 3%" },
-            // Plush Pepes (Variant 2 & 3)
-            { id: 108, name: "Plush Pepe #1002", basePrice: 16100.00, img: PEPE_2_STATIC, lottie: PEPE_2_LOTTIE, startPrice: 16000, model: "Diamond 0.2%", symbol: "TON Cube 0.1%", backdrop: "Emerald 0.1%" },
-            { id: 109, name: "Plush Pepe #2051", basePrice: 14500.00, img: PEPE_3_STATIC, lottie: PEPE_3_LOTTIE, startPrice: 14700, model: "Vivid 1%", symbol: "Lightning 0.5%", backdrop: "Crimson 1%" },
-            // Kissed Frog (Variant 2)
-            { id: 110, name: "Kissed Frog #3001", basePrice: 10200.00, img: FROG_2_STATIC, lottie: FROG_2_LOTTIE, startPrice: 10000, model: "Metallic 1.5%", symbol: "Heart 1.0%", backdrop: "Sapphire 4%" },
-            // Durov's Caps (Variant 2)
-            { id: 111, name: "Durov’s Cap #1001", basePrice: 15100.00, img: CAP_2_STATIC, lottie: CAP_2_LOTTIE, startPrice: 15000, model: "Vivid 0.5%", symbol: "Heart 0.3%", backdrop: "Aqua 0.5%" },
-            // B-Day Candles (Variant 2)
-            { id: 112, name: "B-Day Candle #0012", basePrice: 1700.10, img: CANDLE_2_STATIC, lottie: CANDLE_2_LOTTIE, startPrice: 1750, model: "Metallic 2%", symbol: "Gears 0.6%", backdrop: "Gold 3%" },
-            // Candy Canes (Variant 1 & 2)
-            { id: 113, name: "Candy Cane #9001", basePrice: 2800.00, img: CANE_1_STATIC, lottie: CANE_1_LOTTIE, startPrice: 2900, model: "Pixel 2.5%", symbol: "Lightning 0.8%", backdrop: "Crimson 5%" },
-            { id: 114, name: "Candy Cane #1212", basePrice: 2500.00, img: CANE_2_STATIC, lottie: CANE_2_LOTTIE, startPrice: 2600, model: "Vivid 3%", symbol: "Aurora 1.0%", backdrop: "Grape 6%" },
-            // Holiday Drinks (Variant 2)
-            { id: 115, name: "Holiday Drink #9999", basePrice: 3900.35, img: DRINK_2_STATIC, lottie: DRINK_2_LOTTIE, startPrice: 4000, model: "Spectrum 1%", symbol: "TON Cube 0.3%", backdrop: "Emerald 3%" },
-            // Santa Hats (Variant 2)
-            { id: 116, name: "Santa Hat #0101", basePrice: 4200.77, img: HAT_2_STATIC, lottie: HAT_2_LOTTIE, startPrice: 4100, model: "Diamond 0.3%", symbol: "Heart 0.1%", backdrop: "Sapphire 8%" },
-            // Xmas Stockings (Variant 1 & 2)
-            { id: 117, name: "Xmas Stocking #3000", basePrice: 3100.50, img: STOCKING_1_STATIC, lottie: STOCKING_1_LOTTIE, startPrice: 3200, model: "Metallic 1.0%", symbol: "Gears 0.5%", backdrop: "Aqua 4%" },
-            { id: 118, name: "Xmas Stocking #0005", basePrice: 3500.50, img: STOCKING_2_STATIC, lottie: STOCKING_2_LOTTIE, startPrice: 3400, model: "Pixel 0.5%", symbol: "Aurora 0.2%", backdrop: "Crimson 5%" },
-            // Toy Bears (Variant 2)
-            { id: 119, name: "Toy Bear #4000", basePrice: 2100.10, img: BEAR_2_STATIC, lottie: BEAR_2_LOTTIE, startPrice: 2050, model: "Vivid 4%", symbol: "Lightning 1.5%", backdrop: "Emerald 2%" },
-            // Heart Lockets (Variant 1 & 2)
-            { id: 120, name: "Heart Locket #2222", basePrice: 9400.99, img: LOCKET_1_STATIC, lottie: LOCKET_1_LOTTIE, startPrice: 9500, model: "Rare 0.6%", symbol: "Star Crown 0.4%", backdrop: "Gold 1.2%" },
-            // Дополнительные NFT для имитации большого рынка
-            { id: 121, name: "Astral Shards #101", basePrice: 9900.50, img: LOTTIE_BASE + "astralshard-101.webp", lottie: LOTTIE_BASE + "astralshard-101.lottie.json", startPrice: 10100, ...getRandomRarity() },
-            { id: 122, name: "Bunny Muffin #234", basePrice: 6500.55, img: LOTTIE_BASE + "bunnymuffin-234.webp", lottie: LOTTIE_BASE + "bunnymuffin-234.lottie.json", startPrice: 6700, ...getRandomRarity() },
-            { id: 123, name: "Crystal Ball #909", basePrice: 6800.11, img: LOTTIE_BASE + "crystalball-909.webp", lottie: LOTTIE_BASE + "crystalball-909.lottie.json", startPrice: 6900, ...getRandomRarity() },
-            { id: 124, name: "Diamond Ring #007", basePrice: 12000.45, img: LOTTIE_BASE + "diamondring-007.webp", lottie: LOTTIE_BASE + "diamondring-007.lottie.json", startPrice: 12100, ...getRandomRarity() },
-            { id: 125, name: "Genie Lamp #456", basePrice: 10500.99, img: LOTTIE_BASE + "genielamp-456.webp", lottie: LOTTIE_BASE + "genielamp-456.lottie.json", startPrice: 10300, ...getRandomRarity() },
-            { id: 126, name: "Jelly Bunny #888", basePrice: 8800.33, img: LOTTIE_BASE + "jellybunny-888.webp", lottie: LOTTIE_BASE + "jellybunny-888.lottie.json", startPrice: 8900, ...getRandomRarity() },
-            { id: 127, name: "Light Sword #333", basePrice: 9100.33, img: LOTTIE_BASE + "lightsword-333.webp", lottie: LOTTIE_BASE + "lightsword-333.lottie.json", startPrice: 9300, ...getRandomRarity() },
+            // --- UNIQUE / LOTTIE-ENABLED GIFTS ---
+            { id: 1, name: "Plush Pepe #1152", basePrice: 15321.50, ...generatePath('plushpepe', 1152), startPrice: 15000, ...getRandomRarity() },
+            { id: 2, name: "Kissed Frog #5348", basePrice: 9152.88, ...generatePath('kissedfrog', 5348), startPrice: 9300, ...getRandomRarity() },
+            { id: 19, name: "Durov’s Cap #8721", basePrice: 14550.90, ...generatePath('durovscap', 8721), startPrice: 14600, ...getRandomRarity() },
+            { id: 21, name: "Electric Skull #5813", basePrice: 3350.22, ...generatePath('electricskull', 5813), startPrice: 3400, ...getRandomRarity() },
+            { id: 5, name: "B-Day Candle #2024", basePrice: 1505.44, ...generatePath('bdaycandle', 2024), startPrice: 1550, ...getRandomRarity() },
+            { id: 12, name: "Candy Cane #9001", basePrice: 3105.15, ...generatePath('candycanes', 9001), startPrice: 3150, ...getRandomRarity() },
+            { id: 36, name: "Holiday Drink #4567", basePrice: 3450.35, ...generatePath('holidaydrink', 4567), startPrice: 3500, ...getRandomRarity() },
+            { id: 74, name: "Santa Hat #0001", basePrice: 4010.00, ...generatePath('santahat', 0001), startPrice: 4050, ...getRandomRarity() },
+            { id: 104, name: "Xmas Stocking #3000", basePrice: 3150.00, ...generatePath('xmasstocking', 3000), startPrice: 3200, ...getRandomRarity() },
+            { id: 95, name: "Toy Bear #1500", basePrice: 2050.00, ...generatePath('toybear', 1500), startPrice: 2100, ...getRandomRarity() },
+            { id: 33, name: "Heart Locket #2134", basePrice: 16050.75, ...generatePath('heartlocket', 2134), startPrice: 16100, ...getRandomRarity() },
+            { id: 65, name: "Neko Helmet #1337", basePrice: 11000.55, ...generatePath('nekohelmet', 1337), startPrice: 11200, ...getRandomRarity() },
+            { id: 54, name: "Magic Potion #007", basePrice: 5000.40, ...generatePath('magicpotion', 007), startPrice: 5100, ...getRandomRarity() },
             
-            // --- NEW: 12 PET SNAKES (ID 128 - 139) ---
-            { id: 128, name: "Pet Snake #1001", basePrice: 5320.45, img: SNAKE_1_STATIC, lottie: SNAKE_1_LOTTIE, startPrice: 5220.45, ...getRandomRarity() },
-            { id: 129, name: "Pet Snake #1002", basePrice: 11055.88, img: SNAKE_2_STATIC, lottie: SNAKE_2_LOTTIE, startPrice: 11155.88, ...getRandomRarity() },
-            { id: 130, name: "Pet Snake #1003", basePrice: 7910.12, img: SNAKE_3_STATIC, lottie: SNAKE_3_LOTTIE, startPrice: 7810.12, ...getRandomRarity() },
-            { id: 131, name: "Pet Snake #1004", basePrice: 4099.01, img: SNAKE_4_STATIC, lottie: SNAKE_4_LOTTIE, startPrice: 4199.01, ...getRandomRarity() },
-            { id: 132, name: "Pet Snake #1005", basePrice: 9550.77, img: SNAKE_5_STATIC, lottie: SNAKE_5_LOTTIE, startPrice: 9450.77, ...getRandomRarity() },
-            { id: 133, name: "Pet Snake #1006", basePrice: 6220.50, img: SNAKE_6_STATIC, lottie: SNAKE_6_LOTTIE, startPrice: 6120.50, ...getRandomRarity() },
-            { id: 134, name: "Pet Snake #1007", basePrice: 10500.00, img: SNAKE_7_STATIC, lottie: SNAKE_7_LOTTIE, startPrice: 10400.00, ...getRandomRarity() },
-            { id: 135, name: "Pet Snake #1008", basePrice: 4775.33, img: SNAKE_8_STATIC, lottie: SNAKE_8_LOTTIE, startPrice: 4875.33, ...getRandomRarity() },
-            { id: 136, name: "Pet Snake #1009", basePrice: 8100.99, img: SNAKE_9_STATIC, lottie: SNAKE_9_LOTTIE, startPrice: 8000.99, ...getRandomRarity() },
-            { id: 137, name: "Pet Snake #1010", basePrice: 5880.66, img: SNAKE_10_STATIC, lottie: SNAKE_10_LOTTIE, startPrice: 5980.66, ...getRandomRarity() },
-            { id: 138, name: "Pet Snake #1011", basePrice: 11700.25, img: SNAKE_11_STATIC, lottie: SNAKE_11_LOTTIE, startPrice: 11600.25, ...getRandomRarity() },
-            { id: 139, name: "Pet Snake #1012", basePrice: 7330.15, img: SNAKE_12_STATIC, lottie: SNAKE_12_LOTTIE, startPrice: 7430.15, ...getRandomRarity() },
-
-            // --- NEW: 15 NAIL BRACELETS (ID 140 - 154) ---
-            { id: 140, name: "Nail Bracelet #2001", basePrice: 8550.21, img: BRACELET_1_STATIC, lottie: BRACELET_1_LOTTIE, startPrice: 8400.21, ...getRandomRarity() },
-            { id: 141, name: "Nail Bracelet #2002", basePrice: 13900.50, img: BRACELET_2_STATIC, lottie: BRACELET_2_LOTTIE, startPrice: 14050.50, ...getRandomRarity() },
-            { id: 142, name: "Nail Bracelet #2003", basePrice: 5010.89, img: BRACELET_3_STATIC, lottie: BRACELET_3_LOTTIE, startPrice: 5160.89, ...getRandomRarity() },
-            { id: 143, name: "Nail Bracelet #2004", basePrice: 10100.44, img: BRACELET_4_STATIC, lottie: BRACELET_4_LOTTIE, startPrice: 9950.44, ...getRandomRarity() },
-            { id: 144, name: "Nail Bracelet #2005", basePrice: 6225.11, img: BRACELET_5_STATIC, lottie: BRACELET_5_LOTTIE, startPrice: 6375.11, ...getRandomRarity() },
-            { id: 145, name: "Nail Bracelet #2006", basePrice: 14999.00, img: BRACELET_6_STATIC, lottie: BRACELET_6_LOTTIE, startPrice: 14849.00, ...getRandomRarity() },
-            { id: 146, name: "Nail Bracelet #2007", basePrice: 7800.77, img: BRACELET_7_STATIC, lottie: BRACELET_7_LOTTIE, startPrice: 7950.77, ...getRandomRarity() },
-            { id: 147, name: "Nail Bracelet #2008", basePrice: 9100.33, img: BRACELET_8_STATIC, lottie: BRACELET_8_LOTTIE, startPrice: 8950.33, ...getRandomRarity() },
-            { id: 148, name: "Nail Bracelet #2009", basePrice: 5500.99, img: BRACELET_9_STATIC, lottie: BRACELET_9_LOTTIE, startPrice: 5650.99, ...getRandomRarity() },
-            { id: 149, name: "Nail Bracelet #2010", basePrice: 12500.10, img: BRACELET_10_STATIC, lottie: BRACELET_10_LOTTIE, startPrice: 12650.10, ...getRandomRarity() },
-            { id: 150, name: "Nail Bracelet #2011", basePrice: 6850.45, img: BRACELET_11_STATIC, lottie: BRACELET_11_LOTTIE, startPrice: 6700.45, ...getRandomRarity() },
-            { id: 151, name: "Nail Bracelet #2012", basePrice: 11111.11, img: BRACELET_12_STATIC, lottie: BRACELET_12_LOTTIE, startPrice: 10961.11, ...getRandomRarity() },
-            { id: 152, name: "Nail Bracelet #2013", basePrice: 7300.22, img: BRACELET_13_STATIC, lottie: BRACELET_13_LOTTIE, startPrice: 7450.22, ...getRandomRarity() },
-            { id: 153, name: "Nail Bracelet #2014", basePrice: 9880.88, img: BRACELET_14_STATIC, lottie: BRACELET_14_LOTTIE, startPrice: 9730.88, ...getRandomRarity() },
-            { id: 154, name: "Nail Bracelet #2015", basePrice: 5999.99, img: BRACELET_15_STATIC, lottie: BRACELET_15_LOTTIE, startPrice: 6149.99, ...getRandomRarity() }
+            // --- NEW REQUESTED COLLECTIONS (Added from your list with placeholders) ---
+            { id: 128, name: "Pet Snake #1001", basePrice: 5320.45, ...generatePath('petsnake', 1001), startPrice: 5220, ...getRandomRarity() },
+            { id: 129, name: "Nail Bracelet #2001", basePrice: 8550.21, ...generatePath('nailbracelet', 2001), startPrice: 8400, ...getRandomRarity() },
+            { id: 130, name: "Precious Peach #3001", basePrice: 12800.99, ...generatePath('preciouspeach', 3001), startPrice: 12600, ...getRandomRarity() },
+            { id: 131, name: "Mini Oscar #5001", basePrice: 14500.00, ...generatePath('minioscar', 5001), startPrice: 14300, ...getRandomRarity() },
+            { id: 132, name: "Swiss Watch #6001", basePrice: 8700.77, ...generatePath('swisswatch', 6001), startPrice: 8600, ...getRandomRarity() },
+            { id: 133, name: "Stellar Rocket #7001", basePrice: 3900.44, ...generatePath('stellarrocket', 7001), startPrice: 3800, ...getRandomRarity() },
+            
+            // --- GENERAL GIFT COLLECTIONS (Placeholders) ---
+            { id: 3, name: "Artisan Bricks", basePrice: 4511.00, ...generatePath('artisanbricks'), startPrice: 4450, ...getRandomRarity() },
+            { id: 4, name: "Astral Shards", basePrice: 9870.25, ...generatePath('astralshard'), startPrice: 9900, ...getRandomRarity() },
+            { id: 6, name: "Berry Boxes", basePrice: 7245.99, ...generatePath('berrybox'), startPrice: 7100, ...getRandomRarity() },
+            { id: 7, name: "Big Years", basePrice: 6812.10, ...generatePath('bigyear'), startPrice: 6900, ...getRandomRarity() },
+            { id: 8, name: "Bling Binkies", basePrice: 12530.50, ...generatePath('blingbinky'), startPrice: 12400, ...getRandomRarity() },
+            { id: 9, name: "Bonded Rings", basePrice: 10120.00, ...generatePath('bondedring'), startPrice: 10300, ...getRandomRarity() },
+            { id: 10, name: "Bow Ties", basePrice: 5315.77, ...generatePath('bowtie'), startPrice: 5350, ...getRandomRarity() },
+            { id: 11, name: "Bunny Muffins", basePrice: 6450.05, ...generatePath('bunnymuffin'), startPrice: 6500, ...getRandomRarity() },
+            { id: 13, name: "Clover Pins", basePrice: 8755.02, ...generatePath('cloverpin'), startPrice: 8800, ...getRandomRarity() },
+            { id: 14, name: "Cookie Hearts", basePrice: 9110.89, ...generatePath('cookieheart'), startPrice: 9200, ...getRandomRarity() },
+            { id: 15, name: "Crystal Balls", basePrice: 6520.30, ...generatePath('crystalball'), startPrice: 6450, ...getRandomRarity() },
+            { id: 16, name: "Cupid Charms", basePrice: 3010.99, ...generatePath('cupidcharm'), startPrice: 3100, ...getRandomRarity() },
+            { id: 17, name: "Desk Calendars", basePrice: 1800.00, ...generatePath('deskcalendar'), startPrice: 1850, ...getRandomRarity() },
+            { id: 18, name: "Diamond Rings", basePrice: 11570.45, ...generatePath('diamondring'), startPrice: 11600, ...getRandomRarity() },
+            { id: 20, name: "Easter Eggs", basePrice: 2125.33, ...generatePath('easteregg'), startPrice: 2150, ...getRandomRarity() },
+            { id: 22, name: "Eternal Candles", basePrice: 9175.15, ...generatePath('eternalcandle'), startPrice: 9200, ...getRandomRarity() },
+            { id: 23, name: "Eternal Roses", basePrice: 4030.80, ...generatePath('eternalrose'), startPrice: 4100, ...getRandomRarity() },
+            { id: 24, name: "Evil Eyes", basePrice: 1495.90, ...generatePath('evileye'), startPrice: 1500, ...getRandomRarity() },
+            { id: 25, name: "Faith Amulets", basePrice: 3510.60, ...generatePath('faithamulet'), startPrice: 3550, ...getRandomRarity() },
+            { id: 26, name: "Flying Brooms", basePrice: 5420.75, ...generatePath('flyingbroom'), startPrice: 5450, ...getRandomRarity() },
+            { id: 27, name: "Fresh Socks", basePrice: 3820.10, ...generatePath('freshsock'), startPrice: 3850, ...getRandomRarity() },
+            { id: 28, name: "Gem Signets", basePrice: 14050.50, ...generatePath('gemsignet'), startPrice: 14100, ...getRandomRarity() },
+            { id: 29, name: "Genie Lamps", basePrice: 10150.99, ...generatePath('genielamp'), startPrice: 10200, ...getRandomRarity() },
+            { id: 30, name: "Ginger Cookies", basePrice: 2155.30, ...generatePath('gingercookie'), startPrice: 2200, ...getRandomRarity() },
+            { id: 31, name: "Hanging Stars", basePrice: 4350.40, ...generatePath('hangingstar'), startPrice: 4400, ...getRandomRarity() },
+            { id: 32, name: "Happy Brownies", basePrice: 2450.50, ...generatePath('happybrownie'), startPrice: 2500, ...getRandomRarity() },
+            { id: 34, name: "Heroic Helmets", basePrice: 15550.90, ...generatePath('heroichelmet'), startPrice: 15600, ...getRandomRarity() },
+            { id: 35, name: "Hex Pots", basePrice: 2250.10, ...generatePath('hexpot'), startPrice: 2300, ...getRandomRarity() },
+            { id: 37, name: "Homemade Cakes", basePrice: 1950.20, ...generatePath('homemadecake'), startPrice: 2000, ...getRandomRarity() },
+            { id: 38, name: "Hypno Lollipops", basePrice: 5950.44, ...generatePath('hypnolollipop'), startPrice: 6000, ...getRandomRarity() },
+            { id: 39, name: "Ice Creams", basePrice: 2355.55, ...generatePath('icecream'), startPrice: 2400, ...getRandomRarity() },
+            { id: 40, name: "Input Keys", basePrice: 5350.66, ...generatePath('inputkey'), startPrice: 5400, ...getRandomRarity() },
+            { id: 41, name: "Instant Ramens", basePrice: 2955.77, ...generatePath('instantramen'), startPrice: 3000, ...getRandomRarity() },
+            { id: 42, name: "Ion Gems", basePrice: 11050.88, ...generatePath('iongem'), startPrice: 10800, ...getRandomRarity() },
+            { id: 43, name: "Ionic Dryers", basePrice: 15150.99, ...generatePath('ionicdryer'), startPrice: 15300, ...getRandomRarity() },
+            { id: 44, name: "Jacks-in-the-Box", basePrice: 5550.00, ...generatePath('jackinthebox'), startPrice: 5400, ...getRandomRarity() },
+            { id: 45, name: "Jelly Bunnies", basePrice: 7850.11, ...generatePath('jellybunny'), startPrice: 7600, ...getRandomRarity() },
+            { id: 46, name: "Jester Hats", basePrice: 5950.22, ...generatePath('jesterhat'), startPrice: 6000, ...getRandomRarity() },
+            { id: 47, name: "Jingle Bells", basePrice: 3850.33, ...generatePath('jinglebell'), startPrice: 3900, ...getRandomRarity() },
+            { id: 48, name: "Jolly Chimps", basePrice: 7750.44, ...generatePath('jollychimp'), startPrice: 7500, ...getRandomRarity() },
+            { id: 49, name: "Joyful Bundles", basePrice: 12550.55, ...generatePath('joyfulbundle'), startPrice: 12700, ...getRandomRarity() },
+            { id: 50, name: "Light Swords", basePrice: 8850.99, ...generatePath('lightsword'), startPrice: 9000, ...getRandomRarity() },
+            { id: 52, name: "Loot Bags", basePrice: 5250.20, ...generatePath('lootbag'), startPrice: 5300, ...getRandomRarity() },
+            { id: 53, name: "Love Candles", basePrice: 10550.30, ...generatePath('lovecandle'), startPrice: 10400, ...getRandomRarity() },
+            { id: 55, name: "Low Riders", basePrice: 5550.50, ...generatePath('lowrider'), startPrice: 5400, ...getRandomRarity() },
+            { id: 56, name: "Lunar Snakes", basePrice: 4950.60, ...generatePath('lunarsnake'), startPrice: 5000, ...getRandomRarity() },
+            { id: 57, name: "Lush Bouquets", basePrice: 9350.70, ...generatePath('lushbouquet'), startPrice: 9500, ...getRandomRarity() },
+            { id: 58, name: "Love Potions", basePrice: 4650.40, ...generatePath('lovepotion'), startPrice: 4800, ...getRandomRarity() },
+            { id: 59, name: "Mad Pumpkins", basePrice: 3250.80, ...generatePath('madpumpkin'), startPrice: 3100, ...getRandomRarity() },
+            { id: 60, name: "Mighty Arms", basePrice: 17050.90, ...generatePath('mightyarm'), startPrice: 17200, ...getRandomRarity() },
+            { id: 61, name: "Mini Oscars", basePrice: 14550.00, ...generatePath('minioscar'), startPrice: 14300, ...getRandomRarity() },
+            { id: 62, name: "Money Pots", basePrice: 19050.11, ...generatePath('moneypot'), startPrice: 19200, ...getRandomRarity() },
+            { id: 63, name: "Moon Pendants", basePrice: 4150.22, ...generatePath('moonpendant'), startPrice: 4000, ...getRandomRarity() },
+            { id: 64, name: "Mousse Cakes", basePrice: 13550.33, ...generatePath('moussecake'), startPrice: 13700, ...getRandomRarity() },
+            { id: 65, name: "Nail Bracelets", basePrice: 16150.44, ...generatePath('nailbracelet'), startPrice: 16000, ...getRandomRarity() },
+            { id: 67, name: "Party Sparklers", basePrice: 2850.66, ...generatePath('partysparkler'), startPrice: 2900, ...getRandomRarity() },
+            { id: 68, name: "Perfume Bottles", basePrice: 15350.77, ...generatePath('perfumebottle'), startPrice: 15100, ...getRandomRarity() },
+            { id: 69, name: "Pet Snakes", basePrice: 5150.88, ...generatePath('petsnake'), startPrice: 5300, ...getRandomRarity() },
+            { id: 70, name: "Precious Peaches", basePrice: 12850.99, ...generatePath('preciouspeach'), startPrice: 12600, ...getRandomRarity() },
+            { id: 71, name: "Pretty Posies", basePrice: 18550.10, ...generatePath('prettyposy'), startPrice: 18700, ...getRandomRarity() },
+            { id: 72, name: "Record Players", basePrice: 6550.44, ...generatePath('recordplayer'), startPrice: 6400, ...getRandomRarity() },
+            { id: 73, name: "Restless Jars", basePrice: 5150.55, ...generatePath('restlessjar'), startPrice: 5200, ...getRandomRarity() },
+            { id: 74, name: "Sakura Flowers", basePrice: 4850.66, ...generatePath('sakuraflower'), startPrice: 4900, ...getRandomRarity() },
+            { id: 76, name: "Scared Cats", basePrice: 2250.88, ...generatePath('scaredcat'), startPrice: 2300, ...getRandomRarity() },
+            { id: 77, name: "Sharp Tongues", basePrice: 6050.99, ...generatePath('sharptongue'), startPrice: 5900, ...getRandomRarity() },
+            { id: 78, name: "Signet Rings", basePrice: 11850.10, ...generatePath('signetring'), startPrice: 11700, ...getRandomRarity() },
+            { id: 79, name: "Skull Flowers", basePrice: 5650.20, ...generatePath('skullflower'), startPrice: 5800, ...getRandomRarity() },
+            { id: 80, name: "Sky Stilettos", basePrice: 10150.30, ...generatePath('skystiletto'), startPrice: 10000, ...getRandomRarity() },
+            { id: 81, name: "Sleigh Bells", basePrice: 8550.40, ...generatePath('sleighbell'), startPrice: 8400, ...getRandomRarity() },
+            { id: 82, name: "Snake Boxes", basePrice: 7050.50, ...generatePath('snakebox'), startPrice: 7100, ...getRandomRarity() },
+            { id: 83, name: "Snoop Cigars", basePrice: 4950.60, ...generatePath('snoopcigar'), startPrice: 4700, ...getRandomRarity() },
+            { id: 84, name: "Snoop Doggs", basePrice: 5350.70, ...generatePath('snoopdogg'), startPrice: 5200, ...getRandomRarity() },
+            { id: 85, name: "Snow Globes", basePrice: 6650.80, ...generatePath('snowglobe'), startPrice: 6500, ...getRandomRarity() },
+            { id: 86, name: "Snow Mittens", basePrice: 7950.90, ...generatePath('snowmitten'), startPrice: 8000, ...getRandomRarity() },
+            { id: 87, name: "Spiced Wines", basePrice: 3550.00, ...generatePath('spicedwine'), startPrice: 3700, ...getRandomRarity() },
+            { id: 88, name: "Spring Baskets", basePrice: 8250.11, ...generatePath('springbasket'), startPrice: 8100, ...getRandomRarity() },
+            { id: 89, name: "Spy Agarics", basePrice: 1950.22, ...generatePath('spyagaric'), startPrice: 2000, ...getRandomRarity() },
+            { id: 90, name: "Star Notepads", basePrice: 4750.33, ...generatePath('starnotepad'), startPrice: 4900, ...getRandomRarity() },
+            { id: 91, name: "Stellar Rockets", basePrice: 3950.44, ...generatePath('stellarrocket'), startPrice: 3800, ...getRandomRarity() },
+            { id: 92, name: "Swag Bags", basePrice: 2550.66, ...generatePath('swagbag'), startPrice: 2600, ...getRandomRarity() },
+            { id: 93, name: "Swiss Watches", basePrice: 8750.77, ...generatePath('swisswatch'), startPrice: 8600, ...getRandomRarity() },
+            { id: 94, name: "Tama Gadgets", basePrice: 6550.88, ...generatePath('tamagadget'), startPrice: 6600, ...getRandomRarity() },
+            { id: 95, name: "Top Hats", basePrice: 7150.99, ...generatePath('tophat'), startPrice: 7000, ...getRandomRarity() },
+            { id: 97, name: "Trapped Hearts", basePrice: 4350.20, ...generatePath('trappedheart'), startPrice: 4200, ...getRandomRarity() },
+            { id: 98, name: "Valentine Boxes", basePrice: 11050.30, ...generatePath('valentinebox'), startPrice: 10900, ...getRandomRarity() },
+            { id: 99, name: "Vintage Cigars", basePrice: 6150.40, ...generatePath('vintagecigar'), startPrice: 6000, ...getRandomRarity() },
+            { id: 100, name: "Voodoo Dolls", basePrice: 5450.50, ...generatePath('voodoodoll'), startPrice: 5500, ...getRandomRarity() },
+            { id: 101, name: "Westside Signs", basePrice: 8850.90, ...generatePath('westsidesign'), startPrice: 8700, ...getRandomRarity() },
+            { id: 102, name: "Whip Cupcakes", basePrice: 4650.10, ...generatePath('whipcupcake'), startPrice: 4700, ...getRandomRarity() },
+            { id: 103, name: "Winter Wreaths", basePrice: 3250.20, ...generatePath('winterwreath'), startPrice: 3300, ...getRandomRarity() },
+            { id: 104, name: "Witch Hats", basePrice: 1550.30, ...generatePath('witchhat'), startPrice: 1600, ...getRandomRarity() },
+            { id: 105, name: "Lol Pops", basePrice: 4550.22, ...generatePath('lolpop'), startPrice: 4300, ...getRandomRarity() },
         ];
 
-        // --- GLOBAL UTILITIES ---
-        let favorites = [1, 22, 106, 111, 145]; // Примеры избранных
-        let currentOpenId = null;
-        let currentCurrency = 'RUB';
-        const requisites = { card: "4276 0000 0000 0000", btc: "bc1q...x0z", usdt: "TRC20...d9z" };
-        const priceFormats = {
-            'RUB': (p) => `${p.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽`,
-            'USD': (p) => `$${(p / 90).toFixed(2)}`,
-            'EUR': (p) => `€${(p / 98).toFixed(2)}`,
-            'KZT': (p) => `${(p * 5.2).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₸`,
-            'UAH': (p) => `${(p / 2.3).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₴`,
+        const rates = {
+            'RUB': { val: 1, sign: '₽' }, 'USD': { val: 0.010, sign: '$' }, 'EUR': { val: 0.0095, sign: '€' },
+            'KZT': { val: 5.1, sign: '₸' }, 'UAH': { val: 0.40, sign: '₴' }
         };
-        const getPrice = (p) => priceFormats[currentCurrency](p);
-        
-        function generateHistory(basePrice, days) {
-            const history = [];
-            let price = basePrice;
-            for (let i = 0; i < days; i++) {
-                const change = (Math.random() * 500 - 250); // +/- 250
-                const newPrice = price + change;
-                history.unshift({
-                    date: new Date(Date.now() - i * 86400000).toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' }),
-                    price: newPrice,
-                    change: change
-                });
-                price = newPrice;
-            }
-            return history;
+
+        const requisites = {
+            'card': '0000 0000 0000 0000 (Sber/Tinkoff)', 'btc': 'bc1q_YOUR_BTC', 'eth': '0x_YOUR_ETH',
+            'usdt': 'T_YOUR_TRC20', 'ton': 'UQ_YOUR_TON'
+        };
+
+        let currentCurrency = 'RUB';
+        let favorites = [];
+        let currentOpenId = null;
+
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        document.getElementById('user-id').innerText = tg.initDataUnsafe?.user?.id || "88005553535";
+
+        // --- CORE FUNCTIONS ---
+
+        function getPrice(rubPrice) {
+            const rate = rates[currentCurrency];
+            return (rubPrice * rate.val).toFixed(2) + ' ' + rate.sign;
         }
 
-        function renderHistory(history) {
-            const tbody = document.getElementById('price-history');
-            tbody.innerHTML = '';
-            history.forEach((day, index) => {
-                const changeClass = day.change >= 0 ? 'change-up' : 'change-down';
-                const sign = day.change >= 0 ? '+' : '';
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${day.date}</td>
-                        <td>${getPrice(day.price)}</td>
-                        <td class="${changeClass}">${sign}${getPrice(day.change)}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // --- CORE NAVIGATION & MODAL FUNCTIONS ---
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (element) element.classList.add('active');
-            if (tabId === 'favorites') renderFavorites();
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
+        // --- SHUFFLE ARRAY FUNCTION ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            if (modalId === 'nft-modal' && currentLottieAnimation) {
-                currentLottieAnimation.destroy();
-                currentLottieAnimation = null;
-            }
-        }
-
-        // --- MARKET RENDER ---
         function renderMarket(items, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            if (items.length === 0) {
-                container.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Ничего не найдено</div>`;
+
+            if(items.length === 0 && containerId === 'fav-list') {
+                container.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных NFT</div>`;
                 return;
             }
 
             items.forEach(item => {
                 const isFav = favorites.includes(item.id);
                 const heart = isFav ? '❤️' : '🤍';
+                
                 const card = document.createElement('div');
                 card.className = 'nft-card';
                 card.onclick = () => openNFT(item.id);
+                
                 // Используем статичную картинку для сетки.
                 // При ошибке загрузки (onerror) добавляем класс no-image к родительской карточке.
                 card.innerHTML = `
                     <div class="fav-icon" onclick="toggleFav(${item.id}, event)">${heart}</div>
-                    <img src="${item.img}" class="nft-img" alt="${item.name}" onerror="this.parentElement.classList.add('no-image'); this.onerror=null;">
+                    <img src="${item.img}" class="nft-img" alt="${item.name}" 
+                         onerror="this.parentElement.classList.add('no-image'); this.onerror=null;">
                     <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
                     <div style="color: var(--green-color); font-weight: bold; margin-top: 4px;">${getPrice(item.basePrice)}</div>
                 `;
@@ -703,26 +434,16 @@
         function toggleFav(id, event) {
             if(event) event.stopPropagation();
             favorites = favorites.includes(id) ? favorites.filter(favId => favId !== id) : [...favorites, id];
-            filterNFTs();
-            renderFavorites();
+            filterNFTs(); renderFavorites();
             if(document.getElementById('nft-modal').style.display === 'flex' && currentOpenId === id) updateModalFavBtn(id);
         }
 
-        function toggleFavFromModal() {
-            if(currentOpenId) toggleFav(currentOpenId, null);
-        }
-
+        function toggleFavFromModal() { if(currentOpenId) toggleFav(currentOpenId, null); }
         function updateModalFavBtn(id) {
             const btn = document.getElementById('m-fav-btn');
-            if(favorites.includes(id)) {
-                btn.innerText = '❤️ В избранном';
-                btn.style.borderColor = 'var(--red-color)';
-            } else {
-                btn.innerText = '🤍 В избранное';
-                btn.style.borderColor = '#333';
-            }
+            if(favorites.includes(id)) { btn.innerText = '❤️ В избранном'; btn.style.borderColor = 'var(--red-color)'; } 
+            else { btn.innerText = '🤍 В избранное'; btn.style.borderColor = '#333'; }
         }
-
         function renderFavorites() {
             const favItems = collections.filter(c => favorites.includes(c.id));
             renderMarket(favItems, 'fav-list');
@@ -738,90 +459,170 @@
         // --- SETTINGS: CURRENCY ---
         function changeCurrency() {
             currentCurrency = document.getElementById('currency-select').value;
-            document.getElementById('user-balance').innerText = getPrice(0);
+            document.getElementById('user-balance').innerText = getPrice(0); 
             document.getElementById('frozen-balance').innerText = getPrice(0);
-            filterNFTs();
-            renderFavorites();
+            filterNFTs(); renderFavorites();
         }
 
-        // --- RANDOM SHUFFLE FUNCTION (Fisher-Yates) ---
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-        
         // --- openNFT (ОБНОВЛЕНА ДЛЯ РАБОТЫ С LOTTIE) ---
         function openNFT(id) {
             const item = collections.find(c => c.id === id);
-            if (!item) return;
-
             currentOpenId = id;
-            const mediaWrapper = document.getElementById('nft-media-wrapper');
-            mediaWrapper.innerHTML = '';
-            mediaWrapper.style.backgroundColor = '#2c2c2e'; // Сброс фона
-            mediaWrapper.style.minHeight = '180px'; // Сброс высоты
             
-            // 1. Попытка загрузить Lottie
-            if (item.lottie) {
+            const mediaWrapper = document.getElementById('nft-media-wrapper');
+            mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px;">Загрузка медиа...</div>`;
+            mediaWrapper.style.backgroundColor = '#2c2c2e';
+
+            // 1. ОТОБРАЖЕНИЕ LOTTIE ИЛИ СТАТИКИ
+            if (item.lottie && typeof lottie !== 'undefined') {
+                // Если есть Lottie, пробуем его загрузить
+                mediaWrapper.innerHTML = '';
+                const lottieDiv = document.createElement('div');
+                lottieDiv.id = 'lottie-player-div';
+                lottieDiv.style.width = '100%';
+                lottieDiv.style.height = '100%';
+                mediaWrapper.appendChild(lottieDiv);
+
                 currentLottieAnimation = lottie.loadAnimation({
-                    container: mediaWrapper,
+                    container: lottieDiv,
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
-                    path: item.lottie,
-                    rendererSettings: { preserveAspectRatio: 'xMidYMid slice' }
+                    path: item.lottie
                 });
-                // Обработчик ошибки Lottie (часто не срабатывает надежно, но пытаемся)
-                currentLottieAnimation.addEventListener('error', () => {
-                    if (currentLottieAnimation) currentLottieAnimation.destroy();
-                    currentLottieAnimation = null;
-                    loadStaticImageFallback(item, mediaWrapper);
-                });
+
+                // **ОБЛЕГЧЕННЫЙ FALLBACK:** Если Lottie не загрузился (ошибка 404), отображаем статическое изображение
+                let lottieLoaded = false;
+                currentLottieAnimation.addEventListener('DOMLoaded', () => { lottieLoaded = true; });
+                
+                setTimeout(() => {
+                    if (!lottieLoaded) {
+                        console.warn('Lottie failed to load or render. Falling back to static image.');
+                        showStaticImage(item, mediaWrapper);
+                    }
+                }, 3000); // 3 секунды ожидания
+
             } else {
-                // 2. Если Lottie нет, сразу fallback
-                loadStaticImageFallback(item, mediaWrapper);
+                // Если Lottie нет, сразу показываем статичное изображение
+                showStaticImage(item, mediaWrapper);
             }
 
             document.getElementById('m-title').innerText = item.name;
             document.getElementById('m-price').innerText = getPrice(item.basePrice);
+            
+            // Populate Metadata 
             document.getElementById('m-model').innerHTML = item.model.split(' ')[0] + ' <span class="meta-rarity">' + item.model.split(' ')[1] + '</span>';
             document.getElementById('m-symbol').innerHTML = item.symbol.split(' ')[0] + ' <span class="meta-rarity">' + item.symbol.split(' ')[1] + '</span>';
             document.getElementById('m-backdrop').innerHTML = item.backdrop.split(' ')[0] + ' <span class="meta-rarity">' + item.backdrop.split(' ')[1] + '</span>';
-
+            
             updateModalFavBtn(id);
             openModal('nft-modal');
 
             // Устанавливаем статическую заглушку, имитирующую график
             const chartColor = item.basePrice > item.startPrice ? '34c759' : 'ff3b30';
             document.getElementById('priceChartPlaceholder').src = `https://placehold.co/400x150/111111/${chartColor}?text=Price+Trend`;
-            
+
             const history = generateHistory(item.basePrice, 5);
             renderHistory(history);
         }
 
-        // --- FALLBACK FUNCTION ---
-        function loadStaticImageFallback(item, mediaWrapper) {
+        // Отдельная функция для показа статической картинки
+        function showStaticImage(item, mediaWrapper) {
+            if(currentLottieAnimation) {
+                 currentLottieAnimation.destroy();
+                 currentLottieAnimation = null;
+            }
+            mediaWrapper.innerHTML = '';
             const img = document.createElement('img');
             img.src = item.img;
-            img.style.width = '100%';
+            img.style.width = '100%'; 
             img.style.height = '100%';
             img.style.objectFit = 'cover';
-            img.style.borderRadius = '10px';
-            mediaWrapper.innerHTML = '';
-            mediaWrapper.appendChild(img);
-
-            // Если и статическое изображение не загрузилось
-            img.onerror = function() {
-                this.style.display = 'none'; // Скрываем сломанную иконку
+            img.style.borderRadius = '10px'; 
+            
+            img.onerror = function() { 
                 mediaWrapper.style.backgroundColor = '#121212';
-                mediaWrapper.style.minHeight = '200px';
-                mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px;">${item.name}</div><div style="color: #666; font-size: 12px; margin-top: 5px;">Нет медиа-файла</div>`;
+                mediaWrapper.innerHTML = `<div style="color: #888; font-size: 16px; padding: 50px;">${item.name}<br>(Ошибка загрузки медиа)</div>`; 
+            };
+            mediaWrapper.appendChild(img);
+        }
+
+        // --- HISTORY GENERATION ---
+        function generateHistory(currentBasePrice, days) {
+            const history = [];
+            let price = currentBasePrice;
+            const today = new Date();
+
+            for (let i = 0; i < days; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const percentageChange = parseFloat((Math.random() * 10 - 5).toFixed(2));
+                
+                let prevPrice;
+                if (i === 0) {
+                    prevPrice = price / (1 + percentageChange / 100); 
+                } else {
+                    prevPrice = price / (1 - percentageChange / 100);
+                }
+                
+                history.push({
+                    date: date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' }),
+                    rawPrice: price,
+                    change: percentageChange,
+                    formattedPrice: getPrice(price),
+                });
+                
+                price = prevPrice;
+            }
+            return history.reverse();
+        }
+
+        function renderHistory(history) {
+            const tbody = document.getElementById('price-history');
+            tbody.innerHTML = '';
+
+            history.forEach(day => {
+                const changeClass = day.change >= 0 ? 'change-up' : 'change-down';
+                const changeText = day.change >= 0 ? `+${day.change}%` : `${day.change}%`;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${day.date}</td>
+                    <td>${getPrice(day.rawPrice)}</td>
+                    <td class="${changeClass}">${changeText}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // --- UI UTILS ---
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (el) {
+                el.classList.add('active');
             }
         }
 
-        // --- DEPOSIT & PAYMENT LOGIC ---
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        
+        // ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА С ОСТАНОВКОЙ LOTTIE
+        function closeModal(id) { 
+            document.getElementById(id).style.display = 'none'; 
+            if (id === 'nft-modal' && currentLottieAnimation) {
+                currentLottieAnimation.destroy(); // Уничтожаем анимацию для освобождения ресурсов
+                currentLottieAnimation = null;
+            }
+        }
+        
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal')) { e.target.style.display = "none"; }
+        }
+
         function toggleDepFields() {
             const method = document.getElementById('dep-method').value;
             document.getElementById('bank-wrap').style.display = method === 'card' ? 'block' : 'none';
@@ -831,39 +632,33 @@
         function goToPayment() {
             const methodType = document.getElementById('dep-method').value;
             const amount = document.getElementById('dep-amount').value;
-
-            if(!amount || amount <= 0) {
-                alert("Введите сумму корректно");
-                return;
-            }
-
+            if(!amount || amount <= 0) { alert("Введите сумму корректно"); return; }
             let name = "";
             let req = "";
-
             if (methodType === 'card') {
                 name = document.getElementById('bank-name').value;
                 req = requisites.card;
             } else {
                 const coin = document.getElementById('crypto-coin').value;
-                name = coin.toUpperCase();
-                req = requisites[coin] || 'Неизвестный кошелек';
+                name = document.getElementById('crypto-coin').options[document.getElementById('crypto-coin').selectedIndex].text;
+                req = requisites[coin] || "Адрес не найден";
             }
 
             document.getElementById('pay-method-name').innerText = name;
             document.getElementById('pay-details').innerText = req;
-            document.getElementById('pay-sum').innerText = getPrice(parseFloat(amount)).split(' ')[0];
+            document.getElementById('pay-sum').innerText = amount + ' ' + (methodType === 'card' ? 'RUB' : name.split(' ')[0]);
 
             openModal('payment-modal');
         }
 
-        // --- INIT (ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ) ---
+        // --- INIT ---
         function initializeApp() {
             try {
                 // Инициализация баланса и валюты
                 document.getElementById('user-balance').innerText = getPrice(0); 
                 document.getElementById('frozen-balance').innerText = getPrice(0);
 
-                // **ВЫЗОВ РАНДОМИЗАЦИИ**
+                // ПЕРЕМЕШИВАЕМ КОЛЛЕКЦИЮ
                 shuffleArray(collections);
 
                 // **Отрисовка списка NFT происходит немедленно**
