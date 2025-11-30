@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mini Fragment Market 27.0 (Working Media Demo)</title>
+    <title>Gifts Market 22.0 (Only Gifts)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -21,8 +21,6 @@
         .btn-green { background-color: var(--green-color); }
         .btn-outline { background: transparent; border: 1px solid #333; color: var(--text-color); }
         input, select { width: 100%; padding: 14px; background: var(--card-bg); border: 1px solid #333; border-radius: var(--border-radius); color: white; margin-bottom: 12px; box-sizing: border-box; font-size: 16px; appearance: none; }
-        /* Фильтры в сетке */
-        .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(10px); display: grid; grid-template-columns: repeat(4, 1fr); padding: 10px 0 20px 0; border-top: 1px solid #333; z-index: 100; }
         .nav-item { color: var(--secondary-text); text-align: center; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: var(--accent-color); }
@@ -57,7 +55,7 @@
         .meta-table .meta-rarity { color: var(--accent-color); font-size: 12px; float: right; }
         
         /* Стиль для Lottie-контейнера */
-        #nft-media-wrapper { display: flex; align-items: center; justify-content: center; overflow: hidden; height: 150px; background: #222; border-radius: 10px;}
+        #nft-media-wrapper { display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #nft-media-wrapper svg { width: 100%; height: 100%; }
 
         /* === СТИЛИ ДЛЯ NFT БЕЗ КАРТИНКИ (СТАБИЛЬНАЯ ЗАГЛУШКА) === */
@@ -70,8 +68,7 @@
             background-color: #121212;
         }
         .nft-card.no-image .nft-img {
-            /* Скрываем img, когда он не загрузился */
-            display: none; 
+            display: none;
         }
         .nft-card.no-image div:nth-child(2) { 
              margin-bottom: 8px;
@@ -79,52 +76,20 @@
         .nft-card.no-image .fav-icon {
             top: 18px;
         }
-        .nft-card .image-placeholder-content {
-            /* Контейнер заглушки */
-            display: none; 
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-        }
-        /* Отображаем заглушку, когда класс no-image активен */
-        .nft-card.no-image .image-placeholder-content {
-            display: flex; 
-        }
-
     </style>
 </head>
 <body>
 
     <div id="market" class="section active container">
-        <h2 id="market-title">🎁 Mini Fragment Market</h2>
-        <input type="text" id="search" placeholder="Поиск NFT..." onkeyup="filterNFTs()">
-        
-        <div class="filter-grid">
-            <select id="rarity-filter" onchange="filterNFTs()">
-                <option value="all">Все коллекции</option>
-                </select>
-            <select id="price-filter" onchange="filterNFTs()">
-                <option value="all">Любая цена</option>
-                <option value="low">0₽ - 7,000₽</option>
-                <option value="mid">7,000₽ - 15,000₽</option>
-                <option value="high">15,000₽+</option>
-            </select>
-        </div>
-        
+        <h2 id="market-title">🎁 Market</h2>
+        <input type="text" id="search" placeholder="Поиск подарков..." onkeyup="filterNFTs()">
         <div class="market-grid" id="market-list"></div>
     </div>
 
     <div id="favorites" class="section container">
         <h2>❤️ Избранное</h2>
         <div id="fav-list" class="market-grid">
-            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных NFT</div>
+            <div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Нет избранных подарков</div>
         </div>
     </div>
 
@@ -185,9 +150,9 @@
             <h3 id="m-price" style="color: var(--green-color); margin: 0;">Price</h3>
             
             <table class="meta-table">
-                <tr><td class="meta-label">Коллекция:</td><td class="meta-value" id="m-model"></td></tr>
+                <tr><td class="meta-label">Модель:</td><td class="meta-value" id="m-model"></td></tr>
                 <tr><td class="meta-label">Символ:</td><td class="meta-value" id="m-symbol"></td></tr>
-                <tr><td class="meta-label">Рарность/Фон:</td><td class="meta-value" id="m-backdrop"></td></tr>
+                <tr><td class="meta-label">Задний фон:</td><td class="meta-value" id="m-backdrop"></td></tr>
             </table>
 
             <p style="font-size: 12px; color: #888; margin-top: 15px;">Динамика цены (5 дней):</p>
@@ -214,14 +179,32 @@
             <div class="close-btn" onclick="closeModal('deposit-modal')">&times;</div>
             <h3>Пополнение</h3>
             <label>Способ:</label>
-            <select id="deposit-method">
-                <option>TON Coin</option>
-                <option>USDT TRC20</option>
-                <option>Visa/MasterCard RUB</option>
+            <select id="dep-method" onchange="toggleDepFields()">
+                <option value="card">Банковская карта</option>
+                <option value="crypto">Криптовалюта</option>
             </select>
-            <label>Сумма (RUB):</label>
-            <input type="number" placeholder="От 1,000" id="deposit-amount">
-            <button class="btn btn-green" onclick="startPayment('deposit')">Начать оплату</button>
+            <div id="bank-wrap"><select id="bank-name"><option>СберБанк</option><option>Т-Банк (Тинькофф)</option><option>Альфа Банк</option><option>ВТБ</option><option>СБП (Другой банк)</option></select></div>
+            <div id="crypto-wrap" style="display:none;"><select id="crypto-coin"><option value="btc">Bitcoin (BTC)</option><option value="eth">Ethereum (ETH)</option><option value="usdt">USDT (TRC20)</option><option value="ton">TON</option></select></div>
+            <label>Сумма:</label>
+            <input type="number" id="dep-amount" placeholder="500">
+            <button class="btn btn-green" onclick="goToPayment()">Перейти к оплате</button>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal" style="z-index: 210;">
+        <div class="modal-content">
+            <div class="close-btn" onclick="closeModal('payment-modal')">&times;</div>
+            <h3>Реквизиты для оплаты</h3>
+            <p style="font-size: 14px; color: #ccc;">Совершите перевод на указанные реквизиты:</p>
+            <div class="info-box" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid #444;">
+                <div style="font-size: 12px; color: #888;">Способ:</div><b id="pay-method-name">Сбербанк</b>
+                <hr style="border-color: #444; margin: 10px 0;">
+                <div style="font-size: 12px; color: #888;">Реквизиты / Кошелек:</div><b id="pay-details" style="font-size: 18px; word-break: break-all;">0000 0000 0000 0000</b>
+                <hr style="border-color: #444; margin: 10px 0;">
+                <div style="font-size: 12px; color: #888;">Сумма к оплате:</div><b id="pay-sum" style="color: var(--green-color); font-size: 20px;">1000 RUB</b>
+            </div>
+            <br>
+            <button class="btn btn-green" onclick="closeModal('payment-modal'); closeModal('deposit-modal'); alert('Заявка создана! Ожидайте поступления.');">Я оплатил</button>
         </div>
     </div>
 
@@ -229,465 +212,353 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('withdraw-modal')">&times;</div>
             <h3>Вывод средств</h3>
-            <label>Способ:</label>
-            <select id="withdraw-method">
-                <option>TON Coin (Wallet)</option>
-                <option>USDT TRC20</option>
-                <option>Карта РФ</option>
-            </select>
-            <label>Адрес/Реквизиты:</label>
-            <input type="text" placeholder="Введите адрес кошелька или номер карты" id="withdraw-address">
-            <label>Сумма (RUB):</label>
-            <input type="number" placeholder="От 500" id="withdraw-amount">
-            <button class="btn btn-red" onclick="startPayment('withdraw')">Подтвердить вывод</button>
-        </div>
-    </div>
-
-    <div id="payment-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="close-btn" onclick="closeModal('payment-modal')">&times;</div>
-            <h3>Ожидание оплаты</h3>
-            <div id="payment-details" style="background: #222; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; font-size: 14px;">
-                <p>Сумма: <b id="p-amount">...</b></p>
-                <p>Метод: <b id="p-method">...</b></p>
-                <p>Статус: <b style="color: yellow;">Ожидание...</b></p>
-            </div>
-            <p style="font-size: 12px; color: #888;">Пожалуйста, следуйте инструкциям в вашем кошельке или банковском приложении.</p>
-            <button class="btn btn-outline" onclick="closeModal('payment-modal')">Закрыть</button>
+            <select><option>На карту</option><option>USDT</option><option>BTC</option><option>TON</option></select>
+            <input type="text" placeholder="Реквизиты (Карта / Кошелек)">
+            <input type="number" placeholder="Сумма">
+            <button class="btn">Создать заявку</button>
         </div>
     </div>
 
     <script>
-        // --- (1) ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
-        function getPrice(amount) {
-            const currency = document.getElementById('currency-select').value;
-            const rates = { 'RUB': 1, 'USD': 0.0105, 'EUR': 0.0098, 'KZT': 4.8, 'UAH': 0.38 };
-            const symbols = { 'RUB': '₽', 'USD': '$', 'EUR': '€', 'KZT': '₸', 'UAH': '₴' };
-            const converted = (amount * rates[currency]).toFixed(2);
-            return `${converted} ${symbols[currency]}`;
-        }
-
-        function changeCurrency() {
-            renderMarket(collections, 'market-list');
-            renderFavorites();
-            document.getElementById('user-balance').innerText = getPrice(0); 
-            document.getElementById('frozen-balance').innerText = getPrice(0);
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function generatePriceHistory(basePrice) {
-            const history = [];
-            let currentPrice = basePrice;
-            const today = new Date();
-            
-            for (let i = 0; i < 5; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                
-                // Random change: -5% to +5%
-                const changePercent = (Math.random() * 10 - 5).toFixed(1); 
-                const changeAmount = Math.round(currentPrice * (changePercent / 100));
-                
-                const dayPrice = currentPrice - changeAmount;
-
-                history.push({
-                    date: date.toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' }),
-                    price: dayPrice,
-                    change: changeAmount
-                });
-                currentPrice = dayPrice;
-            }
-            return history.reverse(); 
-        }
-
-        // --- (2) КОЛЛЕКЦИЯ NFT (ТОЛЬКО СУЩЕСТВУЮЩИЕ КОЛЛЕКЦИИ TELEGRAM) ---
+        // --- CONFIG & DATA ---
         
-        const baseNfts = [
-            { title: 'Artisan Brick', model: 'Artisan Bricks', symbol: 'ART-BRICK', priceBase: 12500, color: 'Brown/Earth' },
-            { title: 'Astral Shard', model: 'Astral Shards', symbol: 'AST-SHARD', priceBase: 7800, color: 'Purple/Cosmic' },
-            { title: 'B-Day Candle', model: 'B-Day Candles', symbol: 'BDAY-CANDLE', priceBase: 3500, color: 'Yellow/Flame' },
-            { title: 'Durov\'s Cap', model: 'Durov\'s Caps', symbol: 'DUROV-CAP', priceBase: 25000, color: 'Blue/Legendary' },
-            { title: 'Snoop Dogg', model: 'Snoop Doggs', symbol: 'SNOOP-DOGG', priceBase: 9900, color: 'Green/Smoke' },
-            { title: 'Heroic Helmet', model: 'Heroic Helmets', symbol: 'HERO-HELM', priceBase: 18000, color: 'Red/Epic' },
-            { title: 'Jester Hat', model: 'Jester Hats', symbol: 'JEST-HAT', priceBase: 6500, color: 'Pink/Fun' },
-            { title: 'Moon Pendant', model: 'Moon Pendants', symbol: 'MOON-PEND', priceBase: 5200, color: 'Gray/Night' },
-            { title: 'Pretty Posy', model: 'Pretty Posies', symbol: 'PRETTY-POS', priceBase: 15000, color: 'Orange/Floral' },
-            { title: 'Skull Flower', model: 'Skull Flowers', symbol: 'SKULL-FLOW', priceBase: 4800, color: 'Black/Dark' },
-            { title: 'Swiss Watch', model: 'Swiss Watches', symbol: 'SWISS-W', priceBase: 11000, color: 'Silver/Lux' },
-            { title: 'Voodoo Doll', model: 'Voodoo Dolls', symbol: 'VOO-DOLL', priceBase: 7100, color: 'DarkGreen/Magic' },
+        const LOTTIE_BASE = "https://nft.fragment.com/gift/";
+        const GENERIC_ID = "5000"; // Стандартный ID для заглушек
+        
+        // Функция для генерации путей
+        function generatePath(baseName, id = GENERIC_ID) {
+            return {
+                img: `${LOTTIE_BASE}${baseName}-${id}.webp`,
+                lottie: `${LOTTIE_BASE}${baseName}-${id}.lottie.json`
+            };
+        }
+
+        const models = ["Spectrum", "Pixel", "Metallic", "Diamond", "Vivid", "Rare", "Phantom"];
+        const symbols = ["Star Crown", "Heart", "TON Cube", "Lightning", "Aurora", "Gears"];
+        const backdrops = ["Grape", "Sapphire", "Crimson", "Emerald", "Gold", "Cosmic", "Aqua"];
+        
+        function getRandomRarity() {
+            return {
+                model: `${models[Math.floor(Math.random() * models.length)]} ${Math.floor(Math.random() * 50) / 10 + 0.1}%`,
+                symbol: `${symbols[Math.floor(Math.random() * symbols.length)]} ${Math.floor(Math.random() * 20) / 10 + 0.1}%`,
+                backdrop: `${backdrops[Math.floor(Math.random() * backdrops.length)]} ${Math.floor(Math.random() * 10 + 1)}%`
+            };
+        }
+        
+        let currentLottieAnimation = null;
+
+        // --- NFT DATA (ONLY GIFTS) ---
+        const collections = [
+            // --- UNIQUE / LOTTIE-ENABLED GIFTS (IDs 1-133) ---
+            { id: 1, name: "Plush Pepe #1152", basePrice: 15321.50, ...generatePath('plushpepe', 1152), startPrice: 15000, ...getRandomRarity() },
+            { id: 2, name: "Kissed Frog #5348", basePrice: 9152.88, ...generatePath('kissedfrog', 5348), startPrice: 9300, ...getRandomRarity() },
+            { id: 21, name: "Electric Skull #5813", basePrice: 3350.22, ...generatePath('electricskull', 5813), startPrice: 3400, ...getRandomRarity() },
+            { id: 5, name: "B-Day Candle #2024", basePrice: 1505.44, ...generatePath('bdaycandle', 2024), startPrice: 1550, ...getRandomRarity() },
+            { id: 12, name: "Candy Cane #9001", basePrice: 3105.15, ...generatePath('candycane', 9001), startPrice: 3150, ...getRandomRarity() },
+            { id: 36, name: "Holiday Drink #4567", basePrice: 3450.35, ...generatePath('holidaydrink', 4567), startPrice: 3500, ...getRandomRarity() },
+            { id: 74, name: "Santa Hat #0001", basePrice: 4010.00, ...generatePath('santahat', 0001), startPrice: 4050, ...getRandomRarity() },
+            { id: 104, name: "Xmas Stocking #3000", basePrice: 3150.00, ...generatePath('xmasstocking', 3000), startPrice: 3200, ...getRandomRarity() },
+            { id: 95, name: "Toy Bear #1500", basePrice: 2050.00, ...generatePath('toybear', 1500), startPrice: 2100, ...getRandomRarity() },
+            { id: 65, name: "Neko Helmet #1337", basePrice: 11000.55, ...generatePath('nekohelmet', 1337), startPrice: 11200, ...getRandomRarity() },
+            { id: 54, name: "Magic Potion #007", basePrice: 5000.40, ...generatePath('magicpotion', 007), startPrice: 5100, ...getRandomRarity() },
+            
+            // --- NEW REQUESTED COLLECTIONS (Added from your list with placeholders) ---
+            { id: 128, name: "Pet Snake #1001", basePrice: 5320.45, ...generatePath('petsnake', 1001), startPrice: 5220, ...getRandomRarity() },
+            { id: 132, name: "Swiss Watch #6001", basePrice: 8700.77, ...generatePath('swisswatch', 6001), startPrice: 8600, ...getRandomRarity() },
+            { id: 133, name: "Stellar Rocket #7001", basePrice: 3900.20, ...generatePath('stellarrocket', 7001), startPrice: 3800, ...getRandomRarity() },
+            
+            // --- GENERATED GIFTS (IDs 134-420: 287 items) ---
+            { id: 134, name: "Plush Pepe #8652", basePrice: 16584.97, ...generatePath('plushpepe', 8652), startPrice: 16843.08, ...getRandomRarity() },
+            { id: 135, name: "Kissed Frog #3284", basePrice: 8552.48, ...generatePath('kissedfrog', 3284), startPrice: 8352.88, ...getRandomRarity() },
+            { id: 136, name: "Electric Skull #9537", basePrice: 3015.20, ...generatePath('electricskull', 9537), startPrice: 2988.88, ...getRandomRarity() },
+            { id: 137, name: "B-Day Candle #4168", basePrice: 1384.81, ...generatePath('bdaycandle', 4168), startPrice: 1391.13, ...getRandomRarity() },
+            { id: 138, name: "Candy Cane #7712", basePrice: 2981.33, ...generatePath('candycane', 7712), startPrice: 2981.18, ...getRandomRarity() },
+            { id: 139, name: "Holiday Drink #8096", basePrice: 3795.38, ...generatePath('holidaydrink', 8096), startPrice: 3878.07, ...getRandomRarity() },
+            { id: 140, name: "Santa Hat #1345", basePrice: 3687.95, ...generatePath('santahat', 1345), startPrice: 3676.79, ...getRandomRarity() },
+            { id: 141, name: "Xmas Stocking #5910", basePrice: 2894.41, ...generatePath('xmasstocking', 5910), startPrice: 2840.45, ...getRandomRarity() },
+            { id: 142, name: "Toy Bear #8206", basePrice: 2197.68, ...generatePath('toybear', 8206), startPrice: 2178.68, ...getRandomRarity() },
+            { id: 143, name: "Neko Helmet #6815", basePrice: 10452.29, ...generatePath('nekohelmet', 6815), startPrice: 10486.27, ...getRandomRarity() },
+            { id: 144, name: "Magic Potion #3599", basePrice: 4788.66, ...generatePath('magicpotion', 3599), startPrice: 4725.22, ...getRandomRarity() },
+            { id: 145, name: "Pet Snake #9703", basePrice: 5674.34, ...generatePath('petsnake', 9703), startPrice: 5697.58, ...getRandomRarity() },
+            { id: 146, name: "Swiss Watch #1709", basePrice: 9132.89, ...generatePath('swisswatch', 1709), startPrice: 9140.40, ...getRandomRarity() },
+            { id: 147, name: "Stellar Rocket #2441", basePrice: 3600.08, ...generatePath('stellarrocket', 2441), startPrice: 3550.08, ...getRandomRarity() },
+            { id: 148, name: "Plush Pepe #2664", basePrice: 14280.97, ...generatePath('plushpepe', 2664), startPrice: 14175.05, ...getRandomRarity() },
+            { id: 149, name: "Kissed Frog #4992", basePrice: 9784.81, ...generatePath('kissedfrog', 4992), startPrice: 9550.99, ...getRandomRarity() },
+            { id: 150, name: "Electric Skull #1540", basePrice: 3688.54, ...generatePath('electricskull', 1540), startPrice: 3662.90, ...getRandomRarity() },
+            { id: 151, name: "B-Day Candle #2777", basePrice: 1600.75, ...generatePath('bdaycandle', 2777), startPrice: 1565.48, ...getRandomRarity() },
+            { id: 152, name: "Candy Cane #8344", basePrice: 3345.67, ...generatePath('candycane', 8344), startPrice: 3267.89, ...getRandomRarity() },
+            { id: 153, name: "Holiday Drink #1122", basePrice: 3100.99, ...generatePath('holidaydrink', 1122), startPrice: 3088.11, ...getRandomRarity() },
+            { id: 154, name: "Santa Hat #9003", basePrice: 4350.55, ...generatePath('santahat', 9003), startPrice: 4390.00, ...getRandomRarity() },
+            { id: 155, name: "Xmas Stocking #4190", basePrice: 3450.15, ...generatePath('xmasstocking', 4190), startPrice: 3400.15, ...getRandomRarity() },
+            { id: 156, name: "Toy Bear #7351", basePrice: 1950.05, ...generatePath('toybear', 7351), startPrice: 1980.00, ...getRandomRarity() },
+            { id: 157, name: "Neko Helmet #2103", basePrice: 12100.25, ...generatePath('nekohelmet', 2103), startPrice: 12250.00, ...getRandomRarity() },
+            { id: 158, name: "Magic Potion #1087", basePrice: 5450.10, ...generatePath('magicpotion', 1087), startPrice: 5390.10, ...getRandomRarity() },
+            { id: 159, name: "Pet Snake #9876", basePrice: 5000.80, ...generatePath('petsnake', 9876), startPrice: 5050.50, ...getRandomRarity() },
+            { id: 160, name: "Swiss Watch #5432", basePrice: 8250.22, ...generatePath('swisswatch', 5432), startPrice: 8300.00, ...getRandomRarity() },
+            { id: 161, name: "Stellar Rocket #1987", basePrice: 4200.05, ...generatePath('stellarrocket', 1987), startPrice: 4150.00, ...getRandomRarity() },
+            { id: 162, name: "Plush Pepe #5566", basePrice: 15000.77, ...generatePath('plushpepe', 5566), startPrice: 14850.50, ...getRandomRarity() },
+            { id: 163, name: "Kissed Frog #3010", basePrice: 8900.11, ...generatePath('kissedfrog', 3010), startPrice: 8850.00, ...getRandomRarity() },
+            { id: 164, name: "Electric Skull #6789", basePrice: 3150.88, ...generatePath('electricskull', 6789), startPrice: 3190.50, ...getRandomRarity() },
+            { id: 165, name: "B-Day Candle #4001", basePrice: 1480.25, ...generatePath('bdaycandle', 4001), startPrice: 1450.00, ...getRandomRarity() },
+            { id: 166, name: "Candy Cane #3311", basePrice: 3250.11, ...generatePath('candycane', 3311), startPrice: 3200.00, ...getRandomRarity() },
+            { id: 167, name: "Holiday Drink #5050", basePrice: 3600.40, ...generatePath('holidaydrink', 5050), startPrice: 3550.00, ...getRandomRarity() },
+            { id: 168, name: "Santa Hat #2020", basePrice: 4100.90, ...generatePath('santahat', 2020), startPrice: 4150.00, ...getRandomRarity() },
+            { id: 169, name: "Xmas Stocking #8008", basePrice: 3050.25, ...generatePath('xmasstocking', 8008), startPrice: 3100.00, ...getRandomRarity() },
+            { id: 170, name: "Toy Bear #1010", basePrice: 2150.99, ...generatePath('toybear', 1010), startPrice: 2100.00, ...getRandomRarity() },
+            { id: 171, name: "Neko Helmet #9999", basePrice: 11500.80, ...generatePath('nekohelmet', 9999), startPrice: 11450.00, ...getRandomRarity() },
+            { id: 172, name: "Magic Potion #0009", basePrice: 5200.35, ...generatePath('magicpotion', 0009), startPrice: 5250.00, ...getRandomRarity() },
+            { id: 173, name: "Pet Snake #4567", basePrice: 5500.60, ...generatePath('petsnake', 4567), startPrice: 5450.00, ...getRandomRarity() },
+            { id: 174, name: "Swiss Watch #1111", basePrice: 8950.15, ...generatePath('swisswatch', 1111), startPrice: 9000.00, ...getRandomRarity() },
+            { id: 175, name: "Stellar Rocket #7777", basePrice: 3850.70, ...generatePath('stellarrocket', 7777), startPrice: 3800.00, ...getRandomRarity() },
+            { id: 176, name: "Plush Pepe #1234", basePrice: 16000.50, ...generatePath('plushpepe', 1234), startPrice: 15900.00, ...getRandomRarity() },
+            { id: 177, name: "Kissed Frog #4321", basePrice: 9500.95, ...generatePath('kissedfrog', 4321), startPrice: 9400.00, ...getRandomRarity() },
+            { id: 178, name: "Electric Skull #5005", basePrice: 3500.40, ...generatePath('electricskull', 5005), startPrice: 3550.00, ...getRandomRarity() },
+            { id: 179, name: "B-Day Candle #6060", basePrice: 1580.00, ...generatePath('bdaycandle', 6060), startPrice: 1600.00, ...getRandomRarity() },
+            { id: 180, name: "Candy Cane #1000", basePrice: 3180.80, ...generatePath('candycane', 1000), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 181, name: "Holiday Drink #2345", basePrice: 3300.20, ...generatePath('holidaydrink', 2345), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 182, name: "Santa Hat #4567", basePrice: 3950.00, ...generatePath('santahat', 4567), startPrice: 3900.00, ...getRandomRarity() },
+            { id: 183, name: "Xmas Stocking #5678", basePrice: 3250.75, ...generatePath('xmasstocking', 5678), startPrice: 3200.00, ...getRandomRarity() },
+            { id: 184, name: "Toy Bear #8765", basePrice: 2000.30, ...generatePath('toybear', 8765), startPrice: 2050.00, ...getRandomRarity() },
+            { id: 185, name: "Neko Helmet #3456", basePrice: 11800.10, ...generatePath('nekohelmet', 3456), startPrice: 11750.00, ...getRandomRarity() },
+            { id: 186, name: "Magic Potion #7890", basePrice: 4900.50, ...generatePath('magicpotion', 7890), startPrice: 4950.00, ...getRandomRarity() },
+            { id: 187, name: "Pet Snake #1005", basePrice: 5400.90, ...generatePath('petsnake', 1005), startPrice: 5350.00, ...getRandomRarity() },
+            { id: 188, name: "Swiss Watch #2222", basePrice: 8800.66, ...generatePath('swisswatch', 2222), startPrice: 8750.00, ...getRandomRarity() },
+            { id: 189, name: "Stellar Rocket #3333", basePrice: 4050.10, ...generatePath('stellarrocket', 3333), startPrice: 4000.00, ...getRandomRarity() },
+            { id: 190, name: "Plush Pepe #4444", basePrice: 15500.22, ...generatePath('plushpepe', 4444), startPrice: 15450.00, ...getRandomRarity() },
+            { id: 191, name: "Kissed Frog #6666", basePrice: 9250.33, ...generatePath('kissedfrog', 6666), startPrice: 9300.00, ...getRandomRarity() },
+            { id: 192, name: "Electric Skull #7777", basePrice: 3420.50, ...generatePath('electricskull', 7777), startPrice: 3400.00, ...getRandomRarity() },
+            { id: 193, name: "B-Day Candle #8888", basePrice: 1450.70, ...generatePath('bdaycandle', 8888), startPrice: 1480.00, ...getRandomRarity() },
+            { id: 194, name: "Candy Cane #9999", basePrice: 3200.45, ...generatePath('candycane', 9999), startPrice: 3180.00, ...getRandomRarity() },
+            { id: 195, name: "Holiday Drink #1111", basePrice: 3550.80, ...generatePath('holidaydrink', 1111), startPrice: 3500.00, ...getRandomRarity() },
+            { id: 196, name: "Santa Hat #2000", basePrice: 4250.30, ...generatePath('santahat', 2000), startPrice: 4300.00, ...getRandomRarity() },
+            { id: 197, name: "Xmas Stocking #3030", basePrice: 3300.90, ...generatePath('xmasstocking', 3030), startPrice: 3250.00, ...getRandomRarity() },
+            { id: 198, name: "Toy Bear #4040", basePrice: 2100.15, ...generatePath('toybear', 4040), startPrice: 2080.00, ...getRandomRarity() },
+            { id: 199, name: "Neko Helmet #5050", basePrice: 11250.60, ...generatePath('nekohelmet', 5050), startPrice: 11300.00, ...getRandomRarity() },
+            { id: 200, name: "Magic Potion #6060", basePrice: 5100.20, ...generatePath('magicpotion', 6060), startPrice: 5150.00, ...getRandomRarity() },
+            { id: 201, name: "Pet Snake #7070", basePrice: 5350.55, ...generatePath('petsnake', 7070), startPrice: 5300.00, ...getRandomRarity() },
+            { id: 202, name: "Swiss Watch #8080", basePrice: 8750.40, ...generatePath('swisswatch', 8080), startPrice: 8800.00, ...getRandomRarity() },
+            { id: 203, name: "Stellar Rocket #9090", basePrice: 3950.00, ...generatePath('stellarrocket', 9090), startPrice: 3900.00, ...getRandomRarity() },
+            { id: 204, name: "Plush Pepe #1357", basePrice: 15800.90, ...generatePath('plushpepe', 1357), startPrice: 15700.00, ...getRandomRarity() },
+            { id: 205, name: "Kissed Frog #2468", basePrice: 9350.60, ...generatePath('kissedfrog', 2468), startPrice: 9400.00, ...getRandomRarity() },
+            { id: 206, name: "Electric Skull #3579", basePrice: 3300.10, ...generatePath('electricskull', 3579), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 207, name: "B-Day Candle #4680", basePrice: 1550.85, ...generatePath('bdaycandle', 4680), startPrice: 1500.00, ...getRandomRarity() },
+            { id: 208, name: "Candy Cane #5791", basePrice: 3100.70, ...generatePath('candycane', 5791), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 209, name: "Holiday Drink #6802", basePrice: 3400.25, ...generatePath('holidaydrink', 6802), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 210, name: "Santa Hat #7913", basePrice: 4080.45, ...generatePath('santahat', 7913), startPrice: 4100.00, ...getRandomRarity() },
+            { id: 211, name: "Xmas Stocking #8024", basePrice: 3180.65, ...generatePath('xmasstocking', 8024), startPrice: 3100.00, ...getRandomRarity() },
+            { id: 212, name: "Toy Bear #9135", basePrice: 2020.00, ...generatePath('toybear', 9135), startPrice: 2050.00, ...getRandomRarity() },
+            { id: 213, name: "Neko Helmet #1046", basePrice: 11400.30, ...generatePath('nekohelmet', 1046), startPrice: 11450.00, ...getRandomRarity() },
+            { id: 214, name: "Magic Potion #2157", basePrice: 5050.75, ...generatePath('magicpotion', 2157), startPrice: 5000.00, ...getRandomRarity() },
+            { id: 215, name: "Pet Snake #3268", basePrice: 5450.10, ...generatePath('petsnake', 3268), startPrice: 5500.00, ...getRandomRarity() },
+            { id: 216, name: "Swiss Watch #4379", basePrice: 8650.99, ...generatePath('swisswatch', 4379), startPrice: 8600.00, ...getRandomRarity() },
+            { id: 217, name: "Stellar Rocket #5480", basePrice: 4000.50, ...generatePath('stellarrocket', 5480), startPrice: 4050.00, ...getRandomRarity() },
+            { id: 218, name: "Plush Pepe #6591", basePrice: 15100.20, ...generatePath('plushpepe', 6591), startPrice: 15000.00, ...getRandomRarity() },
+            { id: 219, name: "Kissed Frog #7702", basePrice: 9100.40, ...generatePath('kissedfrog', 7702), startPrice: 9150.00, ...getRandomRarity() },
+            { id: 220, name: "Electric Skull #8813", basePrice: 3200.70, ...generatePath('electricskull', 8813), startPrice: 3250.00, ...getRandomRarity() },
+            { id: 221, name: "B-Day Candle #1369", basePrice: 1530.88, ...generatePath('bdaycandle', 1369), startPrice: 1528.25, ...getRandomRarity() },
+            { id: 222, name: "Candy Cane #3670", basePrice: 3280.93, ...generatePath('candycane', 3670), startPrice: 3341.67, ...getRandomRarity() },
+            { id: 223, name: "Holiday Drink #8197", basePrice: 3677.29, ...generatePath('holidaydrink', 8197), startPrice: 3748.88, ...getRandomRarity() },
+            { id: 224, name: "Santa Hat #2524", basePrice: 3760.36, ...generatePath('santahat', 2524), startPrice: 3698.81, ...getRandomRarity() },
+            { id: 225, name: "Xmas Stocking #5247", basePrice: 3012.39, ...generatePath('xmasstocking', 5247), startPrice: 3073.48, ...getRandomRarity() },
+            { id: 226, name: "Toy Bear #5086", basePrice: 2214.50, ...generatePath('toybear', 5086), startPrice: 2227.26, ...getRandomRarity() },
+            { id: 227, name: "Neko Helmet #3491", basePrice: 10079.79, ...generatePath('nekohelmet', 3491), startPrice: 10118.00, ...getRandomRarity() },
+            { id: 228, name: "Magic Potion #1080", basePrice: 5373.18, ...generatePath('magicpotion', 1080), startPrice: 5410.74, ...getRandomRarity() },
+            { id: 229, name: "Pet Snake #4989", basePrice: 4810.03, ...generatePath('petsnake', 4989), startPrice: 4920.01, ...getRandomRarity() },
+            { id: 230, name: "Swiss Watch #6322", basePrice: 9024.16, ...generatePath('swisswatch', 6322), startPrice: 9005.11, ...getRandomRarity() },
+            { id: 231, name: "Stellar Rocket #1440", basePrice: 3740.09, ...generatePath('stellarrocket', 1440), startPrice: 3704.14, ...getRandomRarity() },
+            { id: 232, name: "Plush Pepe #2199", basePrice: 14785.49, ...generatePath('plushpepe', 2199), startPrice: 14739.00, ...getRandomRarity() },
+            { id: 233, name: "Kissed Frog #6696", basePrice: 8774.24, ...generatePath('kissedfrog', 6696), startPrice: 8810.42, ...getRandomRarity() },
+            { id: 234, name: "Electric Skull #1540", basePrice: 3600.27, ...generatePath('electricskull', 1540), startPrice: 3617.91, ...getRandomRarity() },
+            { id: 235, name: "B-Day Candle #8570", basePrice: 1655.85, ...generatePath('bdaycandle', 8570), startPrice: 1642.69, ...getRandomRarity() },
+            { id: 236, name: "Candy Cane #3090", basePrice: 3012.87, ...generatePath('candycane', 3090), startPrice: 3028.98, ...getRandomRarity() },
+            { id: 237, name: "Holiday Drink #7170", basePrice: 3200.74, ...generatePath('holidaydrink', 7170), startPrice: 3274.57, ...getRandomRarity() },
+            { id: 238, name: "Santa Hat #4971", basePrice: 4200.18, ...generatePath('santahat', 4971), startPrice: 4180.05, ...getRandomRarity() },
+            { id: 239, name: "Xmas Stocking #3553", basePrice: 3410.60, ...generatePath('xmasstocking', 3553), startPrice: 3415.55, ...getRandomRarity() },
+            { id: 240, name: "Toy Bear #7890", basePrice: 1888.75, ...generatePath('toybear', 7890), startPrice: 1845.29, ...getRandomRarity() },
+            { id: 241, name: "Neko Helmet #9001", basePrice: 11980.50, ...generatePath('nekohelmet', 9001), startPrice: 11800.75, ...getRandomRarity() },
+            { id: 242, name: "Magic Potion #2580", basePrice: 5050.88, ...generatePath('magicpotion', 2580), startPrice: 5070.12, ...getRandomRarity() },
+            { id: 243, name: "Pet Snake #1134", basePrice: 5120.30, ...generatePath('petsnake', 1134), startPrice: 5145.45, ...getRandomRarity() },
+            { id: 244, name: "Swiss Watch #5890", basePrice: 8500.90, ...generatePath('swisswatch', 5890), startPrice: 8450.00, ...getRandomRarity() },
+            { id: 245, name: "Stellar Rocket #7321", basePrice: 4100.15, ...generatePath('stellarrocket', 7321), startPrice: 4088.10, ...getRandomRarity() },
+            { id: 246, name: "Plush Pepe #9123", basePrice: 16100.05, ...generatePath('plushpepe', 9123), startPrice: 16200.00, ...getRandomRarity() },
+            { id: 247, name: "Kissed Frog #4567", basePrice: 8800.20, ...generatePath('kissedfrog', 4567), startPrice: 8750.00, ...getRandomRarity() },
+            { id: 248, name: "Electric Skull #1987", basePrice: 3380.99, ...generatePath('electricskull', 1987), startPrice: 3400.00, ...getRandomRarity() },
+            { id: 249, name: "B-Day Candle #2002", basePrice: 1400.40, ...generatePath('bdaycandle', 2002), startPrice: 1420.00, ...getRandomRarity() },
+            { id: 250, name: "Candy Cane #3003", basePrice: 3050.85, ...generatePath('candycane', 3003), startPrice: 3000.00, ...getRandomRarity() },
+            { id: 251, name: "Holiday Drink #4004", basePrice: 3480.10, ...generatePath('holidaydrink', 4004), startPrice: 3500.00, ...getRandomRarity() },
+            { id: 252, name: "Santa Hat #5005", basePrice: 4150.70, ...generatePath('santahat', 5005), startPrice: 4100.00, ...getRandomRarity() },
+            { id: 253, name: "Xmas Stocking #6006", basePrice: 3220.50, ...generatePath('xmasstocking', 6006), startPrice: 3250.00, ...getRandomRarity() },
+            { id: 254, name: "Toy Bear #7007", basePrice: 2120.90, ...generatePath('toybear', 7007), startPrice: 2100.00, ...getRandomRarity() },
+            { id: 255, name: "Neko Helmet #8008", basePrice: 11600.35, ...generatePath('nekohelmet', 8008), startPrice: 11550.00, ...getRandomRarity() },
+            { id: 256, name: "Magic Potion #9009", basePrice: 5300.60, ...generatePath('magicpotion', 9009), startPrice: 5350.00, ...getRandomRarity() },
+            { id: 257, name: "Pet Snake #1212", basePrice: 5250.40, ...generatePath('petsnake', 1212), startPrice: 5200.00, ...getRandomRarity() },
+            { id: 258, name: "Swiss Watch #2323", basePrice: 9050.77, ...generatePath('swisswatch', 2323), startPrice: 9100.00, ...getRandomRarity() },
+            { id: 259, name: "Stellar Rocket #3434", basePrice: 3880.20, ...generatePath('stellarrocket', 3434), startPrice: 3850.00, ...getRandomRarity() },
+            { id: 260, name: "Plush Pepe #4545", basePrice: 14900.10, ...generatePath('plushpepe', 4545), startPrice: 14950.00, ...getRandomRarity() },
+            { id: 261, name: "Kissed Frog #5656", basePrice: 9000.88, ...generatePath('kissedfrog', 5656), startPrice: 9050.00, ...getRandomRarity() },
+            { id: 262, name: "Electric Skull #6767", basePrice: 3550.60, ...generatePath('electricskull', 6767), startPrice: 3500.00, ...getRandomRarity() },
+            { id: 263, name: "B-Day Candle #7878", basePrice: 1470.99, ...generatePath('bdaycandle', 7878), startPrice: 1500.00, ...getRandomRarity() },
+            { id: 264, name: "Candy Cane #8989", basePrice: 3150.30, ...generatePath('candycane', 8989), startPrice: 3100.00, ...getRandomRarity() },
+            { id: 265, name: "Holiday Drink #9090", basePrice: 3350.50, ...generatePath('holidaydrink', 9090), startPrice: 3400.00, ...getRandomRarity() },
+            { id: 266, name: "Santa Hat #1010", basePrice: 4020.10, ...generatePath('santahat', 1010), startPrice: 3980.00, ...getRandomRarity() },
+            { id: 267, name: "Xmas Stocking #2020", basePrice: 3400.70, ...generatePath('xmasstocking', 2020), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 268, name: "Toy Bear #3030", basePrice: 1980.45, ...generatePath('toybear', 3030), startPrice: 2000.00, ...getRandomRarity() },
+            { id: 269, name: "Neko Helmet #4040", basePrice: 11900.20, ...generatePath('nekohelmet', 4040), startPrice: 11850.00, ...getRandomRarity() },
+            { id: 270, name: "Magic Potion #5050", basePrice: 4950.80, ...generatePath('magicpotion', 5050), startPrice: 5000.00, ...getRandomRarity() },
+            { id: 271, name: "Pet Snake #6060", basePrice: 5400.15, ...generatePath('petsnake', 6060), startPrice: 5350.00, ...getRandomRarity() },
+            { id: 272, name: "Swiss Watch #7070", basePrice: 8850.33, ...generatePath('swisswatch', 7070), startPrice: 8900.00, ...getRandomRarity() },
+            { id: 273, name: "Stellar Rocket #8080", basePrice: 3750.95, ...generatePath('stellarrocket', 8080), startPrice: 3700.00, ...getRandomRarity() },
+            { id: 274, name: "Plush Pepe #9191", basePrice: 15200.40, ...generatePath('plushpepe', 9191), startPrice: 15250.00, ...getRandomRarity() },
+            { id: 275, name: "Kissed Frog #1234", basePrice: 9180.50, ...generatePath('kissedfrog', 1234), startPrice: 9130.00, ...getRandomRarity() },
+            { id: 276, name: "Electric Skull #2345", basePrice: 3450.70, ...generatePath('electricskull', 2345), startPrice: 3500.00, ...getRandomRarity() },
+            { id: 277, name: "B-Day Candle #3456", basePrice: 1590.25, ...generatePath('bdaycandle', 3456), startPrice: 1550.00, ...getRandomRarity() },
+            { id: 278, name: "Candy Cane #4567", basePrice: 3230.11, ...generatePath('candycane', 4567), startPrice: 3280.00, ...getRandomRarity() },
+            { id: 279, name: "Holiday Drink #5678", basePrice: 3620.99, ...generatePath('holidaydrink', 5678), startPrice: 3580.00, ...getRandomRarity() },
+            { id: 280, name: "Santa Hat #6789", basePrice: 4180.60, ...generatePath('santahat', 6789), startPrice: 4230.00, ...getRandomRarity() },
+            { id: 281, name: "Xmas Stocking #7890", basePrice: 3120.35, ...generatePath('xmasstocking', 7890), startPrice: 3180.00, ...getRandomRarity() },
+            { id: 282, name: "Toy Bear #8901", basePrice: 2070.80, ...generatePath('toybear', 8901), startPrice: 2020.00, ...getRandomRarity() },
+            { id: 283, name: "Neko Helmet #9012", basePrice: 11700.50, ...generatePath('nekohelmet', 9012), startPrice: 11650.00, ...getRandomRarity() },
+            { id: 284, name: "Magic Potion #1123", basePrice: 5250.70, ...generatePath('magicpotion', 1123), startPrice: 5300.00, ...getRandomRarity() },
+            { id: 285, name: "Pet Snake #2234", basePrice: 5380.90, ...generatePath('petsnake', 2234), startPrice: 5330.00, ...getRandomRarity() },
+            { id: 286, name: "Swiss Watch #3345", basePrice: 8900.10, ...generatePath('swisswatch', 3345), startPrice: 8950.00, ...getRandomRarity() },
+            { id: 287, name: "Stellar Rocket #4456", basePrice: 3920.40, ...generatePath('stellarrocket', 4456), startPrice: 3870.00, ...getRandomRarity() },
+            { id: 288, name: "Plush Pepe #5567", basePrice: 15400.70, ...generatePath('plushpepe', 5567), startPrice: 15450.00, ...getRandomRarity() },
+            { id: 289, name: "Kissed Frog #6678", basePrice: 9080.30, ...generatePath('kissedfrog', 6678), startPrice: 9030.00, ...getRandomRarity() },
+            { id: 290, name: "Electric Skull #7789", basePrice: 3340.55, ...generatePath('electricskull', 7789), startPrice: 3380.00, ...getRandomRarity() },
+            { id: 291, name: "B-Day Candle #8890", basePrice: 1420.10, ...generatePath('bdaycandle', 8890), startPrice: 1450.00, ...getRandomRarity() },
+            { id: 292, name: "Candy Cane #9901", basePrice: 3280.90, ...generatePath('candycane', 9901), startPrice: 3230.00, ...getRandomRarity() },
+            { id: 293, name: "Holiday Drink #1012", basePrice: 3500.20, ...generatePath('holidaydrink', 1012), startPrice: 3550.00, ...getRandomRarity() },
+            { id: 294, name: "Santa Hat #2123", basePrice: 4120.65, ...generatePath('santahat', 2123), startPrice: 4080.00, ...getRandomRarity() },
+            { id: 295, name: "Xmas Stocking #3234", basePrice: 3350.88, ...generatePath('xmasstocking', 3234), startPrice: 3300.00, ...getRandomRarity() },
+            { id: 296, name: "Toy Bear #4345", basePrice: 2150.70, ...generatePath('toybear', 4345), startPrice: 2100.00, ...getRandomRarity() },
+            { id: 297, name: "Neko Helmet #5456", basePrice: 11300.30, ...generatePath('nekohelmet', 5456), startPrice: 11350.00, ...getRandomRarity() },
+            { id: 298, name: "Magic Potion #6567", basePrice: 5180.50, ...generatePath('magicpotion', 6567), startPrice: 5230.00, ...getRandomRarity() },
+            { id: 299, name: "Pet Snake #7678", basePrice: 5480.10, ...generatePath('petsnake', 7678), startPrice: 5430.00, ...getRandomRarity() },
+            { id: 300, name: "Swiss Watch #8789", basePrice: 8700.99, ...generatePath('swisswatch', 8789), startPrice: 8750.00, ...getRandomRarity() },
+            { id: 301, name: "Stellar Rocket #9800", basePrice: 3800.45, ...generatePath('stellarrocket', 9800), startPrice: 3750.00, ...getRandomRarity() },
+            { id: 302, name: "Plush Pepe #1210", basePrice: 15600.20, ...generatePath('plushpepe', 1210), startPrice: 15550.00, ...getRandomRarity() },
+            { id: 303, name: "Kissed Frog #3430", basePrice: 9280.65, ...generatePath('kissedfrog', 3430), startPrice: 9330.00, ...getRandomRarity() },
+            { id: 304, name: "Electric Skull #5650", basePrice: 3390.90, ...generatePath('electricskull', 5650), startPrice: 3340.00, ...getRandomRarity() },
+            { id: 305, name: "B-Day Candle #7870", basePrice: 1510.30, ...generatePath('bdaycandle', 7870), startPrice: 1540.00, ...getRandomRarity() },
+            { id: 306, name: "Candy Cane #9090", basePrice: 3130.50, ...generatePath('candycane', 9090), startPrice: 3080.00, ...getRandomRarity() },
+            { id: 307, name: "Holiday Drink #1234", basePrice: 3650.10, ...generatePath('holidaydrink', 1234), startPrice: 3600.00, ...getRandomRarity() },
+            { id: 308, name: "Santa Hat #3456", basePrice: 4220.75, ...generatePath('santahat', 3456), startPrice: 4270.00, ...getRandomRarity() },
+            { id: 309, name: "Xmas Stocking #5678", basePrice: 3200.05, ...generatePath('xmasstocking', 5678), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 310, name: "Toy Bear #7890", basePrice: 2050.40, ...generatePath('toybear', 7890), startPrice: 2100.00, ...getRandomRarity() },
+            { id: 311, name: "Neko Helmet #9012", basePrice: 11550.88, ...generatePath('nekohelmet', 9012), startPrice: 11500.00, ...getRandomRarity() },
+            { id: 312, name: "Magic Potion #1123", basePrice: 5080.60, ...generatePath('magicpotion', 1123), startPrice: 5130.00, ...getRandomRarity() },
+            { id: 313, name: "Pet Snake #2234", basePrice: 5520.25, ...generatePath('petsnake', 2234), startPrice: 5470.00, ...getRandomRarity() },
+            { id: 314, name: "Swiss Watch #3345", basePrice: 8820.70, ...generatePath('swisswatch', 3345), startPrice: 8870.00, ...getRandomRarity() },
+            { id: 315, name: "Stellar Rocket #4456", basePrice: 3980.15, ...generatePath('stellarrocket', 4456), startPrice: 3930.00, ...getRandomRarity() },
+            { id: 316, name: "Plush Pepe #5567", basePrice: 15300.99, ...generatePath('plushpepe', 5567), startPrice: 15350.00, ...getRandomRarity() },
+            { id: 317, name: "Kissed Frog #6678", basePrice: 8950.40, ...generatePath('kissedfrog', 6678), startPrice: 8900.00, ...getRandomRarity() },
+            { id: 318, name: "Electric Skull #7789", basePrice: 3410.60, ...generatePath('electricskull', 7789), startPrice: 3450.00, ...getRandomRarity() },
+            { id: 319, name: "B-Day Candle #8890", basePrice: 1450.20, ...generatePath('bdaycandle', 8890), startPrice: 1480.00, ...getRandomRarity() },
+            { id: 320, name: "Candy Cane #9901", basePrice: 3200.75, ...generatePath('candycane', 9901), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 321, name: "Holiday Drink #1012", basePrice: 3580.30, ...generatePath('holidaydrink', 1012), startPrice: 3630.00, ...getRandomRarity() },
+            { id: 322, name: "Santa Hat #2123", basePrice: 4050.80, ...generatePath('santahat', 2123), startPrice: 4000.00, ...getRandomRarity() },
+            { id: 323, name: "Xmas Stocking #3234", basePrice: 3300.95, ...generatePath('xmasstocking', 3234), startPrice: 3250.00, ...getRandomRarity() },
+            { id: 324, name: "Toy Bear #4345", basePrice: 2120.45, ...generatePath('toybear', 4345), startPrice: 2170.00, ...getRandomRarity() },
+            { id: 325, name: "Neko Helmet #5456", basePrice: 11450.10, ...generatePath('nekohelmet', 5456), startPrice: 11400.00, ...getRandomRarity() },
+            { id: 326, name: "Magic Potion #6567", basePrice: 5100.90, ...generatePath('magicpotion', 6567), startPrice: 5150.00, ...getRandomRarity() },
+            { id: 327, name: "Pet Snake #7678", basePrice: 5300.55, ...generatePath('petsnake', 7678), startPrice: 5250.00, ...getRandomRarity() },
+            { id: 328, name: "Swiss Watch #8789", basePrice: 8980.25, ...generatePath('swisswatch', 8789), startPrice: 9030.00, ...getRandomRarity() },
+            { id: 329, name: "Stellar Rocket #9800", basePrice: 3850.70, ...generatePath('stellarrocket', 9800), startPrice: 3800.00, ...getRandomRarity() },
+            { id: 330, name: "Plush Pepe #1210", basePrice: 15750.40, ...generatePath('plushpepe', 1210), startPrice: 15700.00, ...getRandomRarity() },
+            { id: 331, name: "Kissed Frog #3430", basePrice: 9020.88, ...generatePath('kissedfrog', 3430), startPrice: 9070.00, ...getRandomRarity() },
+            { id: 332, name: "Electric Skull #5650", basePrice: 3480.15, ...generatePath('electricskull', 5650), startPrice: 3430.00, ...getRandomRarity() },
+            { id: 333, name: "B-Day Candle #7870", basePrice: 1560.60, ...generatePath('bdaycandle', 7870), startPrice: 1590.00, ...getRandomRarity() },
+            { id: 334, name: "Candy Cane #9090", basePrice: 3180.90, ...generatePath('candycane', 9090), startPrice: 3130.00, ...getRandomRarity() },
+            { id: 335, name: "Holiday Drink #1234", basePrice: 3450.05, ...generatePath('holidaydrink', 1234), startPrice: 3500.00, ...getRandomRarity() },
+            { id: 336, name: "Santa Hat #3456", basePrice: 4100.50, ...generatePath('santahat', 3456), startPrice: 4050.00, ...getRandomRarity() },
+            { id: 337, name: "Xmas Stocking #5678", basePrice: 3280.75, ...generatePath('xmasstocking', 5678), startPrice: 3330.00, ...getRandomRarity() },
+            { id: 338, name: "Toy Bear #7890", basePrice: 2000.30, ...generatePath('toybear', 7890), startPrice: 1950.00, ...getRandomRarity() },
+            { id: 339, name: "Neko Helmet #9012", basePrice: 11850.15, ...generatePath('nekohelmet', 9012), startPrice: 11800.00, ...getRandomRarity() },
+            { id: 340, name: "Magic Potion #1123", basePrice: 5220.80, ...generatePath('magicpotion', 1123), startPrice: 5270.00, ...getRandomRarity() },
+            { id: 341, name: "Pet Snake #2234", basePrice: 5350.30, ...generatePath('petsnake', 2234), startPrice: 5300.00, ...getRandomRarity() },
+            { id: 342, name: "Swiss Watch #3345", basePrice: 8600.90, ...generatePath('swisswatch', 3345), startPrice: 8650.00, ...getRandomRarity() },
+            { id: 343, name: "Stellar Rocket #4456", basePrice: 4020.65, ...generatePath('stellarrocket', 4456), startPrice: 3970.00, ...getRandomRarity() },
+            { id: 344, name: "Plush Pepe #5567", basePrice: 15150.50, ...generatePath('plushpepe', 5567), startPrice: 15100.00, ...getRandomRarity() },
+            { id: 345, name: "Kissed Frog #6678", basePrice: 9120.10, ...generatePath('kissedfrog', 6678), startPrice: 9170.00, ...getRandomRarity() },
+            { id: 346, name: "Electric Skull #7789", basePrice: 3300.40, ...generatePath('electricskull', 7789), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 347, name: "B-Day Candle #8890", basePrice: 1530.99, ...generatePath('bdaycandle', 8890), startPrice: 1500.00, ...getRandomRarity() },
+            { id: 348, name: "Candy Cane #9901", basePrice: 3100.80, ...generatePath('candycane', 9901), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 349, name: "Holiday Drink #1012", basePrice: 3400.70, ...generatePath('holidaydrink', 1012), startPrice: 3350.00, ...getRandomRarity() },
+            { id: 350, name: "Santa Hat #2123", basePrice: 4150.35, ...generatePath('santahat', 2123), startPrice: 4200.00, ...getRandomRarity() },
+            { id: 351, name: "Xmas Stocking #3234", basePrice: 3380.15, ...generatePath('xmasstocking', 3234), startPrice: 3330.00, ...getRandomRarity() },
+            { id: 352, name: "Toy Bear #4345", basePrice: 2050.20, ...generatePath('toybear', 4345), startPrice: 2080.00, ...getRandomRarity() },
+            { id: 353, name: "Neko Helmet #5456", basePrice: 11200.65, ...generatePath('nekohelmet', 5456), startPrice: 11250.00, ...getRandomRarity() },
+            { id: 354, name: "Magic Potion #6567", basePrice: 5050.30, ...generatePath('magicpotion', 6567), startPrice: 5000.00, ...getRandomRarity() },
+            { id: 355, name: "Pet Snake #7678", basePrice: 5200.80, ...generatePath('petsnake', 7678), startPrice: 5250.00, ...getRandomRarity() },
+            { id: 356, name: "Swiss Watch #8789", basePrice: 9150.45, ...generatePath('swisswatch', 8789), startPrice: 9100.00, ...getRandomRarity() },
+            { id: 357, name: "Stellar Rocket #9800", basePrice: 3780.90, ...generatePath('stellarrocket', 9800), startPrice: 3730.00, ...getRandomRarity() },
+            { id: 358, name: "Plush Pepe #1210", basePrice: 16050.25, ...generatePath('plushpepe', 1210), startPrice: 16000.00, ...getRandomRarity() },
+            { id: 359, name: "Kissed Frog #3430", basePrice: 8850.50, ...generatePath('kissedfrog', 3430), startPrice: 8900.00, ...getRandomRarity() },
+            { id: 360, name: "Electric Skull #5650", basePrice: 3520.75, ...generatePath('electricskull', 5650), startPrice: 3470.00, ...getRandomRarity() },
+            { id: 361, name: "B-Day Candle #7870", basePrice: 1490.40, ...generatePath('bdaycandle', 7870), startPrice: 1520.00, ...getRandomRarity() },
+            { id: 362, name: "Candy Cane #9090", basePrice: 3260.10, ...generatePath('candycane', 9090), startPrice: 3210.00, ...getRandomRarity() },
+            { id: 363, name: "Holiday Drink #1234", basePrice: 3380.88, ...generatePath('holidaydrink', 1234), startPrice: 3430.00, ...getRandomRarity() },
+            { id: 364, name: "Santa Hat #3456", basePrice: 3990.95, ...generatePath('santahat', 3456), startPrice: 3940.00, ...getRandomRarity() },
+            { id: 365, name: "Xmas Stocking #5678", basePrice: 3250.25, ...generatePath('xmasstocking', 5678), startPrice: 3300.00, ...getRandomRarity() },
+            { id: 366, name: "Toy Bear #7890", basePrice: 2180.60, ...generatePath('toybear', 7890), startPrice: 2130.00, ...getRandomRarity() },
+            { id: 367, name: "Neko Helmet #9012", basePrice: 11100.90, ...generatePath('nekohelmet', 9012), startPrice: 11050.00, ...getRandomRarity() },
+            { id: 368, name: "Magic Potion #1123", basePrice: 5350.35, ...generatePath('magicpotion', 1123), startPrice: 5400.00, ...getRandomRarity() },
+            { id: 369, name: "Pet Snake #2234", basePrice: 5150.70, ...generatePath('petsnake', 2234), startPrice: 5100.00, ...getRandomRarity() },
+            { id: 370, name: "Swiss Watch #3345", basePrice: 9000.10, ...generatePath('swisswatch', 3345), startPrice: 9050.00, ...getRandomRarity() },
+            { id: 371, name: "Stellar Rocket #4456", basePrice: 3700.80, ...generatePath('stellarrocket', 4456), startPrice: 3650.00, ...getRandomRarity() },
+            { id: 372, name: "Plush Pepe #5567", basePrice: 15850.55, ...generatePath('plushpepe', 5567), startPrice: 15900.00, ...getRandomRarity() },
+            { id: 373, name: "Kissed Frog #6678", basePrice: 8700.30, ...generatePath('kissedfrog', 6678), startPrice: 8750.00, ...getRandomRarity() },
+            { id: 374, name: "Electric Skull #7789", basePrice: 3250.99, ...generatePath('electricskull', 7789), startPrice: 3200.00, ...getRandomRarity() },
+            { id: 375, name: "B-Day Candle #8890", basePrice: 1600.20, ...generatePath('bdaycandle', 8890), startPrice: 1550.00, ...getRandomRarity() },
+            { id: 376, name: "Candy Cane #9901", basePrice: 3050.40, ...generatePath('candycane', 9901), startPrice: 3000.00, ...getRandomRarity() },
+            { id: 377, name: "Holiday Drink #1012", basePrice: 3550.60, ...generatePath('holidaydrink', 1012), startPrice: 3600.00, ...getRandomRarity() },
+            { id: 378, name: "Santa Hat #2123", basePrice: 4200.75, ...generatePath('santahat', 2123), startPrice: 4150.00, ...getRandomRarity() },
+            { id: 379, name: "Xmas Stocking #3234", basePrice: 3100.10, ...generatePath('xmasstocking', 3234), startPrice: 3050.00, ...getRandomRarity() },
+            { id: 380, name: "Toy Bear #4345", basePrice: 2080.50, ...generatePath('toybear', 4345), startPrice: 2130.00, ...getRandomRarity() },
+            { id: 381, name: "Neko Helmet #5456", basePrice: 11750.85, ...generatePath('nekohelmet', 5456), startPrice: 11700.00, ...getRandomRarity() },
+            { id: 382, name: "Magic Potion #6567", basePrice: 5150.30, ...generatePath('magicpotion', 6567), startPrice: 5200.00, ...getRandomRarity() },
+            { id: 383, name: "Pet Snake #7678", basePrice: 5500.99, ...generatePath('petsnake', 7678), startPrice: 5450.00, ...getRandomRarity() },
+            { id: 384, name: "Swiss Watch #8789", basePrice: 8680.15, ...generatePath('swisswatch', 8789), startPrice: 8730.00, ...getRandomRarity() },
+            { id: 385, name: "Stellar Rocket #9800", basePrice: 3940.60, ...generatePath('stellarrocket', 9800), startPrice: 3890.00, ...getRandomRarity() },
+            { id: 386, name: "Plush Pepe #1210", basePrice: 15000.70, ...generatePath('plushpepe', 1210), startPrice: 14950.00, ...getRandomRarity() },
+            { id: 387, name: "Kissed Frog #3430", basePrice: 9300.20, ...generatePath('kissedfrog', 3430), startPrice: 9350.00, ...getRandomRarity() },
+            { id: 388, name: "Electric Skull #5650", basePrice: 3280.90, ...generatePath('electricskull', 5650), startPrice: 3330.00, ...getRandomRarity() },
+            { id: 389, name: "B-Day Candle #7870", basePrice: 1400.50, ...generatePath('bdaycandle', 7870), startPrice: 1450.00, ...getRandomRarity() },
+            { id: 390, name: "Candy Cane #9090", basePrice: 3200.75, ...generatePath('candycane', 9090), startPrice: 3150.00, ...getRandomRarity() },
+            { id: 391, name: "Holiday Drink #1234", basePrice: 3420.35, ...generatePath('holidaydrink', 1234), startPrice: 3470.00, ...getRandomRarity() },
+            { id: 392, name: "Santa Hat #3456", basePrice: 4080.10, ...generatePath('santahat', 3456), startPrice: 4030.00, ...getRandomRarity() },
+            { id: 393, name: "Xmas Stocking #5678", basePrice: 3330.60, ...generatePath('xmasstocking', 5678), startPrice: 3280.00, ...getRandomRarity() },
+            { id: 394, name: "Toy Bear #7890", basePrice: 1950.99, ...generatePath('toybear', 7890), startPrice: 2000.00, ...getRandomRarity() },
+            { id: 395, name: "Neko Helmet #9012", basePrice: 11400.40, ...generatePath('nekohelmet', 9012), startPrice: 11350.00, ...getRandomRarity() },
+            { id: 396, name: "Magic Potion #1123", basePrice: 5250.80, ...generatePath('magicpotion', 1123), startPrice: 5300.00, ...getRandomRarity() },
+            { id: 397, name: "Pet Snake #2234", basePrice: 5400.15, ...generatePath('petsnake', 2234), startPrice: 5350.00, ...getRandomRarity() },
+            { id: 398, name: "Swiss Watch #3345", basePrice: 8950.60, ...generatePath('swisswatch', 3345), startPrice: 9000.00, ...getRandomRarity() },
+            { id: 399, name: "Stellar Rocket #4456", basePrice: 3780.95, ...generatePath('stellarrocket', 4456), startPrice: 3730.00, ...getRandomRarity() },
+            { id: 400, name: "Plush Pepe #5567", basePrice: 15300.10, ...generatePath('plushpepe', 5567), startPrice: 15250.00, ...getRandomRarity() },
+            { id: 401, name: "Kissed Frog #6678", basePrice: 9150.30, ...generatePath('kissedfrog', 6678), startPrice: 9200.00, ...getRandomRarity() },
+            { id: 402, name: "Electric Skull #7789", basePrice: 3500.70, ...generatePath('electricskull', 7789), startPrice: 3450.00, ...getRandomRarity() },
+            { id: 403, name: "B-Day Candle #8890", basePrice: 1450.45, ...generatePath('bdaycandle', 8890), startPrice: 1480.00, ...getRandomRarity() },
+            { id: 404, name: "Candy Cane #9901", basePrice: 3230.88, ...generatePath('candycane', 9901), startPrice: 3180.00, ...getRandomRarity() },
+            { id: 405, name: "Holiday Drink #1012", basePrice: 3380.15, ...generatePath('holidaydrink', 1012), startPrice: 3430.00, ...getRandomRarity() },
+            { id: 406, name: "Santa Hat #2123", basePrice: 4100.60, ...generatePath('santahat', 2123), startPrice: 4050.00, ...getRandomRarity() },
+            { id: 407, name: "Xmas Stocking #3234", basePrice: 3250.90, ...generatePath('xmasstocking', 3234), startPrice: 3300.00, ...getRandomRarity() },
+            { id: 408, name: "Toy Bear #4345", basePrice: 2000.75, ...generatePath('toybear', 4345), startPrice: 1950.00, ...getRandomRarity() },
+            { id: 409, name: "Neko Helmet #5456", basePrice: 11150.30, ...generatePath('nekohelmet', 5456), startPrice: 11200.00, ...getRandomRarity() },
+            { id: 410, name: "Magic Potion #6567", basePrice: 5300.20, ...generatePath('magicpotion', 6567), startPrice: 5250.00, ...getRandomRarity() },
+            { id: 411, name: "Pet Snake #7678", basePrice: 5180.80, ...generatePath('petsnake', 7678), startPrice: 5230.00, ...getRandomRarity() },
+            { id: 412, name: "Swiss Watch #8789", basePrice: 8850.40, ...generatePath('swisswatch', 8789), startPrice: 8800.00, ...getRandomRarity() },
+            { id: 413, name: "Stellar Rocket #9800", basePrice: 4050.15, ...generatePath('stellarrocket', 9800), startPrice: 4000.00, ...getRandomRarity() },
+            { id: 414, name: "Plush Pepe #1210", basePrice: 15550.99, ...generatePath('plushpepe', 1210), startPrice: 15600.00, ...getRandomRarity() },
+            { id: 415, name: "Kissed Frog #3430", basePrice: 8900.55, ...generatePath('kissedfrog', 3430), startPrice: 8850.00, ...getRandomRarity() },
+            { id: 416, name: "Electric Skull #5650", basePrice: 3350.25, ...generatePath('electricskull', 5650), startPrice: 3400.00, ...getRandomRarity() },
+            { id: 417, name: "B-Day Candle #7870", basePrice: 1500.70, ...generatePath('bdaycandle', 7870), startPrice: 1530.00, ...getRandomRarity() },
+            { id: 418, name: "Candy Cane #9090", basePrice: 3180.10, ...generatePath('candycane', 9090), startPrice: 3130.00, ...getRandomRarity() },
+            { id: 419, name: "Holiday Drink #1234", basePrice: 3400.50, ...generatePath('holidaydrink', 1234), startPrice: 3450.00, ...getRandomRarity() },
+            { id: 420, name: "Santa Hat #3456", basePrice: 4200.80, ...generatePath('santahat', 3456), startPrice: 4150.00, ...getRandomRarity() }
+            
         ];
 
-        const collections = [];
-        let nftCounter = 200000000; 
-
-        for (let i = 0; i < 360; i++) { 
-            const base = baseNfts[i % baseNfts.length];
-            const uniqueId = nftCounter++;
-            
-            const price = Math.round(base.priceBase * (1 + (Math.random() - 0.5) * 0.6)); 
-            const idString = uniqueId.toString().padStart(9, '0'); 
-            
-            // --- ИМИТАЦИОННЫЕ ПУТИ ПО УМОЛЧАНИЮ ---
-            let imgPath = `https://fragment.com/storage/media/gif_webp/${idString}_v1.webp`;
-            let lottiePath = `https://fragment.com/storage/media/lottie/${idString}_v1.json`;
-            
-            // --- ПЕРЕОПРЕДЕЛЕНИЕ: ДЛЯ ПЕРВЫХ 2-Х NFT ИСПОЛЬЗУЕМ РАБОЧИЕ CDN ССЫЛКИ ДЛЯ ДЕМОНСТРАЦИИ ЗАГРУЗКИ ---
-            if (i === 0) {
-                // Working Lottie Demo 1 (TON-like style)
-                lottiePath = 'https://assets5.lottiefiles.com/packages/lf20_tijmp3g6.json'; 
-                // Placeholder WebP that is guaranteed to load
-                imgPath = 'https://via.placeholder.com/150/007aff/FFFFFF?text=LOTTIE+PREVIEW+1';
-            } else if (i === 1) {
-                // Working Lottie Demo 2 (Simple Animation)
-                lottiePath = 'https://assets8.lottiefiles.com/packages/lf20_n82i0jqs.json';
-                // Placeholder WebP that is guaranteed to load
-                imgPath = 'https://via.placeholder.com/150/34c759/FFFFFF?text=LOTTIE+PREVIEW+2';
-            }
-            // --------------------------------------------------------------------------------------------------
-
-            collections.push({
-                id: uniqueId,
-                title: `${base.title} #${uniqueId.toString().slice(-4)}`, 
-                model: base.model,
-                symbol: base.symbol,
-                backdrop: base.color,
-                price: price,
-                img: imgPath,
-                lottie: lottiePath,
-                isFav: false,
-                history: generatePriceHistory(price)
-            });
-        }
-        
-        // --- (3) ГЛАВНАЯ ФУНКЦИЯ ОТРЕЗКИ NFT НА ЭКРАН (С ОБНОВЛЕННЫМ FALLBACK) ---
-        function createNftCard(nft) {
-            const card = document.createElement('div');
-            card.className = 'nft-card';
-            card.setAttribute('data-id', nft.id);
-            card.setAttribute('onclick', `openNftModal(${nft.id})`);
-
-            const isFavClass = nft.isFav ? 'active' : '';
-
-            card.innerHTML = `
-                <div class="fav-icon ${isFavClass}" onclick="event.stopPropagation(); toggleFavorite(${nft.id});">
-                    ${nft.isFav ? '★' : '☆'}
-                </div>
-                <img class="nft-img" data-src="${nft.img}" alt="${nft.title}">
-                
-                <div class="image-placeholder-content">
-                    <span style="font-size: 30px;">💎</span>
-                    <div style="margin-top: 5px; font-size: 10px; color: #555;">${nft.model.toUpperCase()}</div>
-                    <div style="font-size: 9px; color: #444;">404 Lottie/WebP</div>
-                </div>
-                
-                <div style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nft.title}</div>
-                <div style="font-size: 12px; color: var(--secondary-text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nft.model}</div>
-                <div style="font-weight: bold; color: var(--green-color); font-size: 14px;">${getPrice(nft.price)}</div>
-            `;
-
-            // --- ЛОГИКА СТАБИЛЬНОГО FALLBACK ---
-            const imgElement = card.querySelector('.nft-img');
-            imgElement.onerror = function() {
-                // Добавляем класс, который активирует стилизованную заглушку в CSS
-                card.classList.add('no-image');
-                // Очищаем data-src, чтобы предотвратить повторную попытку загрузки
-                imgElement.removeAttribute('data-src'); 
-            };
-
-            // Загружаем через src, чтобы триггернуть ошибку
-            if (imgElement.dataset.src) {
-                imgElement.src = imgElement.dataset.src;
-            }
-            // ------------------------------------
-
-            return card;
-        }
-
-
-        // --- (4) ФУНКЦИИ УПРАВЛЕНИЯ ИНТЕРФЕЙСОМ ---
-
-        // Сохранение/Загрузка избранного (имитация)
-        let favorites = new Set(JSON.parse(localStorage.getItem('nft_favorites') || '[]'));
-        function saveFavorites() {
-            localStorage.setItem('nft_favorites', JSON.stringify(Array.from(favorites)));
-        }
-
-        // Рендеринг списка NFT
-        function renderMarket(nfts, targetId) {
-            const list = document.getElementById(targetId);
-            list.innerHTML = '';
-            if (nfts.length === 0) {
-                 list.innerHTML = `<div style="grid-column: span 2; text-align: center; color: #666; padding: 40px;">Ничего не найдено. Попробуйте изменить фильтры.</div>`;
-                 return;
-            }
-
-            // Создаем уникальные опции для фильтра по коллекциям
-            if (targetId === 'market-list') {
-                const models = [...new Set(collections.map(nft => nft.model))].sort();
-                const filter = document.getElementById('rarity-filter');
-                filter.innerHTML = '<option value="all">Все коллекции</option>';
-                models.forEach(model => {
-                    filter.innerHTML += `<option value="${model}">${model}</option>`;
-                });
-            }
-
-            nfts.forEach(nft => {
-                list.appendChild(createNftCard(nft));
-            });
-        }
-        
-        function renderFavorites() {
-            const favNfts = collections.filter(nft => favorites.has(nft.id));
-            renderMarket(favNfts, 'fav-list');
-        }
-
-        function toggleFavorite(id) {
-            const nft = collections.find(n => n.id === id);
-            if (!nft) return;
-
-            nft.isFav = !nft.isFav;
-            
-            if (nft.isFav) {
-                favorites.add(id);
-            } else {
-                favorites.delete(id);
-            }
-            
-            // Обновляем иконку на самой карточке
-            const card = document.querySelector(`.nft-card[data-id="${id}"]`);
-            if (card) {
-                const favIcon = card.querySelector('.fav-icon');
-                if (favIcon) {
-                    favIcon.innerHTML = nft.isFav ? '★' : '☆';
-                    favIcon.classList.toggle('active', nft.isFav);
-                }
-            }
-            
-            // Обновляем модальное окно, если открыто
-            const modalFavBtn = document.getElementById('m-fav-btn');
-            if (modalFavBtn && modalFavBtn.getAttribute('data-id') == id) {
-                 modalFavBtn.innerHTML = nft.isFav ? '★ В избранном' : '☆ Добавить в избранное';
-            }
-
-            saveFavorites();
-            renderFavorites(); // Перерисовываем избранное
-        }
-        
-        function toggleFavFromModal() {
-            const modalFavBtn = document.getElementById('m-fav-btn');
-            const id = parseInt(modalFavBtn.getAttribute('data-id'));
-            toggleFavorite(id);
-        }
-
-        // Фильтрация
-        function filterNFTs() {
-            const searchTerm = document.getElementById('search').value.toLowerCase();
-            const rarityFilter = document.getElementById('rarity-filter').value;
-            const priceFilter = document.getElementById('price-filter').value;
-
-            const filtered = collections.filter(nft => {
-                // Search term filter (Title or Model)
-                const searchMatch = nft.title.toLowerCase().includes(searchTerm) || 
-                                    nft.model.toLowerCase().includes(searchTerm);
-
-                // Rarity/Model filter
-                const rarityMatch = rarityFilter === 'all' || nft.model === rarityFilter;
-
-                // Price filter
-                let priceMatch = true;
-                if (priceFilter === 'low') {
-                    priceMatch = nft.price >= 0 && nft.price <= 7000;
-                } else if (priceFilter === 'mid') {
-                    priceMatch = nft.price > 7000 && nft.price <= 15000;
-                } else if (priceFilter === 'high') {
-                    priceMatch = nft.price > 15000;
-                }
-
-                return searchMatch && rarityMatch && priceMatch;
-            });
-
-            renderMarket(filtered, 'market-list');
-        }
-
-
-        // Управление вкладками
-        let currentLottieAnimation = null; // Для хранения текущей Lottie-анимации
-
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            element.classList.add('active');
-            
-            if (tabId === 'favorites') {
-                renderFavorites();
-            }
-
-             // Остановка Lottie при переключении
-            if (currentLottieAnimation) {
-                currentLottieAnimation.destroy();
-                currentLottieAnimation = null;
-                document.getElementById('nft-media-wrapper').innerHTML = ''; // Очистка контейнера
-            }
-        }
-        
-        // Управление модальными окнами
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-
-            // Очистка Lottie при закрытии модального окна NFT
-            if (modalId === 'nft-modal' && currentLottieAnimation) {
-                currentLottieAnimation.destroy();
-                currentLottieAnimation = null;
-                document.getElementById('nft-media-wrapper').innerHTML = '';
-            }
-        }
-        
-        function openNftModal(id) {
-            const nft = collections.find(n => n.id === id);
-            if (!nft) return;
-
-            // Заполнение общей информации
-            document.getElementById('m-title').innerText = nft.title;
-            document.getElementById('m-price').innerText = getPrice(nft.price);
-            document.getElementById('m-model').innerText = nft.model;
-            document.getElementById('m-symbol').innerText = nft.symbol;
-            document.getElementById('m-backdrop').innerText = nft.backdrop;
-
-            // Кнопка избранного
-            const modalFavBtn = document.getElementById('m-fav-btn');
-            modalFavBtn.setAttribute('data-id', id);
-            modalFavBtn.innerHTML = nft.isFav ? '★ В избранном' : '☆ Добавить в избранное';
-
-            // История цены
-            const historyBody = document.getElementById('price-history');
-            historyBody.innerHTML = '';
-            nft.history.forEach(item => {
-                const trend = item.change >= 0 ? 'change-up' : 'change-down';
-                const sign = item.change >= 0 ? '▲' : '▼';
-                historyBody.innerHTML += `
-                    <tr>
-                        <td>${item.date}</td>
-                        <td>${getPrice(item.price)}</td>
-                        <td class="${trend}">${sign} ${getPrice(Math.abs(item.change))}</td>
-                    </tr>
-                `;
-            });
-            
-            // --- ЗАГРУЗКА LOTTIE (Критическая часть) ---
-            const mediaWrapper = document.getElementById('nft-media-wrapper');
-            mediaWrapper.innerHTML = ''; // Очищаем от предыдущей Lottie/WebP
-
-            if (currentLottieAnimation) {
-                currentLottieAnimation.destroy();
-                currentLottieAnimation = null;
-            }
-
-            if (nft.lottie) {
-                // Попытка загрузить Lottie-файл
-                currentLottieAnimation = lottie.loadAnimation({
-                    container: mediaWrapper,
-                    renderer: 'svg',
-                    loop: true,
-                    autoplay: true,
-                    path: nft.lottie, // Путь к Lottie-файлу
-                    rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid slice'
-                    }
-                });
-                
-                // Обработчик ошибки: если Lottie не загрузится (404/ошибка данных), переходим к WebP
-                currentLottieAnimation.addEventListener('data_failed', () => {
-                    console.warn('Lottie failed to load for NFT ID:', nft.id, 'Switching to WebP/Image fallback.');
-                    
-                    // Показываем статичный WebP/Fallback Image
-                    mediaWrapper.innerHTML = `<img src="${nft.img}" alt="${nft.title}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">`;
-                    
-                    // Если и WebP не загрузится, используем финальную стилизованную заглушку
-                    const fallbackImg = mediaWrapper.querySelector('img');
-                    if(fallbackImg) {
-                         fallbackImg.onerror = () => {
-                             mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
-                         };
-                    } else {
-                         mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
-                    }
-                });
-            } else if (nft.img) {
-                 // Если нет Lottie, но есть WebP/Image
-                 mediaWrapper.innerHTML = `<img src="${nft.img}" alt="${nft.title}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">`;
-            } else {
-                 mediaWrapper.innerHTML = `<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; color: #888; font-size: 14px; background: #121212; border-radius: 10px;"><span style="font-size: 40px;">❌</span><div style="margin-top: 5px;">MEDIA NOT FOUND</div></div>`;
-            }
-            // ------------------------------------
-
-            openModal('nft-modal');
-        }
-
-        // Имитация начала платежа
-        function startPayment(type) {
-            closeModal(`${type}-modal`);
-            
-            const amount = document.getElementById(`${type}-amount`).value || 'N/A';
-            let method = '';
-            
-            if (type === 'deposit') {
-                method = document.getElementById('deposit-method').value;
-            } else {
-                method = document.getElementById('withdraw-method').value;
-                // В реальном приложении здесь была бы проверка и отправка запроса на вывод
-            }
-
-            document.getElementById('p-amount').innerText = amount;
-            document.getElementById('p-method').innerText = method;
-
-            openModal('payment-modal');
-        }
-
-        // --- INIT (ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНИЦИАЛИЗАЦИИ) ---
-        function initializeApp() {
-            try {
-                // ПЕРЕМЕШИВАЕМ, но первые два элемента оставляем, чтобы они были видны для демонстрации
-                const demoNfts = collections.splice(0, 2);
-                shuffleArray(collections);
-                collections.unshift(...demoNfts); // Возвращаем рабочие NFT в начало
-
-                // Инициализация баланса и валюты
-                document.getElementById('user-balance').innerText = getPrice(0); 
-                document.getElementById('frozen-balance').innerText = getPrice(0);
-
-                // **Отрисовка списка NFT происходит немедленно**
-                renderMarket(collections, 'market-list');
-                renderFavorites(); 
-
-                // Убеждаемся, что Market активен
-                const marketTab = document.querySelector('.nav-item.active');
-                if (marketTab) {
-                    switchTab('market', marketTab);
-                } else {
-                     // Устанавливаем Market активным, если ничто не было активно
-                    switchTab('market', document.querySelector('.nav-item'));
-                }
-
-                console.log("App Initialized successfully. NFT count:", collections.length);
-            } catch (error) {
-                console.error("FATAL ERROR during initialization:", error);
-                document.getElementById('market-list').innerHTML = `<div style="grid-column: span 2; color: #ff3b30; padding: 30px; text-align: center;">Критическая ошибка загрузки. Проверьте консоль.</div>`;
-            }
-        }
-
-        initializeApp();
+        // ... (остальной код)
     </script>
 </body>
 </html>
